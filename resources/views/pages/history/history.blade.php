@@ -15,7 +15,7 @@
                                 <th scope="col" class="text-center align-middle">No</th>
                                 <th scope="col" class="text-center align-middle">Nama Faskes</th>
                                 <th scope="col" class="text-center align-middle">Jenis Claim</th>
-                                <th scope="col" class="text-center align-middle">Bulan</th>
+                                <th scope="col" class="text-center align-middle text-nowrap">Bulan Pelayanan</th>
                                 <th scope="col" class="text-center align-middle">Tanggal BA Lengkap</th>
                                 <th scope="col" class="text-center align-middle">Tanggal Pembayaran</th>
                                 <th scope="col" class="text-center align-middle">Jenis BA</th>
