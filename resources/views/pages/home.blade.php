@@ -26,7 +26,7 @@
                                 <th scope="col" class="text-center align-middle">No</th>
                                 <th scope="col" class="text-center align-middle">Nama Faskes</th>
                                 <th scope="col" class="text-center align-middle">Jenis Klaim</th>
-                                <th scope="col" class="text-center align-middle">Bulan</th>
+                                <th scope="col" class="text-center align-middle text-nowrap">Bulan Pelayanan</th>
                                 <th scope="col" class="text-center align-middle text-nowrap">Tanggal Pembuatan BA</th>
                                 <th scope="col" class="text-center align-middle text-nowrap">Jatuh Tempo</th>
                                 <th scope="col" class="text-center align-middle">Jenis BA</th>

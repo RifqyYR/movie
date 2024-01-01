@@ -69,7 +69,7 @@
 
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label for="bulan">Bulan</label>
+                            <label for="bulan">Bulan Pelayanan</label>
                             <select class="custom-select @error('bulan') is-invalid @enderror" name="bulan">
                                 <option selected hidden value="">Bulan...</option>
                                 <option value="Januari">Januari</option>
@@ -92,7 +92,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="tahun">Tahun</label>
+                            <label for="tahun">Tahun Pelayanan</label>
                             <select class="custom-select @error('tahun') is-invalid @enderror" name="tahun">
                                 <option value="{{ date('Y') - 1 }}">{{ date('Y') - 1 }}</option>
                                 <option value="{{ date('Y') }}" selected>{{ date('Y') }}</option>
