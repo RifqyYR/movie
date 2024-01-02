@@ -2,6 +2,22 @@
 
 @section('content')
     <div class="container-fluid">
+        @if (auth()->user()->telegram_chat_id)
+            <form action="/message" method="POST">
+                @csrf
+                <div class="form-group mb-3">
+                    <input id="message" type="text" class="form-control" name="message" value="{{ old('message') }}"
+                        required placeholder="Masukkan pesan..." autofocus />
+                    <button type="submit" class="btn btn-primary" style="background-color: #2E3192">
+                        {{ __('Send') }}
+                    </button>
+                </div>
+            </form>
+        @else
+            <script async src="https://telegram.org/js/telegram-widget.js?22" type="application/javascript" data-telegram-login="{{ config('services.telegram-bot-api.name') }}" data-size="large"
+        data-auth-url="{{ route('telegram.connect') }}"    
+        data-request-access="write"></script>
+        @endif
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
             <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim</h1>
         </div>
@@ -61,13 +77,11 @@
                                     @endphp
                                     <tr
                                         class="
-                                        @if ($item->status == 'BA Serah Terima') 
-                                        {{ $datediff + 1 >= 9 ? 'table-danger' : ($datediff + 1 >= 7 && $datediff + 1 < 9 ? 'table-warning' : '') }}
+                                        @if ($item->status == 'BA Serah Terima') {{ $datediff + 1 >= 9 ? 'table-danger' : ($datediff + 1 >= 7 && $datediff + 1 < 9 ? 'table-warning' : '') }}
                                         @elseif (in_array($item->status, $diffStatus))
                                         {{ $dateDiffFinance + 1 >= 9 ? 'table-danger' : ($dateDiffFinance + 1 >= 7 && $dateDiffFinance + 1 < 9 ? 'table-warning' : '') }}
                                         @else
-                                            {{ $dateDiffFinance + 1 >= 13 ? 'table-danger' : '' }} 
-                                        @endif
+                                            {{ $dateDiffFinance + 1 >= 13 ? 'table-danger' : '' }} @endif
                                         ">
                                         <td class="text-center align-middle fw-bold" style="font-size: 14px;">
                                             {{ $loop->index + 1 }} </td>
