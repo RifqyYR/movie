@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('username');
             $table->string('email')->unique();
+            $table->string('telegram_chat_id')->nullable();
             $table->date('email_verified_at');
             $table->enum('role', ['FINANCE', 'VERIFICATOR', 'ADMIN', 'HEAD']);
             $table->string('password');

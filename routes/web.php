@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsensiClaimController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +60,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
   
   Route::get('/ganti-password/{user:uuid}', [UserController::class, 'changePassword'])->name('user.change-password');
   Route::post('/proses-ganti-password/{user:uuid}', [UserController::class, 'changePasswordProcess'])->name('user.change-password.process');
+
+  Route::get('/telegram/example', [TelegramController::class, 'callback'])->name('telegram.connect');
+  Route::post('/message', [TelegramController::class, 'message']);
 });
 
 Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);
