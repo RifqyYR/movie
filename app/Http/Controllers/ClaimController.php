@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateClaimRequest;
 use App\Models\Claim;
 use App\Models\Hospital;
 use DateTime;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClaimController extends Controller
 {
@@ -17,118 +18,116 @@ class ClaimController extends Controller
         ]);
     }
 
-    public function createProcess(Request $request)
+    public function createProcess(CreateClaimRequest $request)
     {
-        $data = $request->all();
-
-        $messages = [
-            'required' => ':attribute tidak boleh kosong',
-            'min' => ':attribute minimal :min karakter',
-            'unique' => ':attribute yang diinput sudah terdaftar',
-        ];
-
-        $this->validate($request, [
-            'nama_rs' => 'required',
-            'tingkat' => 'required',
-            'jenis_claim' => 'required',
-            'bulan' => 'required',
-            'tahun' => 'required',
-            'tanggal_ba' => 'required',
-        ], $messages);
+        $data = $request->validated();
 
         try {
-            $text = $request->nama_rs;
-            $parts = explode("-", $text);
-            $rs_name = trim($parts[1]);
-            $date = new DateTime($data['tanggal_ba']);
+            DB::transaction(function () use ($data) {
+                $text = $data['nama_rs'];
+                $parts = explode("-", $text);
+                $rs_name = trim($parts[1]);
+                $date = new DateTime($data['tanggal_ba']);
 
-            Claim::create([
-                'hospital_name' => $rs_name,
-                'claim_type' => $data['jenis_claim'],
-                'month' => $data['bulan'] . ' ' . $data['tahun'],
-                'created_date' => $data['tanggal_ba'],
-                'ba_date' => $data['tanggal_ba'],
-                'completion_limit_date' => $date->modify('+9 day'),
-                'status' => 'BA Serah Terima'
-            ]);
+                Claim::create([
+                    'hospital_name' => $rs_name,
+                    'claim_type' => $data['jenis_claim'],
+                    'month' => $data['bulan'] . ' ' . $data['tahun'],
+                    'created_date' => $data['tanggal_ba'],
+                    'ba_date' => $data['tanggal_ba'],
+                    'completion_limit_date' => $date->modify('+9 day'),
+                    'status' => 'BA Serah Terima'
+                ]);
+            });
 
             return redirect()->route('home')->with('success', 'Berhasil membuat klaim baru');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal membuat klaim baru');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal membuat klaim baru: ' . $e->getMessage());
         }
     }
 
     public function delete(String $id)
     {
-        $claim = Claim::find($id);
-        $claim->delete();
+        try {
+            DB::transaction(function () use ($id) {
+                $claim = Claim::find($id);
+                $claim->delete();
+            });
 
-        if ($claim) {
             return redirect()->route('home')->with('success', 'Berhasil menghapus klaim');
-        } else {
-            return redirect()->back()->with('error', 'Gagal menghapus klaim');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus klaim: ' . $e->getMessage());
         }
     }
 
     public function approveFinance(String $id)
     {
         try {
-            $claim = Claim::find($id);
-            $claim->update([
-                'ba_date' => now(),
-                'status' => 'Pembayaran Telah Dilakukan'
-            ]);
+            DB::transaction(function () use ($id) {
+                $claim = Claim::find($id);
+                $claim->update([
+                    'ba_date' => now(),
+                    'status' => Claim::STATUS_TELAH_BAYAR,
+                ]);
+            });
+
             return redirect()->back()->with('success', 'Berhasil approve');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal approve');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
     public function approveHead(String $id)
     {
         try {
-            $claim = Claim::find($id);
-            $date = new DateTime($claim->file_completeness);
+            DB::transaction(function () use ($id) {
+                $claim = Claim::find($id);
+                $date = new DateTime($claim->file_completeness);
 
-            $claim->update([
-                'ba_date' => now(),
-                'status' => 'Klaim Telah Teregister di BOA (Menunggu Pembayaran)',
-                'completion_limit_date' => $date->modify('+14 days'),
-            ]);
+                $claim->update([
+                    'ba_date' => now(),
+                    'status' => Claim::STATUS_TELAH_REGISTER_BOA,
+                    'completion_limit_date' => $date->modify('+14 days'),
+                ]);
+            });
+
             return redirect()->back()->with('success', 'Berhasil approve');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal approve');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
     public function approveVerificator(String $id)
     {
         try {
-            $claim = Claim::find($id);
+            DB::transaction(function () use ($id) {
+                $claim = Claim::find($id);
 
-            if ($claim->status == "BA Serah Terima") {
-                $claim->update([
-                    'ba_date' => now(),
-                    'status' => "BA Kelengkapan Berkas",
-                    'file_completeness' => now(),
-                    'completion_limit_date' => now()->modify('+9 day'),
-                ]);
-            } elseif ($claim->status == "BA Kelengkapan Berkas") {
-                $claim->update([
-                    'ba_date' => now(),
-                    'status' => "BA Hasil Verifikasi",
-                ]);
-            }
+                if (!$claim) {
+                    throw new \Exception('Klaim tidak ditemukan');
+                }
+
+                $updateData = ['ba_date' => now()];
+
+                if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA) {
+                    $updateData['status'] = Claim::STATUS_BA_KELENGKAPAN_BERKAS;
+                    $updateData['file_completeness'] = now();
+                    $updateData['completion_limit_date'] = now()->modify('+9 day');
+                } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                    $updateData['status'] = Claim::STATUS_BA_HASIL_VERIFIKASI;
+                }
+                $claim->update($updateData);
+            });
 
             return redirect()->back()->with('success', 'Berhasil approve');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal approve');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
     public function showHistoryPage()
     {
-        $claims = Claim::where('status', 'Pembayaran Telah Dilakukan')->get();
+        $claims = Claim::where('status', Claim::STATUS_TELAH_BAYAR)->get();
 
         return view('pages.history.history', [
             'claims' => $claims

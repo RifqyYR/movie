@@ -6,8 +6,7 @@
             <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim</h1>
         </div>
         <div class="d-sm-flex">
-            <a href="{{ url('/claim/buat') }}"
-                class="d-sm-inline-block btn btn-sm btn-success shadow-sm text-center py-3"
+            <a href="{{ url('/claim/buat') }}" class="d-sm-inline-block btn btn-sm btn-success shadow-sm text-center py-3"
                 style="position: fixed; right: 0; bottom: 0; margin: 20px; width: 60px; height: 60px; border-radius: 50%; padding: 10px; z-index: 1; opacity: 80%;">
                 <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" height="25" width="25"
                     viewBox="0 0 448 512">
@@ -62,9 +61,10 @@
                                     @endphp
                                     <tr
                                         class="
-                                        @if ($item->status == 'BA Serah Terima') {{ $datediff + 1 >= 9 ? 'table-danger' : '' }}
+                                        @if ($item->status == 'BA Serah Terima') 
+                                        {{ $datediff + 1 >= 9 ? 'table-danger' : ($datediff + 1 >= 7 && $datediff + 1 < 9 ? 'table-warning' : '') }}
                                         @elseif (in_array($item->status, $diffStatus))
-                                        {{ $dateDiffFinance + 1 >= 9 ? 'table-danger' : '' }}
+                                        {{ $dateDiffFinance + 1 >= 9 ? 'table-danger' : ($dateDiffFinance + 1 >= 7 && $dateDiffFinance + 1 < 9 ? 'table-warning' : '') }}
                                         @else
                                             {{ $dateDiffFinance + 1 >= 13 ? 'table-danger' : '' }} 
                                         @endif
