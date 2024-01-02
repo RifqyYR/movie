@@ -1,14 +1,14 @@
 @extends('layouts.app') @section('content')
-    <div class="container" style="width: 75vw; height: 90vh;">
+    <div class="container d-flex align-items-center justify-content-center" style="height: 90vh">
         <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <div class="row">
             <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card o-hidden border-0 shadow-lg my-5" style="width: 60vw;">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div
-                                class="col-md-6 d-lg-none d-md-block bg-login-image d-lg-flex align-content-center align-items-center">
+                                class="col-md-12 d-lg-none d-md-block bg-login-image d-lg-flex align-content-center align-items-center">
                                 <img src="{{ url('logo.png') }}" alt="logo aplikasi"
                                     class="ratio ratio-16x9 img-fluid mx-auto d-block mt-5" style="width: 45vw; height: 10vh; margin-bottom: -7vh" />
                             </div>
