@@ -10,6 +10,11 @@ class Claim extends Model
 {
     use HasFactory;
 
+    const STATUS_BA_SERAH_TERIMA = "BA Serah Terima";
+    const STATUS_BA_KELENGKAPAN_BERKAS = "BA Kelengkapan Berkas";
+    const STATUS_BA_HASIL_VERIFIKASI = "BA Hasil Verifikasi";
+    const STATUS_TELAH_REGISTER_BOA = "Klaim Telah Teregister di BOA (Menunggu Pembayaran)";
+    const STATUS_TELAH_BAYAR = "Pembayaran Telah Dilakukan";
     protected $primaryKey = 'uuid';
     
     protected $fillable = [
@@ -33,4 +38,9 @@ class Claim extends Model
             $model->uuid = Uuid::uuid7();
         });
     }    
+
+    public function hospital()
+    {
+        return $this->belongsTo(Hospital::class, 'hospital_name', 'name');
+    }
 }

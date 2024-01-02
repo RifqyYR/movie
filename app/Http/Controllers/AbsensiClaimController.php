@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\Hospital;
+use Illuminate\Support\Facades\Cache;
 
 class AbsensiClaimController extends Controller
 {
@@ -12,59 +13,41 @@ class AbsensiClaimController extends Controller
         $string = 'Reguler';
         $string2 = ['Apotek PRB Reguler', 'Alkes Reguler', 'Non Kapitasi Reguler'];
         $status = 'Pembayaran Telah Dilakukan';
-        $pare = Claim::join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
+
+        $regions = ['Parepare', 'Barru', 'Pinrang', 'Sidrap'];
+        $claims = [];
+
+        foreach ($regions as $region) {
+            $claims[$region] = Cache::remember("claims.$region", 0, function () use ($string, $string2, $status, $region) {
+                return $this->getClaimsByRegion($string, $string2, $status, $region);
+            });
+        }
+
+        $hospitals = Cache::remember('hospitals', 60, function () {
+            return Hospital::all()->groupBy('region');
+        });
+
+        $claims = array_merge($claims, ['hospitals' => $hospitals]);
+
+        return view(
+            'pages.claim-absensi.claim-absensi',
+            [
+                'claims' => $claims,
+                'hospitals' => $hospitals,
+            ]
+        );
+    }
+
+    function getClaimsByRegion($string, $string2, $status, $region)
+    {
+        return Claim::with('hospital')
+            ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
             ->where('claim_type', 'LIKE', '%' . $string . '%')
             ->whereNotIn('claim_type', $string2)
             ->where('status', '!=', $status)
-            ->where('region', 'ParePare')
-            ->orderBy('hospital_name')
+            ->where('region', $region)
+            ->orderBy('month', 'asc')
             ->get();
-        $barru = Claim::join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
-            ->where('claim_type', 'LIKE', '%' . $string . '%')
-            ->where('claim_type', '!=', $string2)
-            ->where('status', '!=', $status)
-            ->where('region', 'Barru')
-            ->orderBy('hospital_name')
-            ->get();
-        $pinrang = Claim::join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
-            ->where('claim_type', 'LIKE', '%' . $string . '%')
-            ->where('claim_type', '!=', $string2)
-            ->where('status', '!=', $status)
-            ->where('region', 'Pinrang')
-            ->orderBy('hospital_name')
-            ->get();
-        $sidrap = Claim::join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
-            ->where('claim_type', 'LIKE', '%' . $string . '%')
-            ->where('claim_type', '!=', $string2)
-            ->where('status', '!=', $status)
-            ->where('region', 'Sidrap')
-            ->orderBy('hospital_name')
-            ->get();
-
-        $hospitals = Hospital::all();
-        $hospitals = $hospitals->groupBy('region');
-        // $groupedData = $pare->groupBy('hospital_name');
-
-        // $formattedData = [];
-        // foreach ($groupedData as $hospitalName => $claims) {
-        //     $formattedData[] = [
-        //         'name' => $hospitalName,
-        //         'claims' => $claims->map(function ($claim) {
-        //             return [
-        //                 'month' => $claim->month,
-        //                 'type' => $claim->claim_type,
-        //             ];
-        //         })->toArray(),
-        //     ];
-        // }
-
-        return view('pages.claim-absensi.claim-absensi', [
-            'pare' => $pare,
-            'hospitals' => $hospitals,
-            'barru' => $barru,
-            'sidrap' => $sidrap,
-            'pinrang' => $pinrang,
-        ]);
     }
 
     public function unique_multidim_array($array, $key)

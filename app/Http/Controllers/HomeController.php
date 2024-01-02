@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -27,8 +26,11 @@ class HomeController extends Controller
     {
         $claims = Claim::where('status', '!=', 'Pembayaran Telah Dilakukan')->get();
 
+        $days = Carbon::now()->addWeekdays(9);
+
         return view('pages.home', [
-            'claims' => $claims
+            'claims' => $claims,
+            'days' => $days,
         ]);
     }
 }
