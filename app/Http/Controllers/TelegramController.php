@@ -20,7 +20,7 @@ class TelegramController extends Controller
         return redirect()->route('home');
     }
 
-    public function message(Request $request)
+    public function message()
     {
         $users = User::where('role', 'VERIFICATOR')->get();
 
