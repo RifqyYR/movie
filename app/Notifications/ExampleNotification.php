@@ -27,6 +27,10 @@ class ExampleNotification extends Notification
      *
      * @return array<int, string>
      */
+    public function via($notifiable)
+    {
+        return [Telegram::class];
+    }
 
     public function toTelegram($notifiable)
     {
