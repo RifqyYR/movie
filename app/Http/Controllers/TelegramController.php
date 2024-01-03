@@ -22,7 +22,7 @@ class TelegramController extends Controller
 
     public function message(Request $request)
     {
-        $users = User::role('VERIFICATOR')->get();
+        $users = User::where('role', 'VERIFICATOR')->get();
 
         foreach ($users as $user) {
             $claims = Claim::where('completion_limit_date', Carbon::tomorrow())
