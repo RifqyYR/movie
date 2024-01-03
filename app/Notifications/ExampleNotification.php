@@ -3,11 +3,10 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class ExampleNotification extends Notification
 {
@@ -28,15 +27,12 @@ class ExampleNotification extends Notification
      *
      * @return array<int, string>
      */
-    public function via($notifiable)
-    {
-        return [TelegramChannel::class];
-    }
 
     public function toTelegram($notifiable)
     {
-        return TelegramMessage::create()
-            ->to($notifiable->telegram_chat_id)
-            ->content($this->message);
+        return Telegram::bot(config('services.telegram-bot-api.name', 'mybot'))->sendMessage([
+            'chat_id' => $notifiable->telegram_chat_id,
+            'text' => $this->message,
+        ]);
     }
 }

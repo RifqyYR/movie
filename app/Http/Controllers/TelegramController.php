@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Notifications\ExampleNotification;
-use Azate\LaravelTelegramLoginAuth\TelegramLoginAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TelegramController extends Controller
 {
-    public function callback(TelegramLoginAuth $telegramLoginAuth, Request $request)
+    public function callback(Request $request)
     {
         $authUser = Auth::user();
-        if (!$user = $telegramLoginAuth->validate($request)) {
-            return 'Telegram Response is not valid';
-        }
-        $telegramChatId = $user->getId();
+        $telegramChatId = $request->input('id');
         $authUser->update(['telegram_chat_id' => $telegramChatId]);
+
         return redirect()->route('home');
     }
 
