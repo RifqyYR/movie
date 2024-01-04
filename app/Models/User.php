@@ -18,15 +18,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'uuid',
-        'name',
-        'username',
-        'email',
-        'password',
-        'email_verified_at',
-        'role',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -56,5 +48,10 @@ class User extends Authenticatable
         static::creating(function ($model) {
             $model->uuid = Uuid::uuid7();
         });
+    }
+
+    public function claims()
+    {
+        return $this->hasMany(Claim::class, 'claim_uuid', 'uuid');
     }
 }

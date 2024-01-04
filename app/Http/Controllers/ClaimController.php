@@ -28,8 +28,10 @@ class ClaimController extends Controller
                 $parts = explode("-", $text);
                 $rs_name = trim($parts[1]);
                 $date = new DateTime($data['tanggal_ba']);
+                $userUid = auth()->user()->uuid;
 
                 Claim::create([
+                    // 'user_uuid' => $userUid,
                     'hospital_name' => $rs_name,
                     'claim_type' => $data['jenis_claim'],
                     'month' => $data['bulan'] . ' ' . $data['tahun'],
