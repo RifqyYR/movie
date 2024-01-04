@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             ['uuid' => Uuid::uuid7(), 'name' => 'RS La Patarai', 'code' => '1806R001', 'region' => 'Barru', 'created_at' => now(), 'updated_at' => now()],
             ['uuid' => Uuid::uuid7(), 'name' => 'Klinik Utama Aflahal', 'code' => '0329S001', 'region' => 'Barru', 'created_at' => now(), 'updated_at' => now()],
             ['uuid' => Uuid::uuid7(), 'name' => 'Klinik Utama Citra Sehat 99', 'code' => '0329S003', 'region' => 'Barru', 'created_at' => now(), 'updated_at' => now()],
-            ['uuid' => Uuid::uuid7(), 'name' => 'Optik Karya', 'code' => '0329O001', 'region' => 'Barru', 'created_at' => now(), 'updated_at' => now()],
+            ['uuid' => Uuid::uuid7(), 'name' => 'Optik Alam Barru', 'code' => '0329O002', 'region' => 'Barru', 'created_at' => now(), 'updated_at' => now()],
             ['uuid' => Uuid::uuid7(), 'name' => 'RS Nene Mallomo', 'code' => '1816R001', 'region' => 'Sidrap', 'created_at' => now(), 'updated_at' => now()],
             ['uuid' => Uuid::uuid7(), 'name' => "RS Arifin Nu'mang", 'code' => '1816R002', 'region' => 'Sidrap', 'created_at' => now(), 'updated_at' => now()],
             ['uuid' => Uuid::uuid7(), 'name' => 'RS Anugrah Pangkajene', 'code' => '0333R001', 'region' => 'Sidrap', 'created_at' => now(), 'updated_at' => now()],

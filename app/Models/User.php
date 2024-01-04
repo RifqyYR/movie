@@ -49,4 +49,9 @@ class User extends Authenticatable
             $model->uuid = Uuid::uuid7();
         });
     }
+
+    public function claims()
+    {
+        return $this->hasMany(Claim::class, 'claim_uuid', 'uuid');
+    }
 }
