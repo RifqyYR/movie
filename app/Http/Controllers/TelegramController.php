@@ -22,11 +22,10 @@ class TelegramController extends Controller
 
     public function message()
     {
-        $users = User::where('role', 'VERIFICATOR')->get();
+        $users = User::where('role', 'VERIFICATOR')->whereNotNull('telegram_chat_id')->get();
 
         foreach ($users as $user) {
-            $claims = Claim::where('completion_limit_date', Carbon::tomorrow())
-                ->get();
+            $claims = Claim::whereBetween('completion_limit_date', [Carbon::now(), Carbon::now()->addDays(2)])->get();
 
             if ($claims->count() > 0) {
                 $message = "Halo, {$user->name}! Besok ada " . $claims->count() . " claim yang harus diverifikasi. Silahkan cek di aplikasi.";
