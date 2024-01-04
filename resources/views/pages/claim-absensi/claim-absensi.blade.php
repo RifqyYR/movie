@@ -262,49 +262,49 @@
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][7]->name, 'Pelayanan Reguler', $pare);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][7]->name, 'Alkes Reguler', $pare);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['ParePare'][7]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][8]->name, 'Pelayanan Reguler', $pare);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][8]->name, 'Alkes Reguler', $pare);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['ParePare'][8]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][9]->name, 'Pelayanan Reguler', $pare);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][9]->name, 'Alkes Reguler', $pare);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['ParePare'][9]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][10]->name, 'Pelayanan Reguler', $pare);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['ParePare'][10]->name, 'Alkes Reguler', $pare);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['ParePare'][10]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
@@ -404,13 +404,13 @@
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['Barru'][3]->name, 'Pelayanan Reguler', $barru);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['Barru'][3]->name, 'Alkes Reguler', $barru);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['Barru'][3]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
@@ -507,25 +507,25 @@
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['Pinrang'][3]->name, 'Pelayanan Reguler', $pinrang);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['Pinrang'][3]->name, 'Alkes Reguler', $pinrang);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['Pinrang'][3]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['Pinrang'][4]->name, 'Pelayanan Reguler', $pinrang);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['Pinrang'][4]->name, 'Alkes Reguler', $pinrang);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['Pinrang'][4]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>
@@ -647,13 +647,13 @@
                         </tr>
 
                         @php
-                            $absensiKlaimPelayanan = getAbsensi($hospitals['Sidrap'][3]->name, 'Pelayanan Reguler', $sidrap);
+                            $absensiKlaimPelayanan = getAbsensi($hospitals['Sidrap'][3]->name, 'Alkes Reguler', $sidrap);
                         @endphp
                         <tr class="{{ $absensiKlaimPelayanan >= 2 && $absensiKlaimPelayanan < 3 ? 'table-warning' : ($absensiKlaimPelayanan >= 3 ? 'table-danger' : '') }}">
                             <td class="align-middle fw-bold text-nowrap" style="font-size: 14px;">
                                 {{ $hospitals['Sidrap'][3]->name }}
                             </td>
-                            <td class="align-middle fw-bold" style="font-size: 14px;">Pelayanan Reguler</td>
+                            <td class="align-middle fw-bold" style="font-size: 14px;">Alkes Reguler</td>
                             <td class="align-middle fw-bold text-center text-nowrap" style="font-size: 14px;">
                                 N-{{ $absensiKlaimPelayanan }}</td>
                         </tr>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        @if (auth()->user()->telegram_chat_id)
+        {{-- @if (auth()->user()->telegram_chat_id)
             <form action="/message" method="POST">
                 @csrf
                 <div class="form-group mb-3">
@@ -17,7 +17,7 @@
             <script async src="https://telegram.org/js/telegram-widget.js?22" type="application/javascript" data-telegram-login="{{ config('services.telegram-bot-api.name') }}" data-size="large"
         data-auth-url="{{ route('telegram.connect') }}"    
         data-request-access="write"></script>
-        @endif
+        @endif --}}
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
             <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim</h1>
         </div>

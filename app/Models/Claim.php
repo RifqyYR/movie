@@ -19,6 +19,7 @@ class Claim extends Model
     
     protected $fillable = [
         'uuid',
+        'user_uuid',
         'hospital_name',
         'claim_type',
         'month',
@@ -42,5 +43,10 @@ class Claim extends Model
     public function hospital()
     {
         return $this->belongsTo(Hospital::class, 'hospital_name', 'name');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_uuid', 'uuid');
     }
 }

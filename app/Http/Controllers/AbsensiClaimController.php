@@ -11,7 +11,7 @@ class AbsensiClaimController extends Controller
     public function index()
     {
         $string = 'Reguler';
-        $string2 = ['Apotek PRB Reguler', 'Alkes Reguler', 'Non Kapitasi Reguler'];
+        $string2 = ['Apotek PRB Reguler', 'Non Kapitasi Reguler'];
         $status = 'Pembayaran Telah Dilakukan';
 
         $regions = ['Parepare', 'Barru', 'Pinrang', 'Sidrap'];
