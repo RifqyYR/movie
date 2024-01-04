@@ -31,7 +31,7 @@ class ClaimController extends Controller
                 $userUid = auth()->user()->uuid;
 
                 Claim::create([
-                    'user_uuid' => $userUid,
+                    // 'user_uuid' => $userUid,
                     'hospital_name' => $rs_name,
                     'claim_type' => $data['jenis_claim'],
                     'month' => $data['bulan'] . ' ' . $data['tahun'],
