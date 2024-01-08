@@ -28,6 +28,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
   Route::get('/claim/approve-verifikator/{id}', [ClaimController::class, 'approveVerificator'])->name('claim.approve.verificator');
   Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
   Route::get('/claim/approve-keuangan/{id}', [ClaimController::class, 'approveFinance'])->name('claim.approve.finance');
+  
+  // Edit Claim
+  Route::get('/claim/edit/{id}', [ClaimController::class, 'showEditPage'])->name('claim.edit.show');
+  Route::post('/claim/edit', [ClaimController::class, 'edit'])->name('claim.edit.process');
 
   // User Management
   Route::get('/user', [UserController::class, 'index'])->name('user');
@@ -47,6 +51,10 @@ Route::middleware(['auth', 'verified', 'head'])->group(function () {
   Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
 });
 
+Route::middleware(['auth', 'verified', 'staff'])->group(function () {
+  Route::post('/claim/approve-staff/{id}', [ClaimController::class, 'approveStaff'])->name('claim.approve.staff');
+});
+
 Route::middleware(['auth', 'verified', 'finance'])->group(function () {
   Route::get('/claim/approve-keuangan/{id}', [ClaimController::class, 'approveFinance'])->name('claim.approve.finance');
 });
@@ -54,6 +62,10 @@ Route::middleware(['auth', 'verified', 'finance'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
   Route::get('/claim-absensi', [AbsensiClaimController::class, 'index'])->name('absent-claim');
+  
+  Route::get('/claim-fktp', [App\Http\Controllers\HomeController::class, 'fktp'])->name('claim.fktp');
+  Route::get('/claim-absensi-fktp', [AbsensiClaimController::class, 'fktp'])->name('absent-claim.fktp');
+  
   Route::get('/claim/buat', [ClaimController::class, 'showCreatePage'])->name('claim.create.show');
   Route::post('/claim/proses-buat-claim', [ClaimController::class, 'createProcess'])->name('claim.create');
   Route::get('/history', [ClaimController::class, 'showHistoryPage'])->name('history');

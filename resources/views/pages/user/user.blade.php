@@ -36,6 +36,10 @@
                                             Kepala Bagian
                                         @elseif ($user->role == 'FINANCE')
                                             Keuangan
+                                        @elseif ($user->role == 'STAFF_ADMIN')
+                                            Staf Administrasi
+                                        @elseif ($user->role == 'GUEST')
+                                            Tamu
                                         @endif
                                     </td>
                                     <td class="fw-bold text-center">

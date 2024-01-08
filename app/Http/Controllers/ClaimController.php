@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateClaimRequest;
 use App\Models\Claim;
 use App\Models\Hospital;
+use Carbon\Carbon;
 use DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ClaimController extends Controller
@@ -21,6 +23,125 @@ class ClaimController extends Controller
     public function createProcess(CreateClaimRequest $request)
     {
         $data = $request->validated();
+        $text = $data['nama_rs'];
+        $parts = explode("-", $text);
+        $rs_name = trim($parts[1]);
+        $hospital = Hospital::where('name', $rs_name)->first();
+
+        try {
+            DB::transaction(function () use ($data, $hospital) {
+                $date = new DateTime($data['tanggal_ba']);
+                $hospitalUuid = $hospital->uuid;
+                $level = $hospital->level;
+                $userUid = auth()->user()->uuid;
+
+                if ($level == 'FKRTL') {
+                    Claim::create([
+                        'user_uuid' => $userUid,
+                        'hospital_uuid' => $hospitalUuid,
+                        'hospital_name' => $hospital->name,
+                        'level' => $level,
+                        'claim_type' => $data['jenis_claim'],
+                        'month' => $data['bulan'] . ' ' . $data['tahun'],
+                        'created_date' => $data['tanggal_ba'],
+                        'ba_date' => $data['tanggal_ba'],
+                        'completion_limit_date' => $date->modify('+9 day'),
+                        'status' => 'BA Serah Terima'
+                    ]);
+                } else {
+                    Claim::create([
+                        'user_uuid' => $userUid,
+                        'hospital_uuid' => $hospitalUuid,
+                        'hospital_name' => $hospital->name,
+                        'level' => $level,
+                        'claim_type' => $data['jenis_claim'],
+                        'month' => $data['bulan'] . ' ' . $data['tahun'],
+                        'created_date' => $data['tanggal_ba'],
+                        'ba_date' => $data['tanggal_ba'],
+                        'completion_limit_date' => $this->addBusinessDays(Carbon::parse($data['tanggal_ba']), 9),
+                        'status' => 'BA Serah Terima'
+                    ]);
+                }
+            });
+
+            if ($hospital->level == 'FKRTL') {
+                return redirect()->route('home')->with('success', 'Berhasil membuat klaim baru');
+            } else {
+                return redirect()->route('claim.fktp')->with('success', 'Berhasil membuat klaim baru');
+            }
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal membuat klaim baru: ' . $e->getMessage());
+        }
+    }
+
+    public function addBusinessDays($date, $daysToAdd)
+    {
+        $holidays = [
+            '2024-01-05',
+            '2024-02-08',
+            '2024-02-09',
+            '2024-02-10',
+            '2024-03-11',
+            '2024-03-12',
+            '2024-03-29',
+            '2024-03-31',
+            '2024-04-08',
+            '2024-04-09',
+            '2024-04-10',
+            '2024-04-11',
+            '2024-04-12',
+            '2024-04-15',
+            '2024-05-01',
+            '2024-05-09',
+            '2024-05-10',
+            '2024-05-23',
+            '2024-05-24',
+            '2024-06-01',
+            '2024-06-17',
+            '2024-06-18',
+            '2024-07-07',
+            '2024-08-17',
+            '2024-09-16',
+            '2024-12-25',
+            '2024-12-26',
+        ];
+
+        for ($i = 0; $i < $daysToAdd; $i++) {
+            $date->addDay();
+
+            // Skip weekends
+            while ($date->isWeekend()) {
+                $date->addDay();
+            }
+
+            // Skip holidays
+            while (in_array($date->format('Y-m-d'), $holidays)) {
+                $date->addDay();
+
+                // Make sure to skip weekends after adding a day for holiday
+                while ($date->isWeekend()) {
+                    $date->addDay();
+                }
+            }
+        }
+
+        return $date;
+    }
+
+    public function showEditPage(String $id)
+    {
+        $claim = Claim::find($id);
+        $hospitals = Hospital::all();
+
+        return view('pages.claim.edit-claim', [
+            'claim' => $claim,
+            'hospitals' => $hospitals
+        ]);
+    }
+
+    public function edit(CreateClaimRequest $request)
+    {
+        $data = $request->all();
 
         try {
             DB::transaction(function () use ($data) {
@@ -28,23 +149,41 @@ class ClaimController extends Controller
                 $parts = explode("-", $text);
                 $rs_name = trim($parts[1]);
                 $date = new DateTime($data['tanggal_ba']);
-                $userUid = auth()->user()->uuid;
+                $hospital = Hospital::where('name', $rs_name)->first();
+                $hospitalUuid = $hospital->uuid;
+                $level = $hospital->level;
 
-                Claim::create([
-                    // 'user_uuid' => $userUid,
-                    'hospital_name' => $rs_name,
-                    'claim_type' => $data['jenis_claim'],
-                    'month' => $data['bulan'] . ' ' . $data['tahun'],
-                    'created_date' => $data['tanggal_ba'],
-                    'ba_date' => $data['tanggal_ba'],
-                    'completion_limit_date' => $date->modify('+9 day'),
-                    'status' => 'BA Serah Terima'
-                ]);
+                $claim = Claim::find($data['id']);
+                if ($claim->level == 'FKRTL') {
+                    $claim->update([
+                        'hospital_name' => $rs_name,
+                        'hospital_uuid' => $hospitalUuid,
+                        'level' => $level,
+                        'claim_type' => $data['jenis_claim'],
+                        'month' => $data['bulan'] . ' ' . $data['tahun'],
+                        'created_date' => $data['tanggal_ba'],
+                        'ba_date' => $data['tanggal_ba'],
+                        'completion_limit_date' => $date->modify('+9 day'),
+                        'status' => 'BA Serah Terima'
+                    ]);
+                } else {
+                    $claim->update([
+                        'hospital_name' => $rs_name,
+                        'hospital_uuid' => $hospitalUuid,
+                        'level' => $level,
+                        'claim_type' => $data['jenis_claim'],
+                        'month' => $data['bulan'] . ' ' . $data['tahun'],
+                        'created_date' => $data['tanggal_ba'],
+                        'ba_date' => $data['tanggal_ba'],
+                        'completion_limit_date' => $this->addBusinessDays(Carbon::parse($data['tanggal_ba']), 9),
+                        'status' => 'BA Serah Terima'
+                    ]);
+                }
             });
 
-            return redirect()->route('home')->with('success', 'Berhasil membuat klaim baru');
+            return redirect()->route('home')->with('success', 'Berhasil mengubah klaim');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal membuat klaim baru: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengubah klaim: ' . $e->getMessage());
         }
     }
 
@@ -56,7 +195,7 @@ class ClaimController extends Controller
                 $claim->delete();
             });
 
-            return redirect()->route('home')->with('success', 'Berhasil menghapus klaim');
+            return redirect()->back()->with('success', 'Berhasil menghapus klaim');
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Gagal menghapus klaim: ' . $e->getMessage());
         }
@@ -79,6 +218,25 @@ class ClaimController extends Controller
         }
     }
 
+    public function approveStaff(String $id, Request $request)
+    {
+        try {
+            DB::transaction(function () use ($id, $request) {
+                $claim = Claim::find($id);
+
+                $claim->update([
+                    'ba_date' => now(),
+                    'boa_register_number' => $request->no_reg_boa,
+                    'status' => Claim::STATUS_TELAH_REGISTER_BOA,
+                ]);
+            });
+
+            return redirect()->back()->with('success', 'Berhasil approve');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
+        }
+    }
+
     public function approveHead(String $id)
     {
         try {
@@ -86,11 +244,19 @@ class ClaimController extends Controller
                 $claim = Claim::find($id);
                 $date = new DateTime($claim->file_completeness);
 
-                $claim->update([
-                    'ba_date' => now(),
-                    'status' => Claim::STATUS_TELAH_REGISTER_BOA,
-                    'completion_limit_date' => $date->modify('+14 days'),
-                ]);
+                if ($claim->level == 'FKRTL') {
+                    $claim->update([
+                        'ba_date' => now(),
+                        'status' => Claim::STATUS_TELAH_SETUJU,
+                        'completion_limit_date' => $date->modify('+14 days'),
+                    ]);
+                } else {
+                    $claim->update([
+                        'ba_date' => now(),
+                        'status' => Claim::STATUS_TELAH_SETUJU,
+                        'completion_limit_date' => $this->addBusinessDays(Carbon::parse($claim->file_completeness), 14),
+                    ]);
+                }
             });
 
             return redirect()->back()->with('success', 'Berhasil approve');
@@ -111,12 +277,22 @@ class ClaimController extends Controller
 
                 $updateData = ['ba_date' => now()];
 
-                if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA) {
-                    $updateData['status'] = Claim::STATUS_BA_KELENGKAPAN_BERKAS;
-                    $updateData['file_completeness'] = now();
-                    $updateData['completion_limit_date'] = now()->modify('+9 day');
-                } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
-                    $updateData['status'] = Claim::STATUS_BA_HASIL_VERIFIKASI;
+                if ($claim->level == 'FKRTL') {
+                    if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA) {
+                        $updateData['status'] = Claim::STATUS_BA_KELENGKAPAN_BERKAS;
+                        $updateData['file_completeness'] = now();
+                        $updateData['completion_limit_date'] = now()->modify('+9 day');
+                    } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                        $updateData['status'] = Claim::STATUS_BA_HASIL_VERIFIKASI;
+                    }
+                } else {
+                    if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA) {
+                        $updateData['status'] = Claim::STATUS_BA_KELENGKAPAN_BERKAS;
+                        $updateData['file_completeness'] = now();
+                        $updateData['completion_limit_date'] = $this->addBusinessDays(now(), 9);
+                    } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                        $updateData['status'] = Claim::STATUS_BA_HASIL_VERIFIKASI;
+                    }
                 }
                 $claim->update($updateData);
             });

@@ -24,13 +24,31 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $claims = Claim::where('status', '!=', 'Pembayaran Telah Dilakukan')->get();
-
-        $days = Carbon::now()->addWeekdays(9);
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('hospitals.level', 'FKRTL')
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get();
 
         return view('pages.home', [
-            'claims' => $claims,
-            'days' => $days,
+            'claims' => $claims
+        ]);
+    }
+
+    public function fktp()
+    {
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('hospitals.level', 'FKTP')
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get();
+
+        return view('pages.home', [
+            'claims' => $claims
         ]);
     }
 }

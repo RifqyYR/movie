@@ -54,6 +54,8 @@
                                         <option {{ $user->role == 'ADMIN' ? 'selected' : '' }} value="ADMIN">Admin</option>
                                         <option {{ $user->role == 'HEAD' ? 'selected' : '' }} value="HEAD">Kepala Bagian</option>
                                         <option {{ $user->role == 'FINANCE' ? 'selected' : '' }} value="FINANCE">Keuangan</option>
+                                        <option {{ $user->role == 'STAFF_ADMIN' ? 'selected' : '' }} value="STAFF_ADMIN">Staf Administrasi</option>
+                                        <option {{ $user->role == 'GUEST' ? 'selected' : '' }} value="GUEST">Tamu</option>
                                     </select>
                                 </div>
                             </div>

@@ -13,14 +13,18 @@ class Claim extends Model
     const STATUS_BA_SERAH_TERIMA = "BA Serah Terima";
     const STATUS_BA_KELENGKAPAN_BERKAS = "BA Kelengkapan Berkas";
     const STATUS_BA_HASIL_VERIFIKASI = "BA Hasil Verifikasi";
-    const STATUS_TELAH_REGISTER_BOA = "Klaim Telah Teregister di BOA (Menunggu Pembayaran)";
+    const STATUS_TELAH_REGISTER_BOA = "Klaim Telah Teregister di BOA";
+    const STATUS_TELAH_SETUJU = "Klaim Telah Disetujui (Menunggu Pembayaran)";
     const STATUS_TELAH_BAYAR = "Pembayaran Telah Dilakukan";
     protected $primaryKey = 'uuid';
     
     protected $fillable = [
         'uuid',
+        'hospital_uuid',
         'user_uuid',
+        'boa_register_number',
         'hospital_name',
+        'level',
         'claim_type',
         'month',
         'created_date',
@@ -42,11 +46,11 @@ class Claim extends Model
 
     public function hospital()
     {
-        return $this->belongsTo(Hospital::class, 'hospital_name', 'name');
+        return $this->belongsTo(Hospital::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_uuid', 'uuid');
+        return $this->belongsTo(User::class);
     }
 }

@@ -13,21 +13,25 @@
         }
 
         array_push($selectOptions, 'Promotif Preventif');
+
+        $parts = explode(' ', $claim->month);
+        $bulan = $parts[0];
+        $tahun = $parts[1];
     @endphp
+
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
-            <h1 class="h6 mb-0 text-gray-800 fw-bold">Buat Klaim Baru</h1>
+            <h1 class="h6 mb-0 text-gray-800 fw-bold">Edit Klaim Baru</h1>
         </div>
-
         <div class="card">
             <div class="card-body">
-                <form action="/claim/proses-buat-claim" method="post" enctype="multipart/form-data">
+                <form action="/claim/edit" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="nama_rs">Nama Faskes</label>
                         <select class="custom-select @error('nama_rs') is-invalid @enderror" name="nama_rs"
                             id="editable-select">
-                            <option selected hidden value=""></option>
+                            <option selected hidden value="{{ $claim->hospital->name }}">{{ $claim->hospital->code . ' - ' . $claim->hospital_name }}</option>
                             @foreach ($hospitals as $item)
                                 <option value="{{ $item->name }}">{{ $item->code . ' - ' . $item->name }}</option>
                             @endforeach
@@ -42,7 +46,7 @@
                         <label for="jenis_claim">Jenis Klaim</label>
                         <select class="custom-select @error('jenis_claim') is-invalid @enderror" name="jenis_claim"
                             id="editable-select">
-                            <option selected hidden value=""></option>
+                            <option selected hidden value="{{ $claim->claim_type }}">{{ trim($claim->claim_type) }}</option>
                             @foreach ($selectOptions as $item)
                                 <option value="{{ $item }}">{{ $item }}</option>
                             @endforeach
@@ -58,7 +62,7 @@
                         <div class="form-group col-md-4">
                             <label for="bulan">Bulan Pelayanan</label>
                             <select class="custom-select @error('bulan') is-invalid @enderror" name="bulan">
-                                <option selected hidden value="">Bulan...</option>
+                                <option selected hidden value="{{ $bulan }}">{{ $bulan }}</option>
                                 <option value="Januari">Januari</option>
                                 <option value="Februari">Februari</option>
                                 <option value="Maret">Maret</option>
@@ -78,12 +82,16 @@
                                 </span>
                             @enderror
                         </div>
+
                         <div class="form-group col-md-4">
                             <label for="tahun">Tahun Pelayanan</label>
                             <select class="custom-select @error('tahun') is-invalid @enderror" name="tahun">
-                                <option value="{{ date('Y') - 1 }}">{{ date('Y') - 1 }}</option>
-                                <option value="{{ date('Y') }}" selected>{{ date('Y') }}</option>
-                                <option value="{{ date('Y') + 1 }}">{{ date('Y') + 1 }}</option>
+                                <option value="{{ date('Y') - 1 }}" {{ $tahun == date('Y') - 1 ? 'selected' : '' }}>
+                                    {{ date('Y') - 1 }}</option>
+                                <option value="{{ date('Y') }}" {{ $tahun == date('Y') ? 'selected' : '' }}>
+                                    {{ date('Y') }}</option>
+                                <option value="{{ date('Y') + 1 }}" {{ $tahun == date('Y') + 1 ? 'selected' : '' }}>
+                                    {{ date('Y') + 1 }}</option>
                             </select>
                             @error('tahun')
                                 <span class="invalid-feedback" role="alert">
@@ -94,7 +102,7 @@
                         <div class="form-group col-md-4">
                             <label for="tanggal_ba">Tanggal Pembuatan BA</label>
                             <input type="date" class="form-control @error('tanggal_ba') is-invalid @enderror"
-                                name="tanggal_ba" value="{{ now()->toDateString() }}" autocomplete="off">
+                                name="tanggal_ba" value="{{ $claim->created_date }}" autocomplete="off">
                             @error('tanggal_ba')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -103,11 +111,10 @@
                         </div>
                     </div>
 
+                    <input type="hidden" name="id" value="{{ $claim->uuid }}">
+
                     <div class="form-group mt-4 d-flex justify-content-center">
-                        <a href="{{ url()->previous() }}">
-                            <input type="button" class="btn btn-secondary me-4" value="Kembali">
-                        </a>
-                        <input type="submit" class="btn btn-success" value="Buat">
+                        <input type="submit" class="btn btn-success" value="Edit">
                     </div>
                 </form>
             </div>

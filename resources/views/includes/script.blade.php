@@ -15,10 +15,11 @@
 <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
 
-<script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
-<script
-    src="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js">
-</script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/searchpanes/2.2.0/js/dataTables.searchPanes.min.js"></script>
+<script src="https://cdn.datatables.net/searchpanes/2.2.0/js/searchPanes.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
 
 <script>
     function deleteClaim(id) {
@@ -43,6 +44,11 @@
         link.href = "/claim/approve-kabag/" + id;
     }
 
+    function approveStaff(id) {
+        const form = document.getElementById('approveStaffLink');
+        form.action = "/claim/approve-staff/" + id;
+    }
+
     function hapusUser(id) {
         const link = document.getElementById('deleteUserLink');
         link.href = "/delete-user/" + id;
@@ -55,4 +61,23 @@
     @endif
 
     $('#editable-select').editableSelect();
+
+    $('#input-no-reg-boa').keyup(function () {
+        var value = $(this).val();
+        if (value.length == 14) {
+            $('#btn-approve-staff').prop('disabled', false);
+        } else {
+            $('#btn-approve-staff').prop('disabled', true);
+        }
+    })
+
+    $(document).ready(function() {
+        var table = $('#my-table').DataTable({
+            searching: false,
+            paging: false,
+            info: false
+        });
+        table.searchPanes.container().prependTo(table.table().container());
+        table.searchPanes.resizePanes();
+    });
 </script>
