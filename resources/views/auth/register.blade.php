@@ -69,6 +69,8 @@
                                         <option value="ADMIN">Admin</option>
                                         <option value="HEAD">Kepala Bagian</option>
                                         <option value="FINANCE">Keuangan</option>
+                                        <option value="STAFF_ADMIN">Staf Administrasi</option>
+                                        <option value="GUEST">Tamu</option>
                                     </select>
                                 </div>
                             </div>

@@ -34,7 +34,7 @@ class ExampleNotification extends Notification
     public function toTelegram($notifiable)
     {
         return TelegramMessage::create()
-            ->to($notifiable->telegram_chat_id)
+            ->to('-4001583555')
             ->content($this->message);
     }
 }

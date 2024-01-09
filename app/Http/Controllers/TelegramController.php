@@ -22,14 +22,46 @@ class TelegramController extends Controller
 
     public function message()
     {
-        $users = User::where('role', 'VERIFICATOR')->whereNotNull('telegram_chat_id')->get();
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('hospitals.level', 'FKRTL')
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get();
 
-        foreach ($users as $user) {
-            $claims = Claim::whereBetween('completion_limit_date', [Carbon::now(), Carbon::now()->addDays(2)])->get();
+        $now = Carbon::now();
+        $endClaim = array();
+        $diffStatus = [Claim::STATUS_BA_KELENGKAPAN_BERKAS, Claim::STATUS_BA_HASIL_VERIFIKASI, Claim::STATUS_TELAH_REGISTER_BOA];
+        foreach ($claims as $item) {
+            $your_date = Carbon::parse($item->created_date);
+            $completion_limit_date = Carbon::parse($item->file_completeness);
 
+            $datediff = $your_date->diffInDays($now);
+            $dateDiffFinance = $completion_limit_date->diffInDays($now);
+
+            if ($item->status == Claim::STATUS_BA_SERAH_TERIMA) {
+                if ($datediff + 1 >= 7 && $datediff + 1 <= 10) {
+                    array_push($endClaim, $item);
+                }
+            } elseif (in_array($item->status, $diffStatus)) {
+                if ($dateDiffFinance + 1 >= 7 && $dateDiffFinance + 1 <= 10) {
+                    array_push($endClaim, $item);
+                }
+            } else {
+                if ($dateDiffFinance + 1 >= 13) {
+                    array_push($endClaim, $item);
+                }
+            }
+        }
+
+        $message = "";
+        $numItems = count($endClaim);
+        $i = 0;
+        foreach ($endClaim as $item) {
             if ($claims->count() > 0) {
-                $message = "Halo, {$user->name}! Besok ada " . $claims->count() . " claim yang harus diverifikasi. Silahkan cek di aplikasi.";
-                $user->notify(new ExampleNotification($message));
+                $message .= "Nama Faskes: $item->hospital_name\nStatus saat ini: $item->status" . (++$i === $numItems ? "" : "\n\n\n");
+                new ExampleNotification($message);
             }
         }
 

@@ -23,7 +23,6 @@ class CreateClaimRequest extends FormRequest
     {
         return [
             'nama_rs' => 'required',
-            'tingkat' => 'required',
             'jenis_claim' => 'required',
             'bulan' => 'required',
             'tahun' => 'required',
