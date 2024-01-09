@@ -78,35 +78,7 @@ class ClaimController extends Controller
 
     public function addBusinessDays($date, $daysToAdd)
     {
-        $holidays = [
-            '2024-01-05',
-            '2024-02-08',
-            '2024-02-09',
-            '2024-02-10',
-            '2024-03-11',
-            '2024-03-12',
-            '2024-03-29',
-            '2024-03-31',
-            '2024-04-08',
-            '2024-04-09',
-            '2024-04-10',
-            '2024-04-11',
-            '2024-04-12',
-            '2024-04-15',
-            '2024-05-01',
-            '2024-05-09',
-            '2024-05-10',
-            '2024-05-23',
-            '2024-05-24',
-            '2024-06-01',
-            '2024-06-17',
-            '2024-06-18',
-            '2024-07-07',
-            '2024-08-17',
-            '2024-09-16',
-            '2024-12-25',
-            '2024-12-26',
-        ];
+        $holidays = config('app.holidays');
 
         for ($i = 0; $i < $daysToAdd; $i++) {
             $date->addDay();
@@ -144,21 +116,21 @@ class ClaimController extends Controller
     public function edit(CreateClaimRequest $request)
     {
         $data = $request->all();
+        $text = $data['nama_rs'];
+        $parts = explode("-", $text);
+        $rs_name = trim($parts[1]);
+        $hospital = Hospital::where('name', $rs_name)->first();
 
         try {
-            DB::transaction(function () use ($data) {
-                $text = $data['nama_rs'];
-                $parts = explode("-", $text);
-                $rs_name = trim($parts[1]);
+            DB::transaction(function () use ($data, $hospital) {
                 $date = new DateTime($data['tanggal_ba']);
-                $hospital = Hospital::where('name', $rs_name)->first();
                 $hospitalUuid = $hospital->uuid;
                 $level = $hospital->level;
 
                 $claim = Claim::find($data['id']);
                 if ($claim->level == 'FKRTL') {
                     $claim->update([
-                        'hospital_name' => $rs_name,
+                        'hospital_name' => $hospital->name,
                         'hospital_uuid' => $hospitalUuid,
                         'level' => $level,
                         'claim_type' => $data['jenis_claim'],
@@ -170,7 +142,7 @@ class ClaimController extends Controller
                     ]);
                 } else {
                     $claim->update([
-                        'hospital_name' => $rs_name,
+                        'hospital_name' => $hospital->name,
                         'hospital_uuid' => $hospitalUuid,
                         'level' => $level,
                         'claim_type' => $data['jenis_claim'],
@@ -183,7 +155,11 @@ class ClaimController extends Controller
                 }
             });
 
-            return redirect()->route('home')->with('success', 'Berhasil mengubah klaim');
+            if ($hospital->level == 'FKRTL') {
+                return redirect()->route('home')->with('success', 'Berhasil membuat klaim baru');
+            } else {
+                return redirect()->route('claim.fktp')->with('success', 'Berhasil membuat klaim baru');
+            }
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Gagal mengubah klaim: ' . $e->getMessage());
         }
