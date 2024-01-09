@@ -41,7 +41,7 @@ class AbsensiClaimController extends Controller
     public function fktp()
     {
         $string = 'Reguler';
-        $string2 = ['Apotek PRB Reguler', 'Non Kapitasi Reguler'];
+        $string2 = ['Apotek Kronis Reguler', 'Ambulance Reguler'];
         $status = 'Pembayaran Telah Dilakukan';
 
         $regions = ['Parepare', 'Barru', 'Pinrang', 'Sidrap'];
@@ -54,7 +54,7 @@ class AbsensiClaimController extends Controller
         }
 
         $hospitals = Cache::remember('hospitals', 60, function () {
-            return Hospital::all()->groupBy('region');
+            return Hospital::all()->where('level', 'FKTP')->groupBy('region');
         });
 
         $claims = array_merge($claims, ['hospitals' => $hospitals]);

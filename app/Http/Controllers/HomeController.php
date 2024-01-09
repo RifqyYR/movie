@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Claim;
+use App\Models\User;
 use Carbon\Carbon;
 
 class HomeController extends Controller

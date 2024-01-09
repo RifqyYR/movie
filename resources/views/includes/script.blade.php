@@ -72,12 +72,16 @@
     })
 
     $(document).ready(function() {
+        $('.table-toggle').hide();
         var table = $('#my-table').DataTable({
             searching: false,
             paging: false,
             info: false
         });
-        table.searchPanes.container().prependTo(table.table().container());
-        table.searchPanes.resizePanes();
+    });
+
+    $('#thead-pare').on('click', function() {
+        var tbody = $('.table-toggle');
+        tbody.toggle(500);
     });
 </script>

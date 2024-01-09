@@ -2,32 +2,23 @@
 
 @section('content')
     <div class="container-fluid">
-        {{-- @if (auth()->user()->telegram_chat_id)
-            <form action="/message" method="POST">
-                @csrf
-                <div class="form-group mb-3">
-                    <input id="message" type="text" class="form-control" name="message" value="{{ old('message') }}"
-                        required placeholder="Masukkan pesan..." autofocus />
-                    <button type="submit" class="btn btn-primary" style="background-color: #2E3192">
-                        {{ __('Send') }}
-                    </button>
-                </div>
-            </form>
-        @else
-            <script async src="https://telegram.org/js/telegram-widget.js?22" type="application/javascript" data-telegram-login="{{ config('services.telegram-bot-api.name') }}" data-size="large"
-        data-auth-url="{{ route('telegram.connect') }}"    
-        data-request-access="write"></script>
-        @endif --}}
-        <div class="d-sm-flex align-items-center justify-content-between mb-3">
+        <div class="d-sm-flex align-items-center justify-content-between mb-2">
             @if (Request::is('/'))
                 <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim FKRTL</h1>
+                @if (auth()->user()->role == 'ADMIN' || auth()->user()->role == 'HEAD')
+                    <a href="/claim/export" class="btn btn-sm btn-success" target="_blank">Export Excel</a>
+                @endif
             @else
                 <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim FKTP</h1>
+                @if (auth()->user()->role == 'ADMIN' || auth()->user()->role == 'HEAD')
+                    <a href="/claim/export" class="btn btn-sm btn-success" target="_blank">Export Excel</a>
+                @endif
             @endif
         </div>
         @if (auth()->user()->role == 'VERIFICATOR' || auth()->user()->role == 'ADMIN')
             <div class="d-sm-flex">
-                <a href="{{ url('/claim/buat') }}" class="d-sm-inline-block btn btn-sm btn-success shadow-sm text-center py-3"
+                <a href="{{ url('/claim/buat') }}"
+                    class="d-sm-inline-block btn btn-sm btn-success shadow-sm text-center py-3"
                     style="position: fixed; right: 0; bottom: 0; margin: 20px; width: 60px; height: 60px; border-radius: 50%; padding: 10px; z-index: 1; opacity: 80%;">
                     <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" height="25" width="25"
                         viewBox="0 0 448 512">
@@ -65,7 +56,7 @@ if (!$claims->isEmpty()) {
                         <tbody>
                             @php
                                 $notAllowedStatus = [App\Models\Claim::STATUS_BA_SERAH_TERIMA, App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS];
-                                $diffStatus = [App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS, App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI];
+                                $diffStatus = [App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS, App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI, App\Models\Claim::STATUS_TELAH_REGISTER_BOA];
                             @endphp
 
                             @if ($claims->isEmpty())
@@ -359,7 +350,8 @@ if ($item->status == App\Models\Claim::STATUS_TELAH_SETUJU) {
                                                             <input id="input-no-reg-boa" type="text"
                                                                 class="form-control" name="no_reg_boa"
                                                                 placeholder="Masukkan Nomor Registrasi BOA" required
-                                                                autofocus autocomplete="no_reg_boa" style="font-size: 0.8rem;"/>
+                                                                autofocus autocomplete="no_reg_boa"
+                                                                style="font-size: 0.8rem;" />
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -367,7 +359,8 @@ if ($item->status == App\Models\Claim::STATUS_TELAH_SETUJU) {
                                                             data-dismiss="modal">Batal</button>
                                                         <button type="submit" class="btn btn-primary"
                                                             id="btn-approve-staff"
-                                                            style="background-color: #2E3192 !important;" disabled>Approve</button>
+                                                            style="background-color: #2E3192 !important;"
+                                                            disabled>Approve</button>
                                                     </div>
                                                 </div>
                                             </form>

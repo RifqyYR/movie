@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ClaimsExport;
 use App\Http\Requests\CreateClaimRequest;
 use App\Models\Claim;
 use App\Models\Hospital;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClaimController extends Controller
 {
@@ -310,5 +312,10 @@ class ClaimController extends Controller
         return view('pages.history.history', [
             'claims' => $claims
         ]);
+    }
+
+    public function export()
+    {
+        return Excel::download(new ClaimsExport, 'claims.xlsx');
     }
 }

@@ -44,11 +44,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'verificator'])->group(function () {
+  Route::get('/claim/buat', [ClaimController::class, 'showCreatePage'])->name('claim.create.show');
+  Route::post('/claim/proses-buat-claim', [ClaimController::class, 'createProcess'])->name('claim.create');
   Route::get('/claim/approve-verifikator/{id}', [ClaimController::class, 'approveVerificator'])->name('claim.approve.verificator');
 });
 
 Route::middleware(['auth', 'verified', 'head'])->group(function () {
   Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
+  Route::get('/claim/export', [ClaimController::class, 'export']);
 });
 
 Route::middleware(['auth', 'verified', 'staff'])->group(function () {
@@ -66,8 +69,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/claim-fktp', [App\Http\Controllers\HomeController::class, 'fktp'])->name('claim.fktp');
   Route::get('/claim-absensi-fktp', [AbsensiClaimController::class, 'fktp'])->name('absent-claim.fktp');
   
-  Route::get('/claim/buat', [ClaimController::class, 'showCreatePage'])->name('claim.create.show');
-  Route::post('/claim/proses-buat-claim', [ClaimController::class, 'createProcess'])->name('claim.create');
   Route::get('/history', [ClaimController::class, 'showHistoryPage'])->name('history');
   
   Route::get('/ganti-password/{user:uuid}', [UserController::class, 'changePassword'])->name('user.change-password');

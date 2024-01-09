@@ -42,15 +42,16 @@
         color: grey !important;
     }
 
-    table.table-bordered-black {
-        border: 1px solid black;
-    }
-
     table.table-bordered-black>thead>tr>th {
         border: 1px solid black;
     }
 
+    table.table-bordered-black>thead>tr>th.transparent-th {
+        border: 1px solid transparent;
+    }
+
     table.table-bordered-black>tbody>tr>td {
         border: 1px solid black;
+        box-sizing: border-box;
     }
 </style>
