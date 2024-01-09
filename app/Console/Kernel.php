@@ -16,6 +16,10 @@ class Kernel extends ConsoleKernel
         $schedule->call(function() {
             app()->make('App\Http\Controllers\TelegramController')->message();
         })->dailyAt('08:00')->timezone('Asia/Singapore');
+        
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message();
+        })->dailyAt('08:00')->timezone('Asia/Singapore');
     }
 
     /**
