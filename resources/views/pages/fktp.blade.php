@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim FKRTL</h1>
+            <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Dashboard SLA Klaim FKTP</h1>
             @if (auth()->user()->role == 'ADMIN' || auth()->user()->role == 'HEAD')
                 <a href="/claim/export" class="btn btn-sm btn-success" target="_blank">Export Excel</a>
             @endif
@@ -62,8 +62,20 @@ if (!$claims->isEmpty()) {
                                         $your_date = Carbon\Carbon::parse($item->created_date);
                                         $completion_limit_date = Carbon\Carbon::parse($item->file_completeness);
 
-                                        $datediff = $your_date->diffInDays($now);
-                                        $dateDiffFinance = $completion_limit_date->diffInDays($now);
+                                        $datediff = $your_date->diffInWeekdays($now);
+                                        $dateDiffFinance = $completion_limit_date->diffInWeekdays($now);
+
+                                        $holidays = config('app.holidays');
+
+                                        foreach ($holidays as $holiday) {
+                                            $holidayDate = Carbon\Carbon::parse($holiday);
+                                            if ($holidayDate->between($your_date, $now)) {
+                                                $datediff--;
+                                            }
+                                            if ($holidayDate->between($completion_limit_date, $now)) {
+                                                $dateDiffFinance--;
+                                            }
+                                        }
 
                                         $text = App\Models\Claim::STATUS_TELAH_SETUJU;
 
