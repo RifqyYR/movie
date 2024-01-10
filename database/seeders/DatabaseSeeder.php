@@ -166,13 +166,13 @@ class DatabaseSeeder extends Seeder
             ['uuid' => Uuid::uuid7(), 'name' => 'APOTIK NURSARI FARMA', 'code' => '1816A002', 'region' => 'Sidrap', 'level' => 'FKTP', 'created_at' => now(), 'updated_at' => now()],
         ];
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'username' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'),
-            'role' => 'ADMIN',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Admin',
+        //     'username' => 'admin',
+        //     'email' => 'admin@gmail.com',
+        //     'password' => Hash::make('admin'),
+        //     'role' => 'ADMIN',
+        // ]);
 
         // Claim::insert($claims);
         Hospital::insert($hospitals);

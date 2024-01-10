@@ -57,7 +57,7 @@ class TelegramController extends Controller
             }
         }
 
-        $message = "Daftar klaim FKRTL yang akan berakhir:\n";
+        $message = "Daftar klaim FKRTL yang akan jatuh tempo:\n\n";
         $numItems = count($endClaim);
         $i = 0;
         foreach ($endClaim as $item) {
@@ -73,9 +73,9 @@ class TelegramController extends Controller
         }
         $message .= "Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com";
 
-        $user = User::first();
-        foreach ($user as $item) {
-            $item->notify(new ExampleNotification($message));
+        if (count($endClaim) != 0) {
+            $user = User::first();
+            $user->notify(new ExampleNotification($message));
         }
     }
 
@@ -126,7 +126,7 @@ class TelegramController extends Controller
             }
         }
 
-        $message = "Daftar klaim FKTP yang akan berakhir:\n";
+        $message = "Daftar klaim FKTP yang akan jatuh tempo:\n\n=============================\n";
         $numItems = count($endClaim);
         $i = 0;
         foreach ($endClaim as $item) {
@@ -149,14 +149,14 @@ class TelegramController extends Controller
                     }
                 }
 
-                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . " hari ke-" . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . "* " . (++$i === $numItems ? "\n\n\n\n" : "\n\n");
+                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . " hari ke-" . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . "* " . (++$i === $numItems ? "\n=============================\n\n\n\n" : "\n=============================\n");
             }
         }
         $message .= "Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com";
 
-        $user = User::first();
-        foreach ($user as $item) {
-            $item->notify(new ExampleNotification($message));
+        if (count($endClaim) != 0) {
+            $user = User::first();
+            $user->notify(new ExampleNotification($message));
         }
     }
 }
