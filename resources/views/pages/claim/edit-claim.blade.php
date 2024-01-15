@@ -1,120 +1,103 @@
 @extends('layouts.main')
 
 @section('content')
-    @php
-        $select1 = ['Pelayanan', 'Apotek Kronis', 'Apotek PRB', 'Ambulance', 'Alkes', 'Non Kapitasi'];
-        $select2 = ['Reguler', 'Susulan', 'Dispute', 'Pending'];
-
-        $selectOptions = [];
-        foreach ($select1 as $a) {
-            foreach ($select2 as $b) {
-                $selectOptions[] = $a . ' ' . $b;
-            }
-        }
-
-        array_push($selectOptions, 'Promotif Preventif');
-
-        $parts = explode(' ', $claim->month);
-        $bulan = $parts[0];
-        $tahun = $parts[1];
-    @endphp
-
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
-            <h1 class="h6 mb-0 text-gray-800 fw-bold">Edit Klaim Baru</h1>
+            <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Edit Klaim</h1>
         </div>
         <div class="card">
             <div class="card-body">
                 <form action="/claim/edit" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group">
-                        <label for="nama_rs">Nama Faskes</label>
-                        <select class="custom-select @error('nama_rs') is-invalid @enderror" name="nama_rs"
-                            id="editable-select">
-                            <option selected hidden value="{{ $claim->hospital->name }}">{{ $claim->hospital->code . ' - ' . $claim->hospital_name }}</option>
-                            @foreach ($hospitals as $item)
-                                <option value="{{ $item->name }}">{{ $item->code . ' - ' . $item->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('nama_rs')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="jenis_claim">Jenis Klaim</label>
-                        <select class="custom-select @error('jenis_claim') is-invalid @enderror" name="jenis_claim"
-                            id="editable-select">
-                            <option selected hidden value="{{ $claim->claim_type }}">{{ trim($claim->claim_type) }}</option>
-                            @foreach ($selectOptions as $item)
-                                <option value="{{ $item }}">{{ $item }}</option>
-                            @endforeach
-                        </select>
-                        @error('jenis_claim')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label for="bulan">Bulan Pelayanan</label>
-                            <select class="custom-select @error('bulan') is-invalid @enderror" name="bulan">
-                                <option selected hidden value="{{ $bulan }}">{{ $bulan }}</option>
-                                <option value="Januari">Januari</option>
-                                <option value="Februari">Februari</option>
-                                <option value="Maret">Maret</option>
-                                <option value="April">April</option>
-                                <option value="Mei">Mei</option>
-                                <option value="Juni">Juni</option>
-                                <option value="Juli">Juli</option>
-                                <option value="Agustus">Agustus</option>
-                                <option value="September">September</option>
-                                <option value="Oktober">Oktober</option>
-                                <option value="November">November</option>
-                                <option value="Desember">Desember</option>
-                            </select>
-                            @error('bulan')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label for="tahun">Tahun Pelayanan</label>
-                            <select class="custom-select @error('tahun') is-invalid @enderror" name="tahun">
-                                <option value="{{ date('Y') - 1 }}" {{ $tahun == date('Y') - 1 ? 'selected' : '' }}>
-                                    {{ date('Y') - 1 }}</option>
-                                <option value="{{ date('Y') }}" {{ $tahun == date('Y') ? 'selected' : '' }}>
-                                    {{ date('Y') }}</option>
-                                <option value="{{ date('Y') + 1 }}" {{ $tahun == date('Y') + 1 ? 'selected' : '' }}>
-                                    {{ date('Y') + 1 }}</option>
-                            </select>
-                            @error('tahun')
+                            <label for="tanggal_pembuatan_ba" class="table-custom-fs-larger">Tanggal Pembuatan BA
+                                (BAST)</label>
+                            <input type="date"
+                                class="form-control table-custom-fs @error('tanggal_pembuatan_ba') is-invalid @enderror"
+                                name="tanggal_pembuatan_ba" value="{{ $claim->created_date }}" autocomplete="off" max="{{ now()->toDateString() }}" {{ auth()->user()->role == 'STAFF_ADMIN' ? 'disabled' : '' }}>
+                            @error('tanggal_pembuatan_ba')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="tanggal_ba">Tanggal Pembuatan BA</label>
-                            <input type="date" class="form-control @error('tanggal_ba') is-invalid @enderror"
-                                name="tanggal_ba" value="{{ $claim->created_date }}" autocomplete="off">
-                            @error('tanggal_ba')
+                            <label for="tanggal_kelengkapan_ba" class="table-custom-fs-larger">Tanggal Kelengkapan
+                                BA (BAKB)</label>
+                            <input type="date"
+                                class="form-control table-custom-fs @error('tanggal_kelengkapan_ba') is-invalid @enderror"
+                                name="tanggal_kelengkapan_ba" value="{{ $claim->file_completeness }}" autocomplete="off" max="{{ now()->toDateString() }}" {{ auth()->user()->role == 'STAFF_ADMIN' ? 'disabled' : '' }}>
+                            @error('tanggal_kelengkapan_ba')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="status" class="table-custom-fs-larger">Status</label>
+                            <select id="edit-status" class="custom-select table-custom-fs @error('status') is-invalid @enderror"
+                                name="status" {{ auth()->user()->role == 'STAFF_ADMIN' ? 'disabled' : '' }}>
+                                <option selected hidden value="{{ $claim->status }}">{{ $claim->status }}</option>
+                                <option value="{{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}">
+                                    {{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}</option>
+                                <option value="{{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}">
+                                    {{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}</option>
+                                <option value="{{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}">
+                                    {{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}</option>
+                                <option value="{{ App\Models\Claim::STATUS_TELAH_REGISTER_BOA }}">
+                                    {{ App\Models\Claim::STATUS_TELAH_REGISTER_BOA }}</option>
+                                <option value="{{ App\Models\Claim::STATUS_TELAH_SETUJU }}">
+                                    {{ App\Models\Claim::STATUS_TELAH_SETUJU }}</option>
+                                <option value="{{ App\Models\Claim::STATUS_TELAH_BAYAR }}">
+                                    {{ App\Models\Claim::STATUS_TELAH_BAYAR }}</option>
+                            </select>
+                            @error('status')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <label class="table-custom-fs-larger form-edit-register-boa">Nomor Register BOA</label>
+                    <div class="form-row form-edit-register-boa">
+                        <div class="form-group col-md-6">
+                            <div class="input-group">
+                                <span class="table-custom-fs input-group-text">RI</span>
+                                <input type="text" class="table-custom-fs form-control" name="no_reg_boa_ri" value="{{ $claim->ritl_number }}"
+                                    placeholder="Masukkan Nomor Registrasi BOA RI" autocomplete="no_reg_boa_ri"
+                                    @error('no_reg_boa_ri') is-invalid @enderror />
+                                @error('no_reg_boa_ri')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="input-group">
+                                <span class="table-custom-fs input-group-text">RJ</span>
+                                <input type="text" class="table-custom-fs form-control" name="no_reg_boa_rj" value="{{ $claim->rjtl_number }}"
+                                    placeholder="Masukkan Nomor Registrasi BOA RJ" autocomplete="no_reg_boa_rj"
+                                    @error('no_reg_boa_rj') is-invalid @enderror />
+                                @error('no_reg_boa_rj')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
                     <input type="hidden" name="id" value="{{ $claim->uuid }}">
 
                     <div class="form-group mt-4 d-flex justify-content-center">
-                        <input type="submit" class="btn btn-success" value="Edit">
+                        <a href="{{ url()->previous() }}">
+                            <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
+                                style="width: 5rem;">
+                        </a>
+                        <input type="submit" class="btn btn-success table-custom-fs-larger" value="Edit"
+                            style="width: 5rem;">
                     </div>
                 </form>
             </div>

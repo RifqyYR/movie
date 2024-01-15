@@ -112,7 +112,7 @@ class TelegramController extends Controller
             }
 
             if ($item->status == Claim::STATUS_BA_SERAH_TERIMA) {
-                if ($datediff + 1 >= 7 && $datediff + 1 <= 10) {
+                if ($datediff + 1 >= 2) {
                     array_push($endClaim, $item);
                 }
             } elseif (in_array($item->status, $diffStatus)) {

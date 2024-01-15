@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiClaimController;
+use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\TelegramController;
@@ -28,10 +29,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
   Route::get('/claim/approve-verifikator/{id}', [ClaimController::class, 'approveVerificator'])->name('claim.approve.verificator');
   Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
   Route::get('/claim/approve-keuangan/{id}', [ClaimController::class, 'approveFinance'])->name('claim.approve.finance');
-  
-  // Edit Claim
-  Route::get('/claim/edit/{id}', [ClaimController::class, 'showEditPage'])->name('claim.edit.show');
-  Route::post('/claim/edit', [ClaimController::class, 'edit'])->name('claim.edit.process');
 
   // User Management
   Route::get('/user', [UserController::class, 'index'])->name('user');
@@ -51,11 +48,14 @@ Route::middleware(['auth', 'verified', 'verificator'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'head'])->group(function () {
   Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
-  Route::get('/claim/export', [ClaimController::class, 'export']);
 });
 
 Route::middleware(['auth', 'verified', 'staff'])->group(function () {
   Route::post('/claim/approve-staff/{id}', [ClaimController::class, 'approveStaff'])->name('claim.approve.staff');
+
+  // Edit Claim
+  Route::get('/claim/edit/{id}', [ClaimController::class, 'showEditPage'])->name('claim.edit.show');
+  Route::post('/claim/edit', [ClaimController::class, 'edit'])->name('claim.edit.process');
 });
 
 Route::middleware(['auth', 'verified', 'finance'])->group(function () {
@@ -67,13 +67,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/claim-absensi', [AbsensiClaimController::class, 'index'])->name('absent-claim');
   
   Route::get('/claim-fktp', [App\Http\Controllers\HomeController::class, 'fktp'])->name('claim.fktp');
-  Route::get('/claim-absensi-fktp', [AbsensiClaimController::class, 'fktp'])->name('absent-claim.fktp');
+  Route::get('/claim-fkrtl', [App\Http\Controllers\HomeController::class, 'fkrtl'])->name('claim.fkrtl');
+
+  Route::get('/absensi-fktp/{wilayah}', [AbsensiClaimController::class, 'absensiFKTP'])->name('absensi.fktp');
+  Route::get('/absensi-fkrtl/{wilayah}', [AbsensiClaimController::class, 'absensiFKRTL'])->name('absensi.fkrtl');
   
   Route::get('/history', [ClaimController::class, 'showHistoryPage'])->name('history');
   
   Route::get('/ganti-password/{user:uuid}', [UserController::class, 'changePassword'])->name('user.change-password');
   Route::post('/proses-ganti-password/{user:uuid}', [UserController::class, 'changePasswordProcess'])->name('user.change-password.process');
 
+  Route::get('/claim/export-fkrtl', [ClaimController::class, 'export_fkrtl']);
+  Route::get('/claim/export-fktp', [ClaimController::class, 'export_fktp']);
+  Route::get('/claim/export-riwayat', [ClaimController::class, 'export_history']);
+  
+  Route::get('/arsip', [ArchiveController::class, 'index'])->name('archive');
+  Route::get('/arsip/buat', [ArchiveController::class, 'create'])->name('archive.create');
+  Route::post('/arsip/proses-buat-arsip', [ArchiveController::class, 'store'])->name('archive.store');
+  
   Route::get('/telegram/example', [TelegramController::class, 'callback'])->name('telegram.connect');
   Route::post('/message', [TelegramController::class, 'message']);
 });

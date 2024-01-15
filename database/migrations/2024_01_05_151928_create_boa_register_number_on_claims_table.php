@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('claims', function (Blueprint $table) {
-            $table->string('boa_register_number')->after('hospital_name')->nullable();
+            $table->string('ritl_number')->after('month')->nullable();
+            $table->string('rjtl_number')->after('ritl_number')->nullable();
         });
     }
 

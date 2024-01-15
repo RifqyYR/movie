@@ -27,6 +27,7 @@ class CreateClaimRequest extends FormRequest
             'bulan' => 'required',
             'tahun' => 'required',
             'tanggal_ba' => 'required',
+            'route' => 'required',
         ];
     }
 

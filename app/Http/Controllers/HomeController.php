@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Claim;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Models\Hospital;
 
 class HomeController extends Controller
 {
@@ -25,9 +24,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $claims = $this->getClaims('FKRTL');
+        $hospitals = Hospital::all()->groupBy('region');
+        // dd($hospitals['ParePare']);
 
         return view('pages.home', [
+            'hospitals' => $hospitals
+        ]);
+    }
+    
+    public function fkrtl()
+    {
+        $claims = $this->getClaims('FKRTL');
+
+        return view('pages.fkrtl', [
             'claims' => $claims
         ]);
     }

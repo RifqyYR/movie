@@ -11,9 +11,16 @@ class ClaimsExport implements FromCollection, WithHeadings
     /**
     * @return \Illuminate\Support\Collection
     */
+    protected $claims;
+
+    public function __construct($claims)
+    {
+        $this->claims = $claims;
+    }
+
     public function collection()
     {
-        return Claim::all();
+        return $this->claims;
     }
 
     public function headings(): array
@@ -23,10 +30,11 @@ class ClaimsExport implements FromCollection, WithHeadings
             'hospital_uuid',
             'user_uuid',
             'Nama Faskes',
-            'Nomor Register BOA',
             'Tingkat',
             'Tipe Klaim',
             'Bulan Pelayanan',
+            'Nomor RITL',
+            'Nomor RJTL',
             'Tanggal Klaim Dibuat',
             'Tanggal BA',
             'Jatuh Tempo',

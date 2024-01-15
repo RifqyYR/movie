@@ -2,12 +2,12 @@
 
 @section('content')
     @php
-        Illuminate\Support\Facades\Session::put('routeFrom', 'fktp');
+        Illuminate\Support\Facades\Session::put('routeFrom', 'fkrtl');
     @endphp
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Dashboard SLA Klaim FKTP</h1>
-            <a href="/claim/export-fktp" class="btn btn-sm btn-success btn-export" target="_blank">
+            <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Dashboard SLA Klaim FKRTL</h1>
+            <a href="/claim/export-fkrtl" class="btn btn-sm btn-success btn-export" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
                     <path fill="#ffffff"
                         d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
@@ -70,6 +70,7 @@ if (!$claims->isEmpty()) {
                             @php
                                 $notAllowedStatus = [App\Models\Claim::STATUS_BA_SERAH_TERIMA, App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS];
                                 $diffStatus = [App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS, App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI, App\Models\Claim::STATUS_TELAH_REGISTER_BOA];
+                                $allowedStaffEditStatus = [App\Models\Claim::STATUS_TELAH_REGISTER_BOA, App\Models\Claim::STATUS_TELAH_SETUJU];
                             @endphp
 
                             @if ($claims->isEmpty())
@@ -84,31 +85,24 @@ if (!$claims->isEmpty()) {
                                         $your_date = Carbon\Carbon::parse($item->created_date);
                                         $completion_limit_date = Carbon\Carbon::parse($item->file_completeness);
 
-                                        $datediff = $your_date->diffInWeekdays($now);
-                                        $dateDiffFinance = $completion_limit_date->diffInWeekdays($now);
-
-                                        $holidays = config('app.holidays');
-
-                                        foreach ($holidays as $holiday) {
-                                            $holidayDate = Carbon\Carbon::parse($holiday);
-                                            if ($holidayDate->between($your_date, $now)) {
-                                                $datediff--;
-                                            }
-                                            if ($holidayDate->between($completion_limit_date, $now)) {
-                                                $dateDiffFinance--;
-                                            }
-                                        }
+                                        $datediff = $your_date->diffInDays($now);
+                                        $dateDiffFinance = $completion_limit_date->diffInDays($now);
 
                                         $text = App\Models\Claim::STATUS_TELAH_SETUJU;
+                                        $text2 = App\Models\CLaim::STATUS_TELAH_REGISTER_BOA;
 
                                         $parts = explode('(', $text);
                                         $parts[1] = '<br>(' . $parts[1];
 
+                                        $parts2 = explode(' ', $text2);
+                                        $parts2[2] = '<br>' . $parts2[2];
+
                                         $text = join('', $parts);
+                                        $text2 = join(' ', $parts2);
                                     @endphp
                                     <tr
                                         class="
-                                        @if ($item->status == 'BA Serah Terima') {{ $datediff + 1 >= 2 ? 'table-danger' : ($datediff + 1 >= 7 && $datediff + 1 < 9 ? 'table-warning' : '') }}
+                                        @if ($item->status == 'BA Serah Terima') {{ $datediff + 1 >= 9 ? 'table-danger' : ($datediff + 1 >= 7 && $datediff + 1 < 9 ? 'table-warning' : '') }}
                                         @elseif (in_array($item->status, $diffStatus))
                                         {{ $dateDiffFinance + 1 >= 9 ? 'table-danger' : ($dateDiffFinance + 1 >= 7 && $dateDiffFinance + 1 < 9 ? 'table-warning' : '') }}
                                         @else
@@ -120,7 +114,8 @@ if (!$claims->isEmpty()) {
                                             {{ $item->hospital_name }} </td>
                                         <td class="align-middle fw-bold text-nowrap table-custom-width table-custom-fs">
                                             {{ $item->claim_type }} </td>
-                                        <td class="align-middle fw-bold text-nowrap table-custom-width table-custom-fs">
+                                        <td
+                                            class="align-middle text-center fw-bold text-nowrap table-custom-width table-custom-fs">
                                             {{ $item->month }} </td>
                                         <td
                                             class="text-center align-middle fw-bold text-nowrap table-custom-width table-custom-fs">
@@ -133,15 +128,18 @@ if (!$claims->isEmpty()) {
                                             @php
                                                 if ($item->status == App\Models\Claim::STATUS_TELAH_SETUJU) {
                                                     echo $text;
+                                                } elseif ($item->status == App\Models\CLaim::STATUS_TELAH_REGISTER_BOA) {
+                                                    echo $text2;
                                                 } else {
                                                     echo $item->status;
                                                 }
                                             @endphp
                                         </td>
                                         <td class="align-middle fw-bold text-nowrap table-custom-fs">
-                                            <b>RITP</b>:
+                                            <b>RITL</b>:
                                             {{ $item->ritl_number == '' ? '' : $item->ritl_number }}<br>
-                                            <b>RJTP</b>: {{ $item->rjtl_number == '' ? '' : $item->rjtl_number }}
+                                            <b>RJTL</b>:
+                                            {{ $item->rjtl_number == '' ? '' : $item->rjtl_number }}
                                         </td>
                                         @if (auth()->user()->role != 'GUEST')
                                             <td class="align-middle fw-bold">
@@ -235,8 +233,8 @@ if (!$claims->isEmpty()) {
                                                                 Approve
                                                             </button>
                                                         </div>
-                                                        <a href="/claim/edit/{{ $item->uuid }}"
-                                                            class="btn btn-warning btn-sm mb-1 table-custom-fs">
+                                                        <a href="{{ in_array($item->status, $allowedStaffEditStatus) ? '/claim/edit/' . $item->uuid : '#' }}"
+                                                            class="btn btn-warning btn-sm mb-1 table-custom-fs {{ !in_array($item->status, $allowedStaffEditStatus) ? 'disabled' : '' }}">
                                                             Edit
                                                         </a>
                                                     </div>
