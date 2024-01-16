@@ -6,21 +6,17 @@ use App\Models\Claim;
 use App\Models\User;
 use App\Notifications\ExampleNotification;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use NotificationChannels\Telegram\TelegramMessage;
 
 class TelegramController extends Controller
 {
-    public function callback(Request $request)
-    {
-        $authUser = Auth::user();
-        $telegramChatId = $request->input('id');
-        $authUser->update(['telegram_chat_id' => $telegramChatId]);
+    // public function callback(Request $request)
+    // {
+    //     $authUser = Auth::user();
+    //     $telegramChatId = $request->input('id');
+    //     $authUser->update(['telegram_chat_id' => $telegramChatId]);
 
-        return redirect()->route('home');
-    }
+    //     return redirect()->route('home');
+    // }
 
     public function message()
     {
@@ -57,7 +53,7 @@ class TelegramController extends Controller
             }
         }
 
-        $message = "Daftar klaim FKRTL yang akan jatuh tempo:\n\n";
+        $message = "Daftar klaim FKRTL yang akan jatuh tempo:\n\n=============================\n";
         $numItems = count($endClaim);
         $i = 0;
         foreach ($endClaim as $item) {
@@ -68,7 +64,7 @@ class TelegramController extends Controller
                 $datediff = $your_date->diffInDays($now);
                 $dateDiffFinance = $completion_limit_date->diffInDays($now);
 
-                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . " hari ke-" . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . "* " . (++$i === $numItems ? "\n\n\n\n" : "\n\n");
+                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . " hari ke-" . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . "* " . (++$i === $numItems ? "\n=============================\n\n\n\n" : "\n=============================\n");
             }
         }
         $message .= "Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com";

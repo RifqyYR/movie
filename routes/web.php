@@ -84,6 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/arsip', [ArchiveController::class, 'index'])->name('archive');
   Route::get('/arsip/buat', [ArchiveController::class, 'create'])->name('archive.create');
   Route::post('/arsip/proses-buat-arsip', [ArchiveController::class, 'store'])->name('archive.store');
+  Route::get('/arsip/export', [ArchiveController::class, 'excel'])->name('archive.export-excel');
   
   Route::get('/telegram/example', [TelegramController::class, 'callback'])->name('telegram.connect');
   Route::post('/message', [TelegramController::class, 'message']);

@@ -207,4 +207,8 @@
         line-height: .5;
         border-radius: .2rem;
     }
+
+    .paginate_button>a {
+        font-size: 0.7rem !important;
+    }
 </style>

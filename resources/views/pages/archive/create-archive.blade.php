@@ -17,8 +17,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="table-custom-fs-larger" for="unit_pengolah">Unit Pengolah</label>
-                                <input type="text" class="table-custom-fs form-control" name="unit_pengolah"
-                                    autocomplete="unit_pengolah" @error('unit_pengolah') is-invalid @enderror />
+                                <input id="unit_pengolah" type="text" class="table-custom-fs form-control"
+                                    name="unit_pengolah" autocomplete="unit_pengolah"
+                                    @error('unit_pengolah') is-invalid @enderror />
                                 @error('unit_pengolah')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -29,8 +30,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="table-custom-fs-larger" for="nomor_berkas">Nomor Berkas</label>
-                                <input type="text" class="table-custom-fs form-control" name="nomor_berkas"
-                                    autocomplete="nomor_berkas" @error('nomor_berkas') is-invalid @enderror />
+                                <input id="nomor_berkas" type="text" class="table-custom-fs form-control"
+                                    name="nomor_berkas" autocomplete="nomor_berkas"
+                                    @error('nomor_berkas') is-invalid @enderror />
                                 @error('nomor_berkas')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -41,8 +43,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="table-custom-fs-larger" for="nomor_dos">Nomor Dos</label>
-                                <input type="text" class="table-custom-fs form-control" name="nomor_dos"
-                                    autocomplete="nomor_dos" @error('nomor_dos') is-invalid @enderror />
+                                <input id="nomor_dos" type="text" class="table-custom-fs form-control" name="nomor_dos"
+                                    value="{{ $archive_number }}" autocomplete="nomor_dos" readonly
+                                    @error('nomor_dos') is-invalid @enderror />
                                 @error('nomor_dos')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -51,9 +54,9 @@
                             </div>
                         </div>
                     </div>
-                    <label>
-                        <span class="table-custom-fs-larger mb-0">Berkas Arsip</span>
-                    </label>
+
+                    <span class="table-custom-fs-larger mb-0">Berkas Arsip</span>
+
                     <div id="inputContainer"></div>
                     <button id="addInput" type="button" class="btn btn-sm table-custom-fs btn-success mb-2">Tambah Berkas
                         Arsip</button>
@@ -71,123 +74,3 @@
         </div>
     </div>
 @endsection
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var counter = 0;
-
-        function addChangeEvent(counter) {
-            $(`select[name='judul_berkas_${counter}']`).change(function() {
-                var selectedOptionValue = $(this).val();
-                $(`input[name='kode_klasifikasi_${counter}']`).val(selectedOptionValue);
-            });
-        }
-
-        addChangeEvent(counter);
-
-        $("#addInput").click(function() {
-            counter++;
-
-            var newInput = $(`<div class="form-group" id="berkas-${counter}">
-                    <div class="form-row">
-                        <div class="col-md-3">
-                            <select
-                                class="custom-select text-truncate table-custom-fs @error('judul_berkas') is-invalid @enderror"
-                                name="judul_berkas_${counter}">
-                                <option selected hidden value="">Judul Berkas</option>
-                                @foreach ($nomorBerkas as $item)
-                                    <option class="table-custom-fs" value="{{ $item['code'] }}">
-                                        {{ $item['name'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('judul_berkas')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-1">
-                            <input type="text" class="table-custom-fs text-truncate form-control"
-                                name="kode_klasifikasi_${counter}" autocomplete="kode_klasifikasi"
-                                @error('kode_klasifikasi') is-invalid @enderror placeholder="Kode Klasifikasi"
-                                disabled />
-                            @error('kode_klasifikasi')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-3">
-                            <select class="custom-select table-custom-fs @error('nama_rs') is-invalid @enderror"
-                                name="nama_rs_${counter}" id="editable-select" aria-placeholder="Nama Faskes">
-                                <option selected hidden value=""></option>
-                                @foreach ($hospitals as $item)
-                                    <option class="table-custom-fs" value="{{ $item->uuid }}">{{ $item->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('nama_rs')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-1">
-                            <select class="custom-select table-custom-fs @error('bulan') is-invalid @enderror"
-                                name="bulan_${counter}">
-                                <option selected hidden value="">Bulan</option>
-                                <option value="Januari">Januari</option>
-                                <option value="Februari">Februari</option>
-                                <option value="Maret">Maret</option>
-                                <option value="April">April</option>
-                                <option value="Mei">Mei</option>
-                                <option value="Juni">Juni</option>
-                                <option value="Juli">Juli</option>
-                                <option value="Agustus">Agustus</option>
-                                <option value="September">September</option>
-                                <option value="Oktober">Oktober</option>
-                                <option value="November">November</option>
-                                <option value="Desember">Desember</option>
-                            </select>
-                            @error('bulan')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-1">
-                            <select class="custom-select table-custom-fs @error('tahun') is-invalid @enderror"
-                                name="tahun_${counter}">
-                                <option value="{{ date('Y') - 1 }}">{{ date('Y') - 1 }}</option>
-                                <option value="{{ date('Y') }}" selected>{{ date('Y') }}</option>
-                                <option value="{{ date('Y') + 1 }}">{{ date('Y') + 1 }}</option>
-                            </select>
-                            @error('tahun')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-2">
-                            <input type="text" class="table-custom-fs form-control" name="keterangan_${counter}"
-                                autocomplete="keterangan" @error('keterangan') is-invalid @enderror
-                                placeholder="Keterangan" />
-                            @error('keterangan')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-danger table-custom-fs w-100 btn-sm" onclick="removeInput('berkas-${counter}')">
-                                Hapus
-                            </button>
-                        </div>
-                    </div>
-                </div>`);
-            $("#inputContainer").append(newInput);
-            addChangeEvent(counter);
-        });
-    });
-</script>
