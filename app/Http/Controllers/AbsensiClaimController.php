@@ -98,6 +98,7 @@ class AbsensiClaimController extends Controller
             ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
             ->whereNotIn('claim_type', $string2)
             ->where('hospitals.level', 'FKTP')
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
             ->where('region', $region)
             ->orderBy('month', 'asc')
             ->get();

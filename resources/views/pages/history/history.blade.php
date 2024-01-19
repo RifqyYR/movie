@@ -5,8 +5,7 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
             <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Riwayat</h1>
             <a href="/claim/export-riwayat" class="btn btn-sm btn-success btn-export" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                    viewBox="0 0 512 512">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
                     <path fill="#ffffff"
                         d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
                 </svg>
@@ -19,7 +18,7 @@
                     <table class="table table-sm table-bordered-black table-hover"
                         @php
 if (!$claims->isEmpty()) {
-                            echo 'id="my-table"';
+                            echo 'id="history-table"';
                         } @endphp>
                         <thead>
                             <tr>
@@ -36,10 +35,12 @@ if (!$claims->isEmpty()) {
                                     Pelayanan</th>
                                 <th scope="col" class="text-center align-middle custom-col">
                                     Tanggal<br>
-                                    <span class="text-nowrap">BA Lengkap</span></th>
+                                    <span class="text-nowrap">BA Lengkap</span>
+                                </th>
                                 <th scope="col" class="text-center align-middle custom-col">
                                     Tanggal<br>
-                                    <span class="text-nowrap">Jatuh Tempo</span></th>
+                                    <span class="text-nowrap">Jatuh Tempo</span>
+                                </th>
                                 <th scope="col" class="text-center align-middle custom-col">Tanggal Pembayaran</th>
                                 <th scope="col" class="text-center align-middle custom-col">Status</th>
                                 <th scope="col" class="text-center align-middle custom-col">No Register BOA</th>
@@ -50,10 +51,17 @@ if (!$claims->isEmpty()) {
                         </thead>
                         <tbody>
                             @if ($claims->isEmpty())
-                                <tr>
-                                    <td colspan="10" class="text-center fw-bold table-custom-fs-larger">Tidak ada data
-                                    </td>
-                                </tr>
+                                @if (auth()->user()->role == 'ADMIN')
+                                    <tr>
+                                        <td colspan="11" class="text-center fw-bold table-custom-fs-larger">Tidak ada data
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td colspan="10" class="text-center fw-bold table-custom-fs-larger">Tidak ada data
+                                        </td>
+                                    </tr>
+                                @endif
                             @else
                                 @foreach ($claims as $item)
                                     <tr>

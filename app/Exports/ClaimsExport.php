@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Claim;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -33,8 +32,8 @@ class ClaimsExport implements FromCollection, WithHeadings
             'Tingkat',
             'Tipe Klaim',
             'Bulan Pelayanan',
-            'Nomor RITL',
-            'Nomor RJTL',
+            'Nomor Register RI',
+            'Nomor Register RJ',
             'Tanggal Klaim Dibuat',
             'Tanggal BA',
             'Jatuh Tempo',

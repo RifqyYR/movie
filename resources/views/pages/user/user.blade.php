@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h5 mb-0 text-gray-800" style="color: #2E3192 !important;">Kelola User</h1>
+            <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Kelola User</h1>
         </div>
 
         <div class="row">

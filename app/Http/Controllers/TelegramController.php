@@ -6,10 +6,6 @@ use App\Models\Claim;
 use App\Models\User;
 use App\Notifications\ExampleNotification;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use NotificationChannels\Telegram\TelegramMessage;
 
 class TelegramController extends Controller
 {

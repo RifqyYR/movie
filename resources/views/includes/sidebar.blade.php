@@ -13,10 +13,11 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::route()->getName() == 'claim.fkrtl' ? 'active' : '' }}">
+    <li
+        class="nav-item {{ Route::is('claim.fkrtl') || (Route::is('claim.create.show') && session('routeFrom') == 'fkrtl') || (Route::is('claim.edit.show') && session('routeFrom') == 'fkrtl') ? 'active' : '' }}">
         <a class="nav-link nav-link-item" href="{{ url('/claim-fkrtl') }}">
             <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" height="22" width="24"
-                viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                viewBox="0 0 448 512">
                 <path fill="#ffffff"
                     d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192zM224 248c13.3 0 24 10.7 24 24v56h56c13.3 0 24 10.7 24 24s-10.7 24-24 24H248v56c0 13.3-10.7 24-24 24s-24-10.7-24-24V376H144c-13.3 0-24-10.7-24-24s10.7-24 24-24h56V272c0-13.3 10.7-24 24-24z" />
             </svg>
@@ -24,10 +25,11 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::route()->getName() == 'claim.fktp' ? 'active' : '' }}">
+    <li
+        class="nav-item {{ (Route::is('claim.fktp') || (Route::is('claim.create.show') && session('routeFrom') == 'fktp')) || (Route::is('claim.edit.show') && session('routeFrom') == 'fktp') ? 'active' : '' }}">
         <a class="nav-link nav-link-item" href="{{ url('/claim-fktp') }}">
             <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" height="22" width="24"
-                viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                viewBox="0 0 448 512">
                 <path fill="#ffffff"
                     d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm80 64c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h96c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80z" />
             </svg>
@@ -35,7 +37,7 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::route()->getName() == 'absent-claim' ? 'active' : '' }}">
+    <li class="nav-item {{ Route::is('absent-claim') || Route::is('absensi.fkrtl') || Route::is('absensi.fktp') ? 'active' : '' }}">
         <a class="nav-link nav-link-item" href="{{ url('/claim-absensi') }}">
             <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" height="22" width="24"
                 viewBox="0 0 512 512">
@@ -57,7 +59,7 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::is('archive') ? 'active' : '' }}">
+    <li class="nav-item {{ Route::is('archive') || Route::is('archive.create') || Route::is('archive.edit') ? 'active' : '' }}">
         <a class="nav-link nav-link-item" href="{{ url('/arsip') }}">
             <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" height="22" width="22"
                 viewBox="0 0 640 512">
