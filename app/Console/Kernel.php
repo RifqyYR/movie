@@ -13,13 +13,17 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        // $schedule->call(function() {
-        //     app()->make('App\Http\Controllers\TelegramController')->message();
-        // })->everyMinute()->timezone('Asia/Singapore');
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message();
+        })->everyMinute()->timezone('Asia/Singapore');
         
-        // $schedule->call(function() {
-        //     app()->make('App\Http\Controllers\TelegramController')->message_fktp();
-        // })->everyMinute()->timezone('Asia/Singapore');
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message_fktp();
+        })->everyMinute()->timezone('Asia/Singapore');
+        
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message_cashier();
+        })->everyTwoMinutes()->timezone('Asia/Singapore');
 
         $schedule->call(function() {
             app()->make('App\Http\Controllers\ArchiveController')->checkInactiveArchive();
