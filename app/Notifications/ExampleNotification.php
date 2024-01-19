@@ -33,10 +33,11 @@ class ExampleNotification extends Notification
 
     public function toTelegram($notifiable)
     {
-        return TelegramMessage::create()
-            // ->to('-1002010134476')
-            // ->to('-4001583555')
-            ->to('-4179670157')
-            ->content($this->message);
+        foreach ($notifiable->telegram_group_ids as $groupId) {
+            TelegramMessage::create()
+                ->to($groupId)
+                ->content($this->message)
+                ->send();
+        }
     }
 }
