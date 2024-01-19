@@ -29,7 +29,7 @@ class TelegramController extends Controller
             ->get();
 
         $now = Carbon::now();
-        $endClaim = array();
+        $endClaim = [];
         $diffStatus = [Claim::STATUS_BA_KELENGKAPAN_BERKAS, Claim::STATUS_BA_HASIL_VERIFIKASI, Claim::STATUS_TELAH_REGISTER_BOA];
         foreach ($claims as $item) {
             $your_date = Carbon::parse($item->created_date);
@@ -64,10 +64,10 @@ class TelegramController extends Controller
                 $datediff = $your_date->diffInDays($now);
                 $dateDiffFinance = $completion_limit_date->diffInDays($now);
 
-                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . " hari ke-" . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . "* " . (++$i === $numItems ? "\n=============================\n\n\n\n" : "\n=============================\n");
+                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . ' hari ke-' . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . '* ' . (++$i === $numItems ? "\n=============================\n\n\n\n" : "\n=============================\n");
             }
         }
-        $message .= "Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com";
+        $message .= 'Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com';
 
         if (count($endClaim) != 0) {
             $user = User::first();
@@ -86,7 +86,7 @@ class TelegramController extends Controller
             ->get();
 
         $now = Carbon::now();
-        $endClaim = array();
+        $endClaim = [];
         $diffStatus = [Claim::STATUS_BA_KELENGKAPAN_BERKAS, Claim::STATUS_BA_HASIL_VERIFIKASI, Claim::STATUS_TELAH_REGISTER_BOA];
         foreach ($claims as $item) {
             $your_date = Carbon::parse($item->created_date);
@@ -145,12 +145,38 @@ class TelegramController extends Controller
                     }
                 }
 
-                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . " hari ke-" . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . "* " . (++$i === $numItems ? "\n=============================\n\n\n\n" : "\n=============================\n");
+                $message .= "Nama Faskes: $item->hospital_name\nKlaim: $item->claim_type $item->month\nStatus saat ini:" . " *$item->status" . ' hari ke-' . ($item->status == Claim::STATUS_BA_SERAH_TERIMA ? $datediff + 1 : $dateDiffFinance + 1) . '* ' . (++$i === $numItems ? "\n=============================\n\n\n\n" : "\n=============================\n");
             }
         }
-        $message .= "Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com";
+        $message .= 'Silahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com';
 
         if (count($endClaim) != 0) {
+            $user = User::first();
+            $user->notify(new ExampleNotification($message));
+        }
+    }
+
+    public function message_cashier()
+    {
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('status', 'Pembayaran Telah Dilakukan')
+            ->where('ba_date', today())
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
+            ->get()
+            ->groupBy('level');
+
+        $message = "Daftar klaim yang telah dibayarkan:\n\n=============================\n";
+        foreach ($claims as $level => $claimsGroup) {
+            $message .= 'Jenis: ' . $level . "\n";
+            foreach ($claimsGroup as $claim) {
+                $message .= $claim->hospital->name . "\n";
+            }
+            $message .= "=============================\n";
+        }
+        $message .= 'Untuk detailnya dapat dilakukan pengecekan pada email dan rekening bank faskes masing-masing';
+           
+        if (count($claims) != 0) {
             $user = User::first();
             $user->notify(new ExampleNotification($message));
         }

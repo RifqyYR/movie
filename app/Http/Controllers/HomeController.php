@@ -94,8 +94,7 @@ class HomeController extends Controller
 
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
-                $query->where('name', 'NOT LIKE', '%' . $keyword . '%')
-                    ->where('level', 'FKRTL');
+                $query->where('name', 'NOT LIKE', '%' . $keyword . '%')->where('level', 'FKRTL');
             }
         })
             ->get()
@@ -128,8 +127,7 @@ class HomeController extends Controller
 
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
-                $query->where('name', 'NOT LIKE', '%' . $keyword . '%')
-                    ->where('level', 'FKTP');
+                $query->where('name', 'NOT LIKE', '%' . $keyword . '%')->where('level', 'FKTP');
             }
         })
             ->get()

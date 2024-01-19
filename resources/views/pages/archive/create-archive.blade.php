@@ -15,7 +15,7 @@
             </div>
         @endif
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
-            <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Buat Klaim Baru</h1>
+            <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Buat Pengarsipan Baru</h1>
         </div>
 
         <div class="card">
