@@ -175,21 +175,3 @@ var pieDataPinrang = {
         },
     ],
 };
-
-// var pieChartBarru = new Chart(ctxBarru, {
-//     type: "pie",
-//     data: pieDataBarru,
-//     options: pieOption,
-// });
-
-// var pieChartSidrap = new Chart(ctxSidrap, {
-//     type: "pie",
-//     data: pieDataSidrap,
-//     options: pieOption,
-// });
-
-// var pieChartPinrang = new Chart(ctxPinrang, {
-//     type: "pie",
-//     data: pieDataPinrang,
-//     options: pieOption,
-// });
