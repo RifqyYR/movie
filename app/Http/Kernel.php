@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'verificator' => \App\Http\Middleware\CheckVerificator::class,
         'head' => \App\Http\Middleware\CheckHead::class,
         'finance' => \App\Http\Middleware\CheckFinance::class,
+        'staff' => \App\Http\Middleware\CheckStaff::class,
     ];
 }

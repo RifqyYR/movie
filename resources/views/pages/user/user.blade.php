@@ -2,32 +2,32 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h5 mb-0 text-gray-800">Kelola User</h1>
+        <div class="d-sm-flex align-items-center justify-content-between mb-2">
+            <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Kelola User</h1>
         </div>
 
         <div class="row">
             <div class="col-xs-12 col-md-12 col-lg-12">
                 <div class="table-responsive">
-                    <table class="table table-bordered-black">
+                    <table class="table table-sm table-bordered-black table-hover">
                         <thead>
                             <tr>
-                                <th scope="col" class="text-center">#</th>
-                                <th scope="col" class="text-center">Name</th>
-                                <th scope="col" class="text-center">Username</th>
-                                <th scope="col" class="text-center">Email</th>
-                                <th scope="col" class="text-center">Role</th>
-                                <th scope="col" class="text-center">Aksi</th>
+                                <th scope="col" class="text-center align-middle custom-col">No</th>
+                                <th scope="col" class="text-center align-middle custom-col">Name</th>
+                                <th scope="col" class="text-center align-middle custom-col">Username</th>
+                                <th scope="col" class="text-center align-middle custom-col">Email</th>
+                                <th scope="col" class="text-center align-middle custom-col">Role</th>
+                                <th scope="col" class="text-center align-middle custom-col">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
                                 <tr>
-                                    <td class="fw-bold text-center" scope="row">{{ $loop->index + 1 }}</td>
-                                    <td class="fw-bold text-center">{{ $user->name }}</td>
-                                    <td class="fw-bold text-center">{{ $user->username }}</td>
-                                    <td class="fw-bold text-center">{{ $user->email }}</td>
-                                    <td class="fw-bold text-center">
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger" scope="row">{{ $loop->index + 1 }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">{{ $user->name }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">{{ $user->username }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">{{ $user->email }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
                                         @if ($user->role == 'ADMIN')
                                             Admin
                                         @elseif ($user->role == 'VERIFICATOR')
@@ -36,9 +36,13 @@
                                             Kepala Bagian
                                         @elseif ($user->role == 'FINANCE')
                                             Keuangan
+                                        @elseif ($user->role == 'STAFF_ADMIN')
+                                            Staf Administrasi
+                                        @elseif ($user->role == 'GUEST')
+                                            Tamu
                                         @endif
                                     </td>
-                                    <td class="fw-bold text-center">
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
                                         <div class="align-items-center d-grip gap-4">
                                             <a href="{{ url('/user-edit/' . $user->uuid) }}"><button type="button"
                                                     class="btn btn-info btn-sm">
@@ -91,7 +95,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Hapus</h5>
+                                                <h5 class="modal-title fw-bold text-danger" id="exampleModalLabel">Konfirmasi Hapus</h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>

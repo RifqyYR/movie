@@ -15,7 +15,19 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function() {
             app()->make('App\Http\Controllers\TelegramController')->message();
-        })->dailyAt('08:00')->timezone('Asia/Singapore');
+        })->everyMinute()->timezone('Asia/Singapore');
+        
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message_fktp();
+        })->everyMinute()->timezone('Asia/Singapore');
+        
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message_cashier();
+        })->everyTwoMinutes()->timezone('Asia/Singapore');
+
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\ArchiveController')->checkInactiveArchive();
+        })->everyFiveSeconds()->timezone('Asia/Singapore');
     }
 
     /**

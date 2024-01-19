@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow">
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-2 static-top shadow">
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
@@ -11,13 +11,34 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-black small">{{ Auth::user()->name }}</span>
+                <span class="mr-2 d-none d-lg-inline text-black small lh-1">
+                    <span class="fw-bold" style="0.7rem;">{{ Auth::user()->name }}</span>
+                    <br>
+                    <span style="font-size: 0.6rem;">
+                        @if (auth()->user()->role == 'ADMIN')
+                            Admin
+                        @elseif (auth()->user()->role == 'VERIFICATOR')
+                            Verifikator
+                        @elseif (auth()->user()->role == 'HEAD')
+                            Kepala Bagian
+                        @elseif (auth()->user()->role == 'FINANCE')
+                            Keuangan
+                        @elseif (auth()->user()->role == 'STAFF_ADMIN')
+                            Staf Administrasi
+                        @elseif (auth()->user()->role == 'GUEST')
+                            Tamu
+                        @endif
+                    </span>
+                </span>
                 <img class="img-profile rounded-circle" src="{{ url('backend/img/undraw_profile.svg') }}">
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 @if (Auth::user()->role == 'ADMIN')
                     <a class="dropdown-item" href="{{ url('register') }}">
                         Tambah User
+                    </a>
+                    <a class="dropdown-item" href="{{ url('faskes') }}">
+                        Daftar Faskes
                     </a>
                     <a class="dropdown-item" href="{{ url('user') }}">
                         Kelola User

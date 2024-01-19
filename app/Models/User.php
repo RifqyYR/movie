@@ -52,6 +52,16 @@ class User extends Authenticatable
 
     public function claims()
     {
-        return $this->hasMany(Claim::class, 'claim_uuid', 'uuid');
+        return $this->hasMany(Claim::class);
+    }
+
+    public function archives()
+    {
+        return $this->hasMany(Archive::class);
+    }
+
+    public function getTelegramGroupIdsAttribute()
+    {
+        return ['-1002094693959', '-4145586916'];
     }
 }

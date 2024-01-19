@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Singapore',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------
@@ -168,6 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -183,6 +184,37 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
+
+    'holidays' => [
+        '2024-01-01',
+        '2024-02-08',
+        '2024-02-09',
+        '2024-02-10',
+        '2024-03-11',
+        '2024-03-12',
+        '2024-03-29',
+        '2024-03-31',
+        '2024-04-08',
+        '2024-04-09',
+        '2024-04-10',
+        '2024-04-11',
+        '2024-04-12',
+        '2024-04-15',
+        '2024-05-01',
+        '2024-05-09',
+        '2024-05-10',
+        '2024-05-23',
+        '2024-05-24',
+        '2024-06-01',
+        '2024-06-17',
+        '2024-06-18',
+        '2024-07-07',
+        '2024-08-17',
+        '2024-09-16',
+        '2024-12-25',
+        '2024-12-26',
+    ],
 ];

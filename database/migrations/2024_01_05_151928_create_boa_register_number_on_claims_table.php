@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('telegram_chat_id')->nullable()->after('email');
+        Schema::table('claims', function (Blueprint $table) {
+            $table->string('ritl_number')->after('month')->nullable();
+            $table->string('rjtl_number')->after('ritl_number')->nullable();
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('telegram_chat_id')->nullable()->after('email');
+        Schema::table('claims', function (Blueprint $table) {
+            //
         });
     }
 };

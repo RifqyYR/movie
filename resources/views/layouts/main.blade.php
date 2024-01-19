@@ -3,7 +3,7 @@
 
 <head>
     @php
-        $allowedRoute = ['home', 'absent-claim', 'history'];
+        $allowedRoute = ['claim.fkrtl', 'claim.fktp', 'history', 'absensi.fktp', 'absensi.fkrtl'];
     @endphp
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     @if (in_array(Route::currentRouteName(), $allowedRoute))
-        <meta http-equiv="refresh" content="60">
+        <meta http-equiv="refresh" content="120">
     @endif
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -53,7 +53,7 @@
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
+    <a class="scroll-to-top rounded" href="#page-top" style="background: #149063 !important;">
         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
             <style>
                 svg {

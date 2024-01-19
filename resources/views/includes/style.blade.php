@@ -20,9 +20,9 @@
 <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css"
     rel="stylesheet">
 
-<link href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css" rel="stylesheet">
-<link href="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/sticky-header/bootstrap-table-sticky-header.css"
-    rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.2.0/css/searchPanes.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.bootstrap5.min.css">
 
 <style>
     th {
@@ -42,15 +42,191 @@
         color: grey !important;
     }
 
-    table.table-bordered-black {
-        border: 1px solid black;
-    }
-
     table.table-bordered-black>thead>tr>th {
         border: 1px solid black;
     }
 
+    table.table-bordered-black>thead>tr>th.transparent-th {
+        border: 1px solid transparent;
+    }
+
     table.table-bordered-black>tbody>tr>td {
         border: 1px solid black;
+        box-sizing: border-box;
+    }
+
+    .img-pare,
+    .img-barru,
+    .img-pinrang,
+    .img-sidrap {
+        transition: transform 0.3s ease;
+    }
+
+    .card-pare:hover {
+        background-color: #D2D2D2 !important;
+
+        .img-pare {
+            transform: scale(1.5);
+        }
+    }
+
+    .card-barru:hover {
+        background-color: #D2D2D2 !important;
+
+        .img-barru {
+            transform: scale(1.5);
+        }
+    }
+
+    .card-sidrap:hover {
+        background-color: #D2D2D2 !important;
+
+        .img-sidrap {
+            transform: scale(1.5);
+        }
+    }
+
+    .card-pinrang:hover {
+        background-color: #D2D2D2 !important;
+
+        .img-pinrang {
+            transform: scale(1.5);
+        }
+    }
+
+    .btn-primary:hover {
+        background-color: #2E3192 !important;
+    }
+
+    .sidebar-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .nav-item:hover {
+        .sidebar-icon {
+            transform: scale(1.5);
+        }
+    }
+
+    .nav-item.active {
+        background-color: #ff8000;
+    }
+
+    .btn-export:hover {
+        background-color: #009648 !important;
+    }
+
+    .custom-col {
+        font-size: 0.8rem;
+        background-color: #158fdb !important;
+    }
+
+    .table-custom-fs {
+        font-size: 0.7rem !important;
+    }
+
+    .table-custom-fs-larger {
+        font-size: 0.8rem !important;
+    }
+
+    .fs-09rem {
+        font-size: 0.9rem !important;
+    }
+
+    .table-custom-width {
+        width: 8rem;
+    }
+    
+    .table-custom-width-smaller {
+        width: 5rem;
+    }
+
+    .btn-blue-custom {
+        background-color: #2E3192 !important;
+        font-size: 0.7rem !important;
+    }
+
+    .btn-approve-custom {
+        background-color: #2E3192 !important;
+    }
+
+    .btn-blue-custom:hover,
+    .btn-approve-custom:hover {
+        background-color: #484de0 !important;
+    }
+
+    .no-bottom-border-radius {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .no-top-border-radius {
+        border-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .btn-confirm-approve {
+        transition: transform 0.3s ease;
+    }
+
+    .btn-confirm-approve:hover {
+        transform: scale(1.3);
+    }
+
+    .table-hover tbody tr:hover td,
+    .table-hover tbody tr:hover th {
+        font-weight: bold !important;
+    }
+
+    .fab-back {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        width: 2.75rem;
+        height: 2.75rem;
+        text-align: center;
+        color: #fff;
+        background: rgb(255, 0, 0);
+        /* color: #05d689; */
+        line-height: 46px;
+    }
+
+    .fab-back:focus,
+    .fab-back:hover {
+        color: white;
+    }
+
+    .fab-back:hover {
+        background: rgb(201, 0, 0);
+    }
+
+    .fab-back i {
+        font-weight: 800;
+    }
+
+    .btn-xs {
+        padding: .25rem .4rem;
+        font-size: .875rem;
+        line-height: .5;
+        border-radius: .2rem;
+    }
+
+    .paginate_button>a {
+        font-size: 0.7rem !important;
+    }
+
+    .dataTables_length {
+        font-size: 0.8rem !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_length select {
+        height: 30px;
+        width: 60px;
+        font-size: 0.7rem !important;
+    }
+
+    .form-select:hover {
+        background-color: #ececec !important;
     }
 </style>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Claim;
-use Carbon\Carbon;
+use App\Models\Hospital;
 
 class HomeController extends Controller
 {
@@ -24,13 +24,133 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $claims = Claim::where('status', '!=', 'Pembayaran Telah Dilakukan')->get();
+        return view('pages.home');
+    }
 
-        $days = Carbon::now()->addWeekdays(9);
+    public function fkrtl()
+    {
+        $claims = $this->getClaims('FKRTL');
 
-        return view('pages.home', [
+        return view('pages.fkrtl', [
             'claims' => $claims,
-            'days' => $days,
+        ]);
+    }
+
+    public function fktp()
+    {
+        $claims = $this->getClaims('FKTP');
+
+        return view('pages.fktp', [
+            'claims' => $claims,
+        ]);
+    }
+
+    private function getClaims($level)
+    {
+        return Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('hospitals.level', $level)
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get();
+    }
+
+    public function getDataPie()
+    {
+        $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
+
+        $hospitals = Hospital::where(function ($query) use ($keywords) {
+            foreach ($keywords as $keyword) {
+                $query->where('name', 'NOT LIKE', '%' . $keyword . '%');
+            }
+        })
+            ->get()
+            ->groupBy('region');
+        $allowedType = ['Pelayanan Reguler', 'Non Kapitasi Reguler'];
+
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->whereIn('claim_type', $allowedType)
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get()
+            ->groupBy('hospital_uuid')
+            ->map(function ($claims) {
+                return $claims->first();
+            })
+            ->groupBy('hospital.region');
+
+        return response()->json([
+            'hospitals' => $hospitals,
+            'claims' => $claims,
+        ]);
+    }
+
+    public function getDataBarFKRTL()
+    {
+        $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
+
+        $hospitals = Hospital::where(function ($query) use ($keywords) {
+            foreach ($keywords as $keyword) {
+                $query->where('name', 'NOT LIKE', '%' . $keyword . '%')->where('level', 'FKRTL');
+            }
+        })
+            ->get()
+            ->groupBy('region');
+        $allowedType = 'Pelayanan Reguler';
+
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('claim_type', $allowedType)
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('hospitals.level', 'FKRTL')
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get()
+            ->groupBy('hospital_uuid')
+            ->map(function ($claims) {
+                return $claims->first();
+            })
+            ->groupBy('hospital.region');
+
+        return response()->json([
+            'hospitals' => $hospitals,
+            'claims' => $claims,
+        ]);
+    }
+
+    public function getDataBarFKTP()
+    {
+        $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
+
+        $hospitals = Hospital::where(function ($query) use ($keywords) {
+            foreach ($keywords as $keyword) {
+                $query->where('name', 'NOT LIKE', '%' . $keyword . '%')->where('level', 'FKTP');
+            }
+        })
+            ->get()
+            ->groupBy('region');
+        $allowedType = 'Non Kapitasi Reguler';
+
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
+            ->where('claim_type', $allowedType)
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('hospitals.level', 'FKTP')
+            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
+            ->orderBy('claims.updated_at', 'desc')
+            ->get()
+            ->groupBy('hospital_uuid')
+            ->map(function ($claims) {
+                return $claims->first();
+            })
+            ->groupBy('hospital.region');
+
+        return response()->json([
+            'hospitals' => $hospitals,
+            'claims' => $claims,
         ]);
     }
 }

@@ -4,46 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\Hospital;
-use Illuminate\Support\Facades\Cache;
 
 class AbsensiClaimController extends Controller
 {
     public function index()
     {
-        $string = 'Reguler';
-        $string2 = ['Apotek PRB Reguler', 'Non Kapitasi Reguler'];
-        $status = 'Pembayaran Telah Dilakukan';
-
-        $regions = ['Parepare', 'Barru', 'Pinrang', 'Sidrap'];
-        $claims = [];
-
-        foreach ($regions as $region) {
-            $claims[$region] = Cache::remember("claims.$region", 0, function () use ($string, $string2, $status, $region) {
-                return $this->getClaimsByRegion($string, $string2, $status, $region);
-            });
-        }
-
-        $hospitals = Cache::remember('hospitals', 60, function () {
-            return Hospital::all()->groupBy('region');
-        });
-
-        $claims = array_merge($claims, ['hospitals' => $hospitals]);
-
-        return view(
-            'pages.claim-absensi.claim-absensi',
-            [
-                'claims' => $claims,
-                'hospitals' => $hospitals,
-            ]
-        );
+        return view('pages.claim-absensi.claim-absensi');
     }
 
-    function getClaimsByRegion($string, $string2, $status, $region)
+    function getClaimsFKRTLByRegion($string, $string2, $status, $region)
     {
         return Claim::with('hospital')
             ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
             ->where('claim_type', 'LIKE', '%' . $string . '%')
             ->whereNotIn('claim_type', $string2)
+            ->where('hospitals.level', 'FKRTL')
+            ->where('status', '!=', $status)
+            ->where('region', $region)
+            ->orderBy('month', 'asc')
+            ->get();
+    }
+
+    function getClaimsFKTPByRegion($string, $string2, $status, $region)
+    {
+        return Claim::with('hospital')
+            ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
+            ->where('claim_type', 'LIKE', '%' . $string . '%')
+            ->whereNotIn('claim_type', $string2)
+            ->where('hospitals.level', 'FKTP')
             ->where('status', '!=', $status)
             ->where('region', $region)
             ->orderBy('month', 'asc')
@@ -65,5 +53,64 @@ class AbsensiClaimController extends Controller
             $i++;
         }
         return $temp_array;
+    }
+
+    public function absensiFKRTL(string $region)
+    {
+        $string = 'Reguler';
+        $string2 = ['Apotek PRB Reguler', 'Non Kapitasi Reguler', 'Promotif Preventif', 'Kegiatan Kelompok'];
+        $status = 'Pembayaran Telah Dilakukan';
+
+        if ($region == 'pare') {
+            $region = 'Parepare';
+        }
+
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
+            ->where('claim_type', 'LIKE', '%' . $string . '%')
+            ->whereNotIn('claim_type', $string2)
+            ->where('hospitals.level', 'FKRTL')
+            ->where('status', '!=', $status)
+            ->where('region', $region)
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $hospitals = Hospital::where('level', 'FKRTL')
+            ->where('region', $region)
+            ->get();
+
+        return view('pages.claim-absensi.fkrtl', [
+            'region' => $region,
+            'claims' => $claims,
+            'hospitals' => $hospitals,
+        ]);
+    }
+
+    public function absensiFKTP(string $region)
+    {
+        $string2 = ['Apotek Kronis Reguler', 'Ambulance Reguler', 'Pelayanan Reguler', 'Pembayaran Telah Dilakukan'];
+
+        if ($region == 'pare') {
+            $region = 'Parepare';
+        }
+
+        $claims = Claim::with('hospital')
+            ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
+            ->whereNotIn('claim_type', $string2)
+            ->where('hospitals.level', 'FKTP')
+            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('region', $region)
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $hospitals = Hospital::where('level', 'FKTP')
+            ->where('region', $region)
+            ->get();
+
+        return view('pages.claim-absensi.fktp', [
+            'region' => $region,
+            'claims' => $claims,
+            'hospitals' => $hospitals,
+        ]);
     }
 }
