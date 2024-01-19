@@ -4,6 +4,8 @@ use App\Http\Controllers\AbsensiClaimController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +37,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
   Route::get('/user-edit/{user:uuid}', [UserController::class, 'edit'])->name('user.edit');
   Route::post('/proses-edit-user', [UserController::class, 'editProcess'])->name('edit.user.proses');
   Route::get('/delete-user/{id}', [UserController::class, 'delete'])->name('delete.user.proses');
+
+  // Faskes Management
+  Route::get('/faskes', [HospitalController::class, 'index'])->name('faskes');
+  Route::get('/faskes/buat', [HospitalController::class, 'create'])->name('faskes.show-create');
+  Route::get('/delete-faskes/{id}', [HospitalController::class, 'delete'])->name('faskes.delete');
+  Route::post('/proses-tambah-faskes', [HospitalController::class, 'store'])->name('faskes.create');
 
   // Hapus Claim
   Route::get('/claim/hapus/{id}', [ClaimController::class, 'delete'])->name('claim.delete');
@@ -86,8 +94,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::post('/arsip/proses-buat-arsip', [ArchiveController::class, 'store'])->name('archive.store');
   Route::get('/arsip/export', [ArchiveController::class, 'excel'])->name('archive.export-excel');
   
+  Route::get('/arsip/edit/{uid}', [ArchiveController::class, 'edit'])->name('archive.edit');
+  Route::post('/arsip/proses-edit-arsip', [ArchiveController::class, 'update'])->name('archive.update');
+  
   Route::get('/telegram/example', [TelegramController::class, 'callback'])->name('telegram.connect');
   Route::post('/message', [TelegramController::class, 'message']);
+
+  Route::get('/home/data-pie', [HomeController::class, 'getDataPie']);
+  Route::get('/home/data-bar-fkrtl', [HomeController::class, 'getDataBarFKRTL']);
+  Route::get('/home/data-bar-fktp', [HomeController::class, 'getDataBarFKTP']);
 });
 
 Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);

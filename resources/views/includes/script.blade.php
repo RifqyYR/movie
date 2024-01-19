@@ -69,6 +69,11 @@
         link.href = "/delete-user/" + id;
     }
 
+    function hapusFaskes(id) {
+        const link = document.getElementById('deleteFaskesLink');
+        link.href = "/delete-faskes/" + id;
+    }
+
     @if (session()->has('success'))
         toastr.success('{{ session('success') }}', 'BERHASIL!');
     @elseif (session()->has('error'))
@@ -76,6 +81,7 @@
     @endif
 
     $('#editable-select').editableSelect();
+    $('.editable-select').editableSelect();
 
     $('#input-no-reg-boa-ri').keyup(function() {
         var value = $(this).val();
@@ -113,7 +119,22 @@
 
     var counter = 0;
 
+    $(document).on('keyup', '.description-archive', function() {
+        var value = $(this).val();
+
+        if (value.length > 30) {
+            $(this).css('border-color', 'red');
+            $(this).css('border-width', '2px');
+            $('#description-alert').show(500);
+        } else {
+            $(this).css('border-color', 'initial');
+            $(this).css('border-width', '1px');
+            $('#description-alert').hide(500);
+        }
+    });
+
     $(document).ready(function() {
+        $('#description-alert').hide();
         $('.table-toggle').hide();
         $('#boa-reg-number-warning').hide();
 
@@ -138,51 +159,53 @@
             searching: false,
             responsive: true,
             info: false,
+            dom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
         });
 
-        @if (Request::route()->getName() == 'archive.create')
-            var nomorBerkas = [{
-                    name: 'Rawat Jalan Tingkat Pertama',
-                    code: 'PK.03.00'
-                },
-                {
-                    name: 'Rawat Jalan Tingkat Lanjutan',
-                    code: 'PK.03.02'
-                },
-                {
-                    name: 'Rawat Inap Tingkat Pertama dan Persalinan',
-                    code: 'PK.03.01'
-                },
-                {
-                    name: 'Rawat Inap Tingkat Lanjutan',
-                    code: 'PK.03.03'
-                },
-                {
-                    name: 'Pelayanan Obat di Fasilitas Kesehatan Tingkat Pertama',
-                    code: 'PK.03.04'
-                },
-                {
-                    name: 'Pelayanan Obat di Fasilitas Kesehatan Tingkat Lanjutan',
-                    code: 'PK.03.05'
-                },
-                {
-                    name: 'Pelayanan Alat Bantu Kesehatan di Fasilitas Kesehatan Tingkat Pertama',
-                    code: 'PK.03.06'
-                },
-                {
-                    name: 'Pelayanan Alat Bantu Kesehatan di Fasilitas Kesehatan Rujukan Tingkat Lanjutan',
-                    code: 'PK.03.07'
-                },
-                {
-                    name: 'Promotif dan Preventif',
-                    code: 'PK.03.08'
-                },
-                {
-                    name: 'Surat-surat dan dokumen lain-nya yang berkaitan dengan operasional berikut lampirannya',
-                    code: 'PK.06.01'
-                }
-            ];
+        const nomorBerkas = [{
+                name: 'Rawat Jalan Tingkat Pertama',
+                code: 'PK.03.00'
+            },
+            {
+                name: 'Rawat Jalan Tingkat Lanjutan',
+                code: 'PK.03.02'
+            },
+            {
+                name: 'Rawat Inap Tingkat Pertama dan Persalinan',
+                code: 'PK.03.01'
+            },
+            {
+                name: 'Rawat Inap Tingkat Lanjutan',
+                code: 'PK.03.03'
+            },
+            {
+                name: 'Pelayanan Obat di Fasilitas Kesehatan Tingkat Pertama',
+                code: 'PK.03.04'
+            },
+            {
+                name: 'Pelayanan Obat di Fasilitas Kesehatan Tingkat Lanjutan',
+                code: 'PK.03.05'
+            },
+            {
+                name: 'Pelayanan Alat Bantu Kesehatan di Fasilitas Kesehatan Tingkat Pertama',
+                code: 'PK.03.06'
+            },
+            {
+                name: 'Pelayanan Alat Bantu Kesehatan di Fasilitas Kesehatan Rujukan Tingkat Lanjutan',
+                code: 'PK.03.07'
+            },
+            {
+                name: 'Promotif dan Preventif',
+                code: 'PK.03.08'
+            },
+            {
+                name: 'Surat-surat dan dokumen lain-nya yang berkaitan dengan operasional berikut lampirannya',
+                code: 'PK.06.01'
+            }
+        ];
 
+        @if (Route::is('archive.create'))
             function addChangeEvent(counter) {
                 $(`select[name='judul_berkas_${counter}']`).change(function() {
                     var selectedOptionText = $(this).find('option:selected').text();
@@ -270,9 +293,10 @@
                             <div class="col-md-1">
                                 <select class="custom-select table-custom-fs @error('tahun') is-invalid @enderror"
                                     name="tahun_${counter}">
-                                    <option value="{{ date('Y') - 1 }}">{{ date('Y') - 1 }}</option>
-                                    <option value="{{ date('Y') }}" selected>{{ date('Y') }}</option>
-                                    <option value="{{ date('Y') + 1 }}">{{ date('Y') + 1 }}</option>
+                                    @for ($year = date('Y'); $year >= 2020; $year--)
+                                        <option value="{{ $year }}" {{ date('Y') == $year ? 'selected' : '' }}>
+                                            {{ $year }}</option>
+                                    @endfor
                                 </select>
                                 @error('tahun')
                                     <span class="invalid-feedback" role="alert">
@@ -281,7 +305,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <input type="text" class="table-custom-fs form-control" name="keterangan_${counter}"
+                                <input type="text" class="table-custom-fs form-control description-archive" name="keterangan_${counter}"
                                     autocomplete="keterangan" @error('keterangan') is-invalid @enderror placeholder="Keterangan" />
                                 @error('keterangan')
                                     <span class="invalid-feedback" role="alert">
@@ -305,9 +329,6 @@
                 $(`#deleteButton-${counter}`).prop('disabled', false);
                 $("#inputContainer").append(newInput);
                 $(`select[name='nama_rs_${counter}']`).editableSelect();
-                $(`select[name='nama_rs_${counter}']`).on('show.editable-select', function() {
-                    alert(1);
-                });
                 addChangeEvent(counter);
             });
         @endif

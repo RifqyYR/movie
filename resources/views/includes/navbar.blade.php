@@ -37,6 +37,9 @@
                     <a class="dropdown-item" href="{{ url('register') }}">
                         Tambah User
                     </a>
+                    <a class="dropdown-item" href="{{ url('faskes') }}">
+                        Daftar Faskes
+                    </a>
                     <a class="dropdown-item" href="{{ url('user') }}">
                         Kelola User
                     </a>

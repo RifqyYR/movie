@@ -63,7 +63,7 @@
     }
 
     .card-pare:hover {
-        background-color: #3d3d3d !important;
+        background-color: #D2D2D2 !important;
 
         .img-pare {
             transform: scale(1.5);
@@ -71,7 +71,7 @@
     }
 
     .card-barru:hover {
-        background-color: #3d3d3d !important;
+        background-color: #D2D2D2 !important;
 
         .img-barru {
             transform: scale(1.5);
@@ -79,7 +79,7 @@
     }
 
     .card-sidrap:hover {
-        background-color: #3d3d3d !important;
+        background-color: #D2D2D2 !important;
 
         .img-sidrap {
             transform: scale(1.5);
@@ -87,7 +87,7 @@
     }
 
     .card-pinrang:hover {
-        background-color: #3d3d3d !important;
+        background-color: #D2D2D2 !important;
 
         .img-pinrang {
             transform: scale(1.5);
@@ -135,6 +135,10 @@
 
     .table-custom-width {
         width: 8rem;
+    }
+    
+    .table-custom-width-smaller {
+        width: 5rem;
     }
 
     .btn-blue-custom {
@@ -210,5 +214,19 @@
 
     .paginate_button>a {
         font-size: 0.7rem !important;
+    }
+
+    .dataTables_length {
+        font-size: 0.8rem !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_length select {
+        height: 30px;
+        width: 60px;
+        font-size: 0.7rem !important;
+    }
+
+    .form-select:hover {
+        background-color: #ececec !important;
     }
 </style>

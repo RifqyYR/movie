@@ -17,6 +17,7 @@ class Hospital extends Model
         'name',
         'code',
         'level',
+        'region',
     ];
 
     protected $keyType = 'string';

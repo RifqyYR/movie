@@ -23,10 +23,10 @@ return new class extends Migration
             $table->string('hospital_name');
             $table->string('month');
             $table->integer('year');
-            $table->string('description')->nullable();
             $table->string('file_content_information');
+            $table->string('description', 30)->nullable();
+            $table->enum('status', ['AKTIF', 'INAKTIF'])->default('AKTIF');
             $table->integer('active_retention_schedule')->nullable();
-            $table->integer('inactive_retention_schedule')->nullable();
             $table->timestamps();
         });
     }

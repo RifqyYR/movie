@@ -4,7 +4,7 @@
     <div class="px-2">
         <div class="row d-flex justify-content-center">
             <div class="col-md-4 mb-2">
-                <div class="card text-bg-dark card-pare" style="border-radius: 14px; background-color: #FF9130 !important;">
+                <div class="card card-pare" style="border-radius: 14px; border: 2px solid black;">
                     <div class="card-body d-flex flex-column align-items-start">
                         <h5 class="card-title fs-6 fw-bold text-start " style="z-index: 1;">Kota Pare Pare</h5>
                         <img src="{{ url('pare.png') }}" alt="Peta Kota Pare-Pare" class="mb-1 img-pare mx-auto"
@@ -27,8 +27,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-bg-dark card-barru"
-                    style="border-radius: 14px; background-color: #A1EEBD !important;">
+                <div class="card card-barru" style="border-radius: 14px; border: 2px solid black;">
                     <div class="card-body d-flex flex-column align-items-start">
                         <h5 class="card-title fs-6 fw-bold text-start">Kab. Barru</h5>
                         <img src="{{ url('barru.png') }}" style="max-height: 7rem;" alt="Peta Kabupaten Barru"
@@ -53,7 +52,7 @@
         </div>
         <div class="row d-flex justify-content-center">
             <div class="col-md-4 mb-2">
-                <div class="card text-bg-dark card-sidrap" style="border-radius: 14px;">
+                <div class="card card-sidrap" style="border-radius: 14px; border: 2px solid black;">
                     <div class="card-body d-flex flex-column align-items-start">
                         <h5 class="card-title fs-6 fw-bold text-start" style="z-index: 1;">Kab. Sidenreng Rappang</h5>
                         <img src="{{ url('sidrap.png') }}" alt="Peta Kabupaten Sidenreng Rappang"
@@ -76,8 +75,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-bg-dark card-pinrang"
-                    style="border-radius: 14px;  background-color: #EF9595 !important;">
+                <div class="card card-pinrang" style="border-radius: 14px; border: 2px solid black;">
                     <div class="card-body d-flex flex-column align-items-start">
                         <h5 class="card-title fs-6 fw-bold text-start" style="z-index: 1;">Kab. Pinrang</h5>
                         <img src="{{ url('pinrang.png') }}" style="max-height: 7rem;" alt="Peta Kabupaten Pinrang"

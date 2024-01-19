@@ -5,6 +5,15 @@
         $nomorBerkas = [['name' => 'Rawat Jalan Tingkat Pertama', 'code' => 'PK.03.00'], ['name' => 'Rawat Jalan Tingkat Lanjutan', 'code' => 'PK.03.02'], ['name' => 'Rawat Inap Tingkat Pertama dan Persalinan', 'code' => 'PK.03.01'], ['name' => 'Rawat Inap Tingkat Lanjutan', 'code' => 'PK.03.03'], ['name' => 'Pelayanan Obat di Fasilitas Kesehatan Tingkat Pertama', 'code' => 'PK.03.04'], ['name' => 'Pelayanan Obat di Fasilitas Kesehatan Tingkat Lanjutan', 'code' => 'PK.03.05'], ['name' => 'Pelayanan Alat Bantu Kesehatan di Fasilitas Kesehatan Tingkat Pertama', 'code' => 'PK.03.06'], ['name' => 'Pelayanan Alat Bantu Kesehatan di Fasilitas Kesehatan Rujukan Tingkat Lanjutan', 'code' => 'PK.03.07'], ['name' => 'Promotif dan Preventif', 'code' => 'PK.03.08'], ['name' => 'Surat-surat dan dokumen lain-nya yang berkaitan dengan operasional berikut lampirannya', 'code' => 'PK.06.01']];
     @endphp
     <div class="container-fluid">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
             <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Buat Klaim Baru</h1>
         </div>
@@ -29,7 +38,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="table-custom-fs-larger" for="nomor_berkas">Nomor Berkas</label>
+                                <label class="table-custom-fs-larger" for="nomor_berkas">Nomor Barcode</label>
                                 <input id="nomor_berkas" type="text" class="table-custom-fs form-control"
                                     name="nomor_berkas" autocomplete="nomor_berkas"
                                     @error('nomor_berkas') is-invalid @enderror />
@@ -61,13 +70,18 @@
                     <button id="addInput" type="button" class="btn btn-sm table-custom-fs btn-success mb-2">Tambah Berkas
                         Arsip</button>
 
-                    <div class="form-group mt-4 d-flex justify-content-center">
-                        <a href="{{ route('archive') }}">
-                            <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
+                    <div class="form-group mt-1">
+                        <span id="description-alert" class="text-danger table-custom-fs">*Maksimal karakter input deskripsi
+                            hanya 30
+                            karakter</span>
+                        <div class="form-group mt-4 d-flex justify-content-center">
+                            <a href="{{ route('archive') }}">
+                                <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
+                                    style="width: 5rem;">
+                            </a>
+                            <input type="submit" class="btn btn-success table-custom-fs-larger" value="Buat"
                                 style="width: 5rem;">
-                        </a>
-                        <input type="submit" class="btn btn-success table-custom-fs-larger" value="Buat"
-                            style="width: 5rem;">
+                        </div>
                     </div>
                 </form>
             </div>

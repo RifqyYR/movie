@@ -21,10 +21,10 @@ class Archive extends Model
         'hospital_name',
         'month',
         'year',
-        'description',
         'file_content_information',
+        'description',
+        'status',
         'active_retention_schedule',
-        'inactive_retention_schedule',
     ];
 
     public static function booted()
