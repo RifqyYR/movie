@@ -12,13 +12,15 @@ class ExampleNotification extends Notification
     use Queueable;
 
     private $message;
+    private $groupId;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $message)
+    public function __construct(string $message, $groupId)
     {
         $this->message = $message;
+        $this->groupId = $groupId;
     }
 
     /**
@@ -33,11 +35,8 @@ class ExampleNotification extends Notification
 
     public function toTelegram($notifiable)
     {
-        foreach ($notifiable->telegram_group_ids as $groupId) {
-            TelegramMessage::create()
-                ->to($groupId)
-                ->content($this->message)
-                ->send();
-        }
+        return TelegramMessage::create()
+            ->to($this->groupId)
+            ->content($this->message);
     }
 }

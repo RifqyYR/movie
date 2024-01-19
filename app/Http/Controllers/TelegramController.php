@@ -71,7 +71,7 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message));
+            $user->notify(new ExampleNotification($message, '-4145586916'));
         }
     }
 
@@ -152,7 +152,7 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message));
+            $user->notify(new ExampleNotification($message, '-4145586916'));
         }
     }
 
@@ -175,10 +175,10 @@ class TelegramController extends Controller
             $message .= "=============================\n";
         }
         $message .= 'Untuk detailnya dapat dilakukan pengecekan pada email dan rekening bank faskes masing-masing';
-           
+
         if (count($claims) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message));
+            $user->notify(new ExampleNotification($message, '-1002094693959'));
         }
     }
 }
