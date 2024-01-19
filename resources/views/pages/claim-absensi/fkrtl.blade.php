@@ -88,7 +88,7 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
             <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Absensi Klaim FKRTL -
                 @if ($region == 'Parepare')
-                    Kota Pare-Pare
+                    Kota Parepare
                 @elseif ($region == 'barru')
                     Kabupaten Barru
                 @elseif ($region == 'pinrang')

@@ -6,7 +6,7 @@
             <div class="col-md-6 mx-auto mb-3 mb-md-0">
                 <div class="card">
                     <div class="card-body px-4 py-0">
-                        <div class="fw-bold" style="color: #2E3192 !important; font-size: 0.9rem !important;">Kota Pare-Pare
+                        <div class="fw-bold" style="color: #2E3192 !important; font-size: 0.9rem !important;">Kota Parepare
                         </div>
                         <div class="row">
                             <div class="col-md-3 mx-auto my-auto">

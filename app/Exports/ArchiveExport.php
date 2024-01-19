@@ -4,8 +4,9 @@ namespace App\Exports;
 
 use App\Models\Archive;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ArchiveExport implements FromCollection
+class ArchiveExport implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection

@@ -47,7 +47,7 @@ if (!$hospitals->isEmpty()) {
                                     <td class="text-center align-middle fw-bold table-custom-fs">
                                         {{ $item->level }} </td>
                                     <td class="text-center align-middle fw-bold table-custom-fs">
-                                        {{ $item->region == 'ParePare' ? 'Pare Pare' : $item->region }} </td>
+                                        {{ $item->region == 'ParePare' ? 'Parepare' : $item->region }} </td>
                                     <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
                                         <div class="align-items-center d-grip gap-4">
                                             <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"

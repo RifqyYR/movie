@@ -6,7 +6,7 @@
             <div class="col-md-4 mb-2">
                 <div class="card card-pare" style="border-radius: 14px; border: 2px solid black;">
                     <div class="card-body d-flex flex-column align-items-start">
-                        <h5 class="card-title fs-6 fw-bold text-start " style="z-index: 1;">Kota Pare Pare</h5>
+                        <h5 class="card-title fs-6 fw-bold text-start " style="z-index: 1;">Kota Parepare</h5>
                         <img src="{{ url('pare.png') }}" alt="Peta Kota Pare-Pare" class="mb-1 img-pare mx-auto"
                             style="max-height: 7rem;">
                         <div class="row mt-4 mx-auto">
