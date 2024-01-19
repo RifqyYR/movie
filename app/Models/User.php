@@ -59,7 +59,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Archive::class);
     }
-    
+
     public function getTelegramGroupIdsAttribute()
     {
         return ['-1002094693959', '-4145586916'];

@@ -6,7 +6,7 @@
     @endphp
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
-            <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Buat Klaim Baru</h1>
+            <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Edit Arsip</h1>
         </div>
 
         <div class="card">
@@ -89,12 +89,12 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <select
-                                    class="custom-select table-custom-fs @error('nama_rs') is-invalid @enderror"
+                                <select class="custom-select table-custom-fs @error('nama_rs') is-invalid @enderror"
                                     name="nama_rs" id="editable-select">
                                     <option selected hidden value="{{ $archive->hospital_name }}">{{ $archive->hospital_name }}</option>
                                     @foreach ($hospitals as $item)
-                                        <option class="table-custom-fs" value="{{ trim($item->name) }}">{{ trim($item->name) }}</option>
+                                        <option class="table-custom-fs" value="{{ trim($item->name) }}">
+                                            {{ trim($item->name) }}</option>
                                     @endforeach
                                 </select>
                                 @error('nama_rs')
@@ -142,8 +142,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="table-custom-fs form-control" name="keterangan"
-                                    autocomplete="keterangan" @error('keterangan') is-invalid @enderror
+                                <input type="text" class="table-custom-fs form-control description-archive"
+                                    name="keterangan" autocomplete="keterangan" @error('keterangan') is-invalid @enderror
                                     placeholder="Keterangan" value="{{ $archive->description }}" />
                                 @error('keterangan')
                                     <span class="invalid-feedback" role="alert">
@@ -154,13 +154,19 @@
                         </div>
                     </div>
                     <input type="hidden" value="{{ $archive->uuid }}" name="uuid">
-                    <div class="form-group mt-4 d-flex justify-content-center">
-                        <a href="{{ route('archive') }}">
-                            <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
+                    <div class="form-group mt-1">
+                        <span id="description-alert" class="text-danger table-custom-fs">*Maksimal karakter input
+                            deskripsi
+                            hanya 30
+                            karakter</span>
+                        <div class="form-group mt-4 d-flex justify-content-center">
+                            <a href="{{ route('archive') }}">
+                                <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
+                                    style="width: 5rem;">
+                            </a>
+                            <input type="submit" class="btn btn-success table-custom-fs-larger" value="Edit"
                                 style="width: 5rem;">
-                        </a>
-                        <input type="submit" class="btn btn-success table-custom-fs-larger" value="Edit"
-                            style="width: 5rem;">
+                        </div>
                     </div>
                 </form>
             </div>
