@@ -4,7 +4,7 @@ const pieBackgroundColor = ["#00a651", "#fc7f01"];
 const pieHoverBackgroundColor = ["#46DF90", "#FD9B3A"];
 const pieLabels = ["Klaim Diajukan", "Klaim Belum Diajukan"];
 const pieOption = {
-    maintainAspectRatio: window.innerWidth >= 768 ? true : false,
+    maintainAspectRatio: window.innerWidth <= 768 ? true : false,
     animation: {
         duration: 2500,
     },

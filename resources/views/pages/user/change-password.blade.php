@@ -48,7 +48,12 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary" id="btn-edit" disabled style="background-color: #2E3192">
+                                    <a href="{{ route('user') }}">
+                                        <button type="button" class="btn btn-danger" style="width: 7rem;">
+                                            Kembali
+                                        </button>
+                                    </a>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #2E3192;">
                                         Ubah Password
                                     </button>
                                 </div>
