@@ -105,6 +105,11 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
+                                    <a href="{{ route('home') }}">
+                                        <button type="button" class="btn btn-danger" style="width: 6rem;">
+                                            Kembali
+                                        </button>
+                                    </a>
                                     <button type="submit" class="btn btn-primary" id="btn-add" disabled style="background-color: #2E3192">
                                         Tambah User
                                     </button>

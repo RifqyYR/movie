@@ -62,7 +62,12 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary" style="background-color: #2E3192">
+                                    <a href="{{ route('user') }}">
+                                        <button type="button" class="btn btn-danger">
+                                            Kembali
+                                        </button>
+                                    </a>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #2E3192; width: 4.7rem;">
                                         Edit
                                     </button>
                                 </div>

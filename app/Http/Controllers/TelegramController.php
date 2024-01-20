@@ -156,7 +156,11 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message, '-4145586916'));
+            $groupIds = ['-4145586916', '-4192360145'];
+
+            foreach ($groupIds as $groupId) {
+                $user->notify(new ExampleNotification($message, $groupId));
+            }
         }
     }
 
