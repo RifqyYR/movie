@@ -74,7 +74,7 @@
             }
         }
     @endphp
-    <div class="container">
+    <div class="container-fluid">
         <div class="d-sm-flex">
             <a href="{{ route('absent-claim') }}" class="fab-back rounded"
                 style="margin-right: 3.5rem; z-index: 1;">

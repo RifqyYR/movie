@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\Hospital;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -27,33 +28,38 @@ class HomeController extends Controller
         return view('pages.home');
     }
 
-    public function fkrtl()
+    public function fkrtl(Request $request)
     {
-        $claims = $this->getClaims('FKRTL');
+        $claims = $this->getClaims('FKRTL', $request->status);
 
         return view('pages.fkrtl', [
             'claims' => $claims,
         ]);
     }
 
-    public function fktp()
+    public function fktp(Request $request)
     {
-        $claims = $this->getClaims('FKTP');
+        $claims = $this->getClaims('FKTP', $request->status);
 
         return view('pages.fktp', [
             'claims' => $claims,
         ]);
     }
 
-    private function getClaims($level)
+    private function getClaims($level, $status)
     {
-        return Claim::with('hospital')
+        $query = Claim::with('hospital')
             ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
             ->where('status', '!=', 'Pembayaran Telah Dilakukan')
             ->where('hospitals.level', $level)
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
-            ->orderBy('claims.updated_at', 'desc')
-            ->get();
+            ->orderBy('claims.updated_at', 'desc');
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        return $query->get();
     }
 
     public function getDataPie()
