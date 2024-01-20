@@ -4,7 +4,7 @@ const pieBackgroundColor = ["#00a651", "#fc7f01"];
 const pieHoverBackgroundColor = ["#46DF90", "#FD9B3A"];
 const pieLabels = ["Klaim Diajukan", "Klaim Belum Diajukan"];
 const pieOption = {
-    // maintainAspectRatio: false,
+    maintainAspectRatio: window.innerWidth >= 768 ? true : false,
     animation: {
         duration: 2500,
     },
@@ -103,7 +103,10 @@ $.ajax({
             labels: pieLabels,
             datasets: [
                 {
-                    data: [dataClaimPinrang, dataFaskesPinrang - dataClaimPinrang],
+                    data: [
+                        dataClaimPinrang,
+                        dataFaskesPinrang - dataClaimPinrang,
+                    ],
                     backgroundColor: pieBackgroundColor,
                     hoverBackgroundColor: pieHoverBackgroundColor,
                     hoverBorderColor: "rgba(234, 236, 244, 1)",
@@ -122,13 +125,13 @@ $.ajax({
             data: pieDataBarru,
             options: pieOption,
         });
-        
+
         new Chart(ctxSidrap, {
             type: "pie",
             data: pieDataSidrap,
             options: pieOption,
         });
-        
+
         new Chart(ctxPinrang, {
             type: "pie",
             data: pieDataPinrang,
