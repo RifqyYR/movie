@@ -10,7 +10,7 @@
             <div class="ms-auto d-sm-flex">
                 <form method="GET" action="{{ route('claim.fkrtl') }}" class="me-2">
                     <select class="form-select table-custom-fs-larger" name="status" onchange="this.form.submit()">
-                        <option value="">Status</option>
+                        <option value="">Status BA</option>
                         <option value="{{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}" {{ request('status') == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}</option>
                         <option value="{{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}" {{ request('status') == App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}</option>
                         <option value="{{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}" {{ request('status') == App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}</option>
