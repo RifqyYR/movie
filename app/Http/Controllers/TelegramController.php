@@ -71,7 +71,7 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $groupIds = ['-4145586916', '-4192360145'];
+            $groupIds = ['-4145586916', '-4192360145', '-1001144496725'];
 
             foreach ($groupIds as $groupId) {
                 $user->notify(new ExampleNotification($message, $groupId));
@@ -156,7 +156,11 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message, '-4145586916'));
+            $groupIds = ['-4145586916', '-4192360145', '-1001144496725'];
+
+            foreach ($groupIds as $groupId) {
+                $user->notify(new ExampleNotification($message, $groupId));
+            }
         }
     }
 
@@ -176,13 +180,13 @@ class TelegramController extends Controller
             foreach ($claimsGroup as $claim) {
                 $message .= $claim->hospital->name . "\n";
             }
-            $message .= "=============================\n";
+            $message .= "=============================\n\n";
         }
-        $message .= 'Untuk detailnya dapat dilakukan pengecekan pada email dan rekening bank faskes masing-masing';
+        $message .= "\n\nUntuk detailnya dapat dilakukan pengecekan pada email dan rekening bank faskes masing-masing";
 
         if (count($claims) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message, '-1002094693959'));
+            $user->notify(new ExampleNotification($message, '-1001144496725'));
         }
     }
 }
