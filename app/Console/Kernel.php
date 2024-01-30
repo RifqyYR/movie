@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
         
         $schedule->call(function() {
             app()->make('App\Http\Controllers\TelegramController')->message_cashier();
-        })->everyTwoMinutes()->timezone('Asia/Singapore');
+        })->everyMinute()->timezone('Asia/Singapore');
 
         $schedule->call(function() {
             app()->make('App\Http\Controllers\ArchiveController')->checkInactiveArchive();
