@@ -237,4 +237,10 @@
         min-width: 7.5rem;
         min-height: 7.5rem;
     }
+
+    .link-status:hover {
+        color: #484de0 !important;
+        font-weight: bold !important;
+        text-decoration: none;
+    }
 </style>
