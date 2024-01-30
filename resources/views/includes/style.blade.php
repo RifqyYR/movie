@@ -136,7 +136,7 @@
     .table-custom-width {
         width: 8rem;
     }
-    
+
     .table-custom-width-smaller {
         width: 5rem;
     }
@@ -228,5 +228,13 @@
 
     .form-select:hover {
         background-color: #ececec !important;
+    }
+
+    #pie-chart-pare,
+    #pie-chart-barru,
+    #pie-chart-sidrap,
+    #pie-chart-pinrang {
+        min-width: 7.5rem;
+        min-height: 7.5rem;
     }
 </style>

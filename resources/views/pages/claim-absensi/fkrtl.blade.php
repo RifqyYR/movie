@@ -74,7 +74,7 @@
             }
         }
     @endphp
-    <div class="container">
+    <div class="container-fluid">
         <div class="d-sm-flex">
             <a href="{{ route('absent-claim') }}" class="fab-back rounded"
                 style="margin-right: 3.5rem; z-index: 1;">
@@ -88,7 +88,7 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
             <h1 class="h5 mb-0 text-gray-800" style="color: #fc7f01 !important;">Absensi Klaim FKRTL -
                 @if ($region == 'Parepare')
-                    Kota Pare-Pare
+                    Kota Parepare
                 @elseif ($region == 'barru')
                     Kabupaten Barru
                 @elseif ($region == 'pinrang')
