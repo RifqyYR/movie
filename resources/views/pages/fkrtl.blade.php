@@ -11,11 +11,21 @@
                 <form method="GET" action="{{ route('claim.fkrtl') }}" class="me-2">
                     <select class="form-select table-custom-fs-larger" name="status" onchange="this.form.submit()">
                         <option value="">Status BA</option>
-                        <option value="{{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}" {{ request('status') == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}</option>
-                        <option value="{{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}" {{ request('status') == App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}</option>
-                        <option value="{{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}" {{ request('status') == App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}</option>
-                        <option value="{{ App\Models\Claim::STATUS_TELAH_REGISTER_BOA }}" {{ request('status') == App\Models\Claim::STATUS_TELAH_REGISTER_BOA ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_TELAH_REGISTER_BOA }}</option>
-                        <option value="{{ App\Models\Claim::STATUS_TELAH_SETUJU }}" {{ request('status') == App\Models\Claim::STATUS_TELAH_SETUJU ? 'selected' : '' }}>{{ App\Models\Claim::STATUS_TELAH_SETUJU }}</option>
+                        <option value="{{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}"
+                            {{ request('status') == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? 'selected' : '' }}>
+                            {{ App\Models\Claim::STATUS_BA_SERAH_TERIMA }}</option>
+                        <option value="{{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}"
+                            {{ request('status') == App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS ? 'selected' : '' }}>
+                            {{ App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS }}</option>
+                        <option value="{{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}"
+                            {{ request('status') == App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI ? 'selected' : '' }}>
+                            {{ App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI }}</option>
+                        <option value="{{ App\Models\Claim::STATUS_TELAH_REGISTER_BOA }}"
+                            {{ request('status') == App\Models\Claim::STATUS_TELAH_REGISTER_BOA ? 'selected' : '' }}>
+                            {{ App\Models\Claim::STATUS_TELAH_REGISTER_BOA }}</option>
+                        <option value="{{ App\Models\Claim::STATUS_TELAH_SETUJU }}"
+                            {{ request('status') == App\Models\Claim::STATUS_TELAH_SETUJU ? 'selected' : '' }}>
+                            {{ App\Models\Claim::STATUS_TELAH_SETUJU }}</option>
                     </select>
                 </form>
                 <a href="/claim/export-fkrtl" class="btn btn-sm btn-success btn-export" target="_blank">
@@ -143,7 +153,48 @@ if (!$claims->isEmpty()) {
                                                 } elseif ($item->status == App\Models\CLaim::STATUS_TELAH_REGISTER_BOA) {
                                                     echo $text2;
                                                 } else {
-                                                    echo $item->status;
+                                                    if ($item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA && (strpos(strtolower($item->claim_type), 'ambulance') !== false || strpos(strtolower($item->claim_type), 'alkes') !== false)) {
+                                                        echo '<a class="text-black" href="#" id="badropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="fw-bold" style="0.7rem;">' .
+                                                            $item->status .
+                                                            '</span>
+                                                            </a>';
+                                                        echo '<div class="dropdown-menu dropdown-menu-bottom shadow" aria-labelledby="#badropdown">
+                                                                <a class="dropdown-item" href="/claim/download/' .
+                                                            $item->uuid .
+                                                            '" target="_blank">
+                                                                    Download File
+                                                                </a>
+                                                            </div>';
+                                                    } elseif ($item->status == App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS && (strpos(strtolower($item->claim_type), 'ambulance') !== false || strpos(strtolower($item->claim_type), 'alkes') !== false)) {
+                                                        echo '<a class="text-black" href="#" id="badropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="fw-bold" style="0.7rem;">' .
+                                                            $item->status .
+                                                            '</span>
+                                                            </a>';
+                                                        echo '<div class="dropdown-menu dropdown-menu-bottom shadow" aria-labelledby="#badropdown">
+                                                                <a class="dropdown-item" href="/claim/download/' .
+                                                            $item->uuid .
+                                                            '" target="_blank">
+                                                                    Download File
+                                                                </a>
+                                                            </div>';
+                                                    } elseif ($item->status == App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI && (strpos(strtolower($item->claim_type), 'ambulance') !== false || strpos(strtolower($item->claim_type), 'alkes') !== false)) {
+                                                        echo '<a class="text-black" href="#" id="badropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="fw-bold" style="0.7rem;">' .
+                                                            $item->status .
+                                                            '</span>
+                                                            </a>';
+                                                        echo '<div class="dropdown-menu dropdown-menu-bottom shadow" aria-labelledby="#badropdown">
+                                                                <a class="dropdown-item" href="/claim/download/' .
+                                                            $item->uuid .
+                                                            '" target="_blank">
+                                                                    Download File
+                                                                </a>
+                                                            </div>';
+                                                    } else {
+                                                        echo $item->status;
+                                                    }
                                                 }
                                             @endphp
                                         </td>

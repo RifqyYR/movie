@@ -103,6 +103,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/home/data-pie', [HomeController::class, 'getDataPie']);
   Route::get('/home/data-bar-fkrtl', [HomeController::class, 'getDataBarFKRTL']);
   Route::get('/home/data-bar-fktp', [HomeController::class, 'getDataBarFKTP']);
+
+  // Download Word
+  Route::get('/claim/download/{uid}', [ClaimController::class, 'downloadWord']);
 });
 
 Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);
