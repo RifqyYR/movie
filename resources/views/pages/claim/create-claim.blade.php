@@ -19,8 +19,8 @@
             }
         }
 
-        array_push($selectOptions, 'Promotif Preventif');
         if ($routeFrom == 'fktp') {
+            array_push($selectOptions, 'Promotif Preventif');
             array_push($selectOptions, 'Kegiatan Kelompok');
         }
     @endphp

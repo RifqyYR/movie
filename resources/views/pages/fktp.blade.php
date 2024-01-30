@@ -124,7 +124,7 @@ if (!$claims->isEmpty()) {
                                         @elseif (in_array($item->status, $diffStatus))
                                         {{ $dateDiffFinance + 1 >= 9 ? 'table-danger' : ($dateDiffFinance + 1 >= 7 && $dateDiffFinance + 1 < 9 ? 'table-warning' : '') }}
                                         @else
-                                            {{ $dateDiffFinance + 1 >= 13 ? 'table-danger' : '' }} @endif
+                                            {{ $dateDiffFinance + 1 >= 11 ? 'table-danger' : '' }} @endif
                                         ">
                                         <td class="text-center align-middle fw-bold table-custom-fs">
                                             {{ $loop->index + 1 }} </td>

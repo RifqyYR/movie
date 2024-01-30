@@ -70,7 +70,6 @@ class AbsensiClaimController extends Controller
             ->where('claim_type', 'LIKE', '%' . $string . '%')
             ->whereNotIn('claim_type', $string2)
             ->where('hospitals.level', 'FKRTL')
-            ->where('status', '!=', $status)
             ->where('region', $region)
             ->orderBy('month', 'asc')
             ->get();
@@ -88,7 +87,7 @@ class AbsensiClaimController extends Controller
 
     public function absensiFKTP(string $region)
     {
-        $string2 = ['Apotek Kronis Reguler', 'Ambulance Reguler', 'Pelayanan Reguler', 'Pembayaran Telah Dilakukan'];
+        $string2 = ['Apotek Kronis Reguler', 'Ambulance Reguler', 'Pelayanan Reguler'];
 
         if ($region == 'pare') {
             $region = 'Parepare';
@@ -98,7 +97,6 @@ class AbsensiClaimController extends Controller
             ->join('hospitals', 'hospitals.name', '=', 'claims.hospital_name')
             ->whereNotIn('claim_type', $string2)
             ->where('hospitals.level', 'FKTP')
-            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
             ->where('region', $region)
             ->orderBy('month', 'asc')
             ->get();

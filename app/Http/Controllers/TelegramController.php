@@ -71,7 +71,7 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $groupIds = ['-4145586916', '-4192360145', '-1001144496725'];
+            $groupIds = ['-4145586916', '-4192360145', '-1001144496725', '-1001683875925', '-1001686172782'];
 
             foreach ($groupIds as $groupId) {
                 $user->notify(new ExampleNotification($message, $groupId));
@@ -120,7 +120,7 @@ class TelegramController extends Controller
                     array_push($endClaim, $item);
                 }
             } else {
-                if ($dateDiffFinance + 1 >= 13) {
+                if ($dateDiffFinance + 1 >= 11) {
                     array_push($endClaim, $item);
                 }
             }
@@ -156,7 +156,7 @@ class TelegramController extends Controller
 
         if (count($endClaim) != 0) {
             $user = User::first();
-            $groupIds = ['-4145586916', '-4192360145', '-1001144496725'];
+            $groupIds = ['-4145586916', '-4192360145', '-1001144496725', '-1001683875925', '-1001686172782'];
 
             foreach ($groupIds as $groupId) {
                 $user->notify(new ExampleNotification($message, $groupId));
@@ -186,7 +186,11 @@ class TelegramController extends Controller
 
         if (count($claims) != 0) {
             $user = User::first();
-            $user->notify(new ExampleNotification($message, '-1001144496725'));
+            $groupIds = ['-1001144496725', '-1002131753510', '-4127203087', '-1001144496725', '-1001683875925', '-1001686172782'];
+
+            foreach ($groupIds as $groupId) {
+                $user->notify(new ExampleNotification($message, $groupId));
+            }
         }
     }
 }

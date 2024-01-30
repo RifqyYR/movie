@@ -1,10 +1,13 @@
 Chart.register(ChartDataLabels);
 
+const zoomLevel = window.innerWidth / document.documentElement.clientWidth;
 const pieBackgroundColor = ["#00a651", "#fc7f01"];
 const pieHoverBackgroundColor = ["#46DF90", "#FD9B3A"];
 const pieLabels = ["Klaim Diajukan", "Klaim Belum Diajukan"];
 const pieOption = {
-    maintainAspectRatio: false,
+    // maintainAspectRatio: true,
+    responsive: true,
+    aspecRatio: 1,
     animation: {
         duration: 2500,
     },
