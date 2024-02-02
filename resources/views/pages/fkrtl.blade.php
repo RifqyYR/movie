@@ -153,7 +153,7 @@ if (!$claims->isEmpty()) {
                                                 } elseif ($item->status == App\Models\CLaim::STATUS_TELAH_REGISTER_BOA) {
                                                     echo $text2;
                                                 } else {
-                                                    if (strpos(strtolower($item->claim_type), 'ambulance') !== false || strpos(strtolower($item->claim_type), 'alkes') !== false) {
+                                                    if ((auth()->user()->role == 'VERIFICATOR' || auth()->user()->role == 'ADMIN') && (strpos(strtolower($item->claim_type), 'ambulance') !== false || strpos(strtolower($item->claim_type), 'alkes') !== false)) {
                                                         if ($item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA || $item->status == App\Models\Claim::STATUS_BA_KELENGKAPAN_BERKAS || $item->status == App\Models\Claim::STATUS_BA_HASIL_VERIFIKASI) {
                                                             echo '<a class="text-black link-status" href="#" id="badropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <span class="fw-bold" style="0.7rem;">' .
