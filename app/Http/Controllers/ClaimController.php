@@ -435,6 +435,7 @@ class ClaimController extends Controller
     {
         $claim = Claim::find($id);
         $fileName = '';
+        $recepientName = auth()->user()->name;
 
         $dateNow = Carbon::now()
             ->locale('id')
@@ -453,6 +454,7 @@ class ClaimController extends Controller
                 'faskesName' => $claim->hospital_name,
                 'monthService' => $monthService,
                 'yearService' => $yearService,
+                'recepientName' => $recepientName,
             ]);
 
             $fileName = "BAST_Movie_" . time() . '.docx';
@@ -472,6 +474,7 @@ class ClaimController extends Controller
                 'claimType' => $claim->claim_type,
                 'monthService' => $monthService,
                 'yearService' => $yearService,
+                'recepientName' => $recepientName,
             ]);
 
             $fileName = "BA Lengkap_Movie_" . time() . '.docx';
