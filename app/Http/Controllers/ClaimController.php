@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpWord\TemplateProcessor;
+
+use function Laravel\Prompts\error;
 
 class ClaimController extends Controller
 {
@@ -26,7 +29,7 @@ class ClaimController extends Controller
         }
 
         return view('pages.claim.create-claim', [
-            'hospitals' => $hospitals
+            'hospitals' => $hospitals,
         ]);
     }
 
@@ -34,7 +37,7 @@ class ClaimController extends Controller
     {
         $data = $request->validated();
         $text = $data['nama_rs'];
-        $parts = explode("-", $text);
+        $parts = explode('-', $text);
         $rs_name = trim($parts[1]);
         $hospital = Hospital::where('name', $rs_name)->first();
 
@@ -49,7 +52,7 @@ class ClaimController extends Controller
                 $hospitalUuid = $hospital->uuid;
                 $level = $hospital->level;
                 $userUid = auth()->user()->uuid;
-                
+
                 if ($exists != true) {
                     if ($level == 'FKRTL') {
                         Claim::create([
@@ -62,7 +65,7 @@ class ClaimController extends Controller
                             'created_date' => $data['tanggal_ba'],
                             'ba_date' => $data['tanggal_ba'],
                             'completion_limit_date' => $date->modify('+9 day'),
-                            'status' => 'BA Serah Terima'
+                            'status' => 'BA Serah Terima',
                         ]);
                     } else {
                         Claim::create([
@@ -75,22 +78,30 @@ class ClaimController extends Controller
                             'created_date' => $data['tanggal_ba'],
                             'ba_date' => $data['tanggal_ba'],
                             'completion_limit_date' => $this->addBusinessDays(Carbon::parse($data['tanggal_ba']), 1),
-                            'status' => 'BA Serah Terima'
+                            'status' => 'BA Serah Terima',
                         ]);
                     }
                 }
             });
 
             if ($exists) {
-                return redirect()->back()->with('error', 'Klaim telah terdaftar');
+                return redirect()
+                    ->back()
+                    ->with('error', 'Klaim telah terdaftar');
             }
             if ($hospital->level == 'FKRTL') {
-                return redirect()->route('claim.fkrtl')->with('success', 'Berhasil membuat klaim baru');
+                return redirect()
+                    ->route('claim.fkrtl')
+                    ->with('success', 'Berhasil membuat klaim baru');
             } else {
-                return redirect()->route('claim.fktp')->with('success', 'Berhasil membuat klaim baru');
+                return redirect()
+                    ->route('claim.fktp')
+                    ->with('success', 'Berhasil membuat klaim baru');
             }
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal membuat klaim baru: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal membuat klaim baru: ' . $e->getMessage());
         }
     }
 
@@ -120,7 +131,7 @@ class ClaimController extends Controller
         return $date;
     }
 
-    public function showEditPage(String $id)
+    public function showEditPage(string $id)
     {
         $claim = Claim::find($id);
 
@@ -142,9 +153,13 @@ class ClaimController extends Controller
                         'rjtl_number' => $data['no_reg_boa_rj'],
                     ]);
                     if ($claim->level == 'FKRTL') {
-                        return redirect()->route('claim.fkrtl')->with('success', 'Berhasil mengubah klaim');
+                        return redirect()
+                            ->route('claim.fkrtl')
+                            ->with('success', 'Berhasil mengubah klaim');
                     } else {
-                        return redirect()->route('claim.fktp')->with('success', 'Berhasil mengubah klaim');
+                        return redirect()
+                            ->route('claim.fktp')
+                            ->with('success', 'Berhasil mengubah klaim');
                     }
                 }
                 if ($claim->level == 'FKRTL') {
@@ -223,16 +238,22 @@ class ClaimController extends Controller
             });
 
             if ($claim->level == 'FKRTL') {
-                return redirect()->route('claim.fkrtl')->with('success', 'Berhasil mengubah klaim');
+                return redirect()
+                    ->route('claim.fkrtl')
+                    ->with('success', 'Berhasil mengubah klaim');
             } else {
-                return redirect()->route('claim.fktp')->with('success', 'Berhasil mengubah klaim');
+                return redirect()
+                    ->route('claim.fktp')
+                    ->with('success', 'Berhasil mengubah klaim');
             }
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal mengubah klaim: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal mengubah klaim: ' . $e->getMessage());
         }
     }
 
-    public function delete(String $id)
+    public function delete(string $id)
     {
         try {
             DB::transaction(function () use ($id) {
@@ -240,13 +261,17 @@ class ClaimController extends Controller
                 $claim->delete();
             });
 
-            return redirect()->back()->with('success', 'Berhasil menghapus klaim');
+            return redirect()
+                ->back()
+                ->with('success', 'Berhasil menghapus klaim');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus klaim: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal menghapus klaim: ' . $e->getMessage());
         }
     }
 
-    public function approveFinance(String $id)
+    public function approveFinance(string $id)
     {
         try {
             DB::transaction(function () use ($id) {
@@ -257,13 +282,17 @@ class ClaimController extends Controller
                 ]);
             });
 
-            return redirect()->back()->with('success', 'Berhasil approve');
+            return redirect()
+                ->back()
+                ->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
-    public function approveStaff(String $id, Request $request)
+    public function approveStaff(string $id, Request $request)
     {
         try {
             DB::transaction(function () use ($id, $request) {
@@ -277,13 +306,17 @@ class ClaimController extends Controller
                 ]);
             });
 
-            return redirect()->back()->with('success', 'Berhasil approve');
+            return redirect()
+                ->back()
+                ->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
-    public function approveHead(String $id)
+    public function approveHead(string $id)
     {
         try {
             DB::transaction(function () use ($id) {
@@ -305,13 +338,17 @@ class ClaimController extends Controller
                 }
             });
 
-            return redirect()->back()->with('success', 'Berhasil approve');
+            return redirect()
+                ->back()
+                ->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
-    public function approveVerificator(String $id)
+    public function approveVerificator(string $id)
     {
         try {
             DB::transaction(function () use ($id) {
@@ -343,9 +380,13 @@ class ClaimController extends Controller
                 $claim->update($updateData);
             });
 
-            return redirect()->back()->with('success', 'Berhasil approve');
+            return redirect()
+                ->back()
+                ->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal approve: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal approve: ' . $e->getMessage());
         }
     }
 
@@ -354,7 +395,7 @@ class ClaimController extends Controller
         $claims = Claim::where('status', Claim::STATUS_TELAH_BAYAR)->get();
 
         return view('pages.history.history', [
-            'claims' => $claims
+            'claims' => $claims,
         ]);
     }
 
@@ -388,5 +429,81 @@ class ClaimController extends Controller
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
             ->orderBy('claims.updated_at', 'desc')
             ->get();
+    }
+
+    public function downloadWord(string $id)
+    {
+        $claim = Claim::find($id);
+        $fileName = '';
+        $recepientName = auth()->user()->name;
+
+        $dateNow = Carbon::now()
+            ->locale('id')
+            ->translatedFormat('l d F Y');
+        [$day, $todayDate, $todayMonth, $todayYear] = explode(' ', $dateNow);
+
+        [$monthService, $yearService] = explode(' ', $claim->month);
+
+        if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $templateProcessor = new TemplateProcessor('bast.docx');
+            $templateProcessor->setValues([
+                'day' => $day,
+                'todayDate' => $todayDate,
+                'todayMonth' => $todayMonth,
+                'todayYear' => $todayYear,
+                'faskesName' => $claim->hospital_name,
+                'monthService' => $monthService,
+                'yearService' => $yearService,
+                'recepientName' => $recepientName,
+            ]);
+
+            $fileName = "BAST_Movie_" . time() . '.docx';
+            $templateProcessor->saveAs($fileName);
+
+            return response()
+                ->download($fileName)
+                ->deleteFileAfterSend(true);
+        } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $templateProcessor = new TemplateProcessor('ba-lengkap.docx');
+            $templateProcessor->setValues([
+                'day' => $day,
+                'todayDate' => $todayDate,
+                'todayMonth' => $todayMonth,
+                'todayYear' => $todayYear,
+                'faskesName' => $claim->hospital_name,
+                'claimType' => $claim->claim_type,
+                'monthService' => $monthService,
+                'yearService' => $yearService,
+                'recepientName' => $recepientName,
+            ]);
+
+            $fileName = "BA Lengkap_Movie_" . time() . '.docx';
+            $templateProcessor->saveAs($fileName);
+
+            return response()
+                ->download($fileName)
+                ->deleteFileAfterSend(true);
+        } elseif ($claim->status == Claim::STATUS_BA_HASIL_VERIFIKASI && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $templateProcessor = new TemplateProcessor('bahv.docx');
+            $templateProcessor->setValues([
+                'day' => $day,
+                'todayDate' => $todayDate,
+                'todayMonth' => $todayMonth,
+                'todayYear' => $todayYear,
+                'faskesName' => $claim->hospital_name,
+                'monthService' => $monthService,
+                'yearService' => $yearService,
+                'dateNow' => $todayDate . ' ' . $todayMonth . ' ' . $todayYear,
+            ]);
+
+            $fileName = "BAHV_Movie_" . time() . '.docx';
+            $templateProcessor->saveAs($fileName);
+
+            return response()
+                ->download($fileName)
+                ->deleteFileAfterSend(true);
+        }
+
+        return abort(404);
     }
 }

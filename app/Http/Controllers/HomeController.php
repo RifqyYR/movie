@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\Hospital;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -66,6 +67,8 @@ class HomeController extends Controller
     {
         $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
 
+        $lastMonthName = Carbon::now()->subMonth()->locale('id')->translatedFormat('F');
+
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
                 $query->where('name', 'NOT LIKE', '%' . $keyword . '%');
@@ -79,6 +82,7 @@ class HomeController extends Controller
             ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
             ->whereIn('claim_type', $allowedType)
             ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('claims.month', 'LIKE', '%' . $lastMonthName . '%')
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
             ->orderBy('claims.updated_at', 'desc')
             ->get()
@@ -98,6 +102,8 @@ class HomeController extends Controller
     {
         $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
 
+        $lastMonthName = Carbon::now()->subMonth()->locale('id')->translatedFormat('F');
+
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
                 $query->where('name', 'NOT LIKE', '%' . $keyword . '%')->where('level', 'FKRTL');
@@ -111,6 +117,7 @@ class HomeController extends Controller
             ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
             ->where('claim_type', $allowedType)
             ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('claims.month', 'LIKE', '%' . $lastMonthName . '%')
             ->where('hospitals.level', 'FKRTL')
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
             ->orderBy('claims.updated_at', 'desc')
@@ -131,6 +138,8 @@ class HomeController extends Controller
     {
         $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
 
+        $lastMonthName = Carbon::now()->subMonth()->locale('id')->translatedFormat('F');
+
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
                 $query->where('name', 'NOT LIKE', '%' . $keyword . '%')->where('level', 'FKTP');
@@ -144,6 +153,7 @@ class HomeController extends Controller
             ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
             ->where('claim_type', $allowedType)
             ->where('status', '!=', 'Pembayaran Telah Dilakukan')
+            ->where('claims.month', 'LIKE', '%' . $lastMonthName . '%')
             ->where('hospitals.level', 'FKTP')
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
             ->orderBy('claims.updated_at', 'desc')
