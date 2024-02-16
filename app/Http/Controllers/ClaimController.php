@@ -11,10 +11,9 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use IntlDateFormatter;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\TemplateProcessor;
-
-use function Laravel\Prompts\error;
 
 class ClaimController extends Controller
 {
@@ -85,18 +84,12 @@ class ClaimController extends Controller
             });
 
             if ($exists) {
-                return redirect()
-                    ->back()
-                    ->with('error', 'Klaim telah terdaftar');
+                return redirect()->back()->with('error', 'Klaim telah terdaftar');
             }
             if ($hospital->level == 'FKRTL') {
-                return redirect()
-                    ->route('claim.fkrtl')
-                    ->with('success', 'Berhasil membuat klaim baru');
+                return redirect()->route('claim.fkrtl')->with('success', 'Berhasil membuat klaim baru');
             } else {
-                return redirect()
-                    ->route('claim.fktp')
-                    ->with('success', 'Berhasil membuat klaim baru');
+                return redirect()->route('claim.fktp')->with('success', 'Berhasil membuat klaim baru');
             }
         } catch (\Throwable $e) {
             return redirect()
@@ -153,13 +146,9 @@ class ClaimController extends Controller
                         'rjtl_number' => $data['no_reg_boa_rj'],
                     ]);
                     if ($claim->level == 'FKRTL') {
-                        return redirect()
-                            ->route('claim.fkrtl')
-                            ->with('success', 'Berhasil mengubah klaim');
+                        return redirect()->route('claim.fkrtl')->with('success', 'Berhasil mengubah klaim');
                     } else {
-                        return redirect()
-                            ->route('claim.fktp')
-                            ->with('success', 'Berhasil mengubah klaim');
+                        return redirect()->route('claim.fktp')->with('success', 'Berhasil mengubah klaim');
                     }
                 }
                 if ($claim->level == 'FKRTL') {
@@ -238,13 +227,9 @@ class ClaimController extends Controller
             });
 
             if ($claim->level == 'FKRTL') {
-                return redirect()
-                    ->route('claim.fkrtl')
-                    ->with('success', 'Berhasil mengubah klaim');
+                return redirect()->route('claim.fkrtl')->with('success', 'Berhasil mengubah klaim');
             } else {
-                return redirect()
-                    ->route('claim.fktp')
-                    ->with('success', 'Berhasil mengubah klaim');
+                return redirect()->route('claim.fktp')->with('success', 'Berhasil mengubah klaim');
             }
         } catch (\Throwable $e) {
             return redirect()
@@ -261,9 +246,7 @@ class ClaimController extends Controller
                 $claim->delete();
             });
 
-            return redirect()
-                ->back()
-                ->with('success', 'Berhasil menghapus klaim');
+            return redirect()->back()->with('success', 'Berhasil menghapus klaim');
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
@@ -282,9 +265,7 @@ class ClaimController extends Controller
                 ]);
             });
 
-            return redirect()
-                ->back()
-                ->with('success', 'Berhasil approve');
+            return redirect()->back()->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
@@ -302,13 +283,12 @@ class ClaimController extends Controller
                     'ba_date' => now(),
                     'ritl_number' => $request->no_reg_boa_ri,
                     'rjtl_number' => $request->no_reg_boa_rj,
+                    'register_boa_date' => now(),
                     'status' => Claim::STATUS_TELAH_REGISTER_BOA,
                 ]);
             });
 
-            return redirect()
-                ->back()
-                ->with('success', 'Berhasil approve');
+            return redirect()->back()->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
@@ -327,20 +307,20 @@ class ClaimController extends Controller
                     $claim->update([
                         'ba_date' => now(),
                         'status' => Claim::STATUS_TELAH_SETUJU,
+                        'approve_head_date' => now(),
                         'completion_limit_date' => $date->modify('+14 days'),
                     ]);
                 } else {
                     $claim->update([
                         'ba_date' => now(),
                         'status' => Claim::STATUS_TELAH_SETUJU,
+                        'approve_head_date' => now(),
                         'completion_limit_date' => $this->addBusinessDays(Carbon::parse($claim->file_completeness), 14),
                     ]);
                 }
             });
 
-            return redirect()
-                ->back()
-                ->with('success', 'Berhasil approve');
+            return redirect()->back()->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
@@ -348,10 +328,11 @@ class ClaimController extends Controller
         }
     }
 
-    public function approveVerificator(string $id)
+    public function approveVerificator(string $id, Request $request)
     {
+        $data = $request->all();
         try {
-            DB::transaction(function () use ($id) {
+            DB::transaction(function () use ($id, $data) {
                 $claim = Claim::find($id);
 
                 if (!$claim) {
@@ -366,6 +347,9 @@ class ClaimController extends Controller
                         $updateData['file_completeness'] = now();
                         $updateData['completion_limit_date'] = now()->modify('+9 day');
                     } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                        $updateData['fpk_number_ri'] = $data['no_reg_fpk_ri'];
+                        $updateData['fpk_number_rj'] = $data['no_reg_fpk_rj'];
+                        $updateData['bahv_date'] = now();
                         $updateData['status'] = Claim::STATUS_BA_HASIL_VERIFIKASI;
                     }
                 } else {
@@ -374,15 +358,16 @@ class ClaimController extends Controller
                         $updateData['file_completeness'] = now();
                         $updateData['completion_limit_date'] = $this->addBusinessDays(now(), 9);
                     } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                        $updateData['fpk_number_ri'] = $data['no_reg_fpk_ri'];
+                        $updateData['fpk_number_rj'] = $data['no_reg_fpk_rj'];
+                        $updateData['bahv_date'] = now();
                         $updateData['status'] = Claim::STATUS_BA_HASIL_VERIFIKASI;
                     }
                 }
                 $claim->update($updateData);
             });
 
-            return redirect()
-                ->back()
-                ->with('success', 'Berhasil approve');
+            return redirect()->back()->with('success', 'Berhasil approve');
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
@@ -422,13 +407,7 @@ class ClaimController extends Controller
 
     private function getClaims($level)
     {
-        return Claim::with('hospital')
-            ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
-            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
-            ->where('hospitals.level', $level)
-            ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')
-            ->orderBy('claims.updated_at', 'desc')
-            ->get();
+        return Claim::with('hospital')->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')->where('status', '!=', 'Pembayaran Telah Dilakukan')->where('hospitals.level', $level)->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.level')->orderBy('claims.updated_at', 'desc')->get();
     }
 
     public function downloadWord(string $id)
@@ -437,14 +416,14 @@ class ClaimController extends Controller
         $fileName = '';
         $recepientName = auth()->user()->name;
 
-        $dateNow = Carbon::now()
-            ->locale('id')
-            ->translatedFormat('l d F Y');
-        [$day, $todayDate, $todayMonth, $todayYear] = explode(' ', $dateNow);
-
         [$monthService, $yearService] = explode(' ', $claim->month);
 
         if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $dateNow = Carbon::parse($claim->created_date)
+                ->locale('id')
+                ->translatedFormat('l d F Y');
+            [$day, $todayDate, $todayMonth, $todayYear] = explode(' ', $dateNow);
+
             $templateProcessor = new TemplateProcessor('bast.docx');
             $templateProcessor->setValues([
                 'day' => $day,
@@ -457,13 +436,14 @@ class ClaimController extends Controller
                 'recepientName' => $recepientName,
             ]);
 
-            $fileName = "BAST_Movie_" . time() . '.docx';
+            $fileName = 'BAST_Movie_' . time() . '.docx';
             $templateProcessor->saveAs($fileName);
 
-            return response()
-                ->download($fileName)
-                ->deleteFileAfterSend(true);
+            return response()->download($fileName)->deleteFileAfterSend(true);
         } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $dateNow = Carbon::parse($claim->file_completeness)->locale('id')->translatedFormat('l d F Y');
+            [$day, $todayDate, $todayMonth, $todayYear] = explode(' ', $dateNow);
+
             $templateProcessor = new TemplateProcessor('ba-lengkap.docx');
             $templateProcessor->setValues([
                 'day' => $day,
@@ -477,13 +457,14 @@ class ClaimController extends Controller
                 'recepientName' => $recepientName,
             ]);
 
-            $fileName = "BA Lengkap_Movie_" . time() . '.docx';
+            $fileName = 'BA Lengkap_Movie_' . time() . '.docx';
             $templateProcessor->saveAs($fileName);
 
-            return response()
-                ->download($fileName)
-                ->deleteFileAfterSend(true);
+            return response()->download($fileName)->deleteFileAfterSend(true);
         } elseif ($claim->status == Claim::STATUS_BA_HASIL_VERIFIKASI && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $dateNow = Carbon::parse($claim->ba_date)->locale('id')->translatedFormat('l d F Y');
+            [$day, $todayDate, $todayMonth, $todayYear] = explode(' ', $dateNow);
+
             $templateProcessor = new TemplateProcessor('bahv.docx');
             $templateProcessor->setValues([
                 'day' => $day,
@@ -496,12 +477,32 @@ class ClaimController extends Controller
                 'dateNow' => $todayDate . ' ' . $todayMonth . ' ' . $todayYear,
             ]);
 
-            $fileName = "BAHV_Movie_" . time() . '.docx';
+            $fileName = 'BAHV_Movie_' . time() . '.docx';
             $templateProcessor->saveAs($fileName);
 
-            return response()
-                ->download($fileName)
-                ->deleteFileAfterSend(true);
+            return response()->download($fileName)->deleteFileAfterSend(true);
+        } elseif ($claim->status == Claim::STATUS_TELAH_SETUJU) {
+            $locale = 'id_ID';
+            $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+            $templateProcessor = new TemplateProcessor('lembar-APA.docx');
+            $templateProcessor->setValues([
+                'namaFaskes' => $claim->hospital_name,
+                'nomorRJ' => $claim->rjtl_number,
+                'nomorRI' => $claim->ritl_number,
+                'nomorRJFPK' => $claim->fpk_number_rj,
+                'nomorRIFPK' => $claim->fpk_number_ri,
+                'bulanPelayanan' => $claim->month,
+                'jenisKlaim' => $claim->claim_type,
+                'tanggalRegisterBOA' => $dateFormatter->format(new DateTime($claim->register_boa_date == null ? now() : $claim->register_boa_date)),
+                'tanggalSetujuKlaim' => $dateFormatter->format(new DateTime($claim->approve_head_date == null ? now() : $claim->approve_head_date)),
+                'tanggalJatuhTempo' => $dateFormatter->format(new DateTime($claim->completion_limit_date == null ? now() : $claim->completion_limit_date)),
+            ]);
+
+            $fileName = 'Lembar APA Movie_' . time() . '.docx';
+            $templateProcessor->saveAs($fileName);
+
+            return response()->download($fileName)->deleteFileAfterSend(true);
         }
 
         return abort(404);

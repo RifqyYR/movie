@@ -51,7 +51,7 @@
         const link = document.getElementById('approveVerificatorLink');
         const link2 = document.getElementById('approveVerificatorCompleteLink');
         link.href = "/claim/approve-verifikator/" + id;
-        link2.href = "/claim/approve-verifikator/" + id;
+        link2.action = "/claim/approve-verifikator-complete/" + id;
     }
 
     function approveHead(id) {
@@ -109,6 +109,32 @@
         }
     });
 
+    $('#input-no-reg-fpk-ri').keyup(function() {
+        var value = $(this).val();
+        var value2 = $('#input-no-reg-fpk-rj').val();
+        if ((value.length == 14 || value2.length == 14) && !(value.length > 14 || value2.length > 14 || (value
+                .length > 0 && value.length < 14) || (value2.length > 0 && value2.length < 14))) {
+            $('#btn-approve-verificator-complete').prop('disabled', false);
+            $('#fpk-reg-number-warning').hide();
+        } else {
+            $('#btn-approve-verificator-complete').prop('disabled', true);
+            $('#fpk-reg-number-warning').show();
+        }
+    });
+
+    $('#input-no-reg-fpk-rj').keyup(function() {
+        var value = $(this).val();
+        var value2 = $('#input-no-reg-fpk-ri').val();
+        if ((value.length == 14 || value2.length == 14) && !(value.length > 14 || value2.length > 14 || (value
+                .length > 0 && value.length < 14) || (value2.length > 0 && value2.length < 14))) {
+            $('#btn-approve-verificator-complete').prop('disabled', false);
+            $('#fpk-reg-number-warning').hide();
+        } else {
+            $('#btn-approve-verificator-complete').prop('disabled', true);
+            $('#fpk-reg-number-warning').show();
+        }
+    });
+
     $('#edit-status').on('change', function() {
         if (status.includes(this.value)) {
             $('.form-edit-register-boa').show(500);
@@ -137,6 +163,7 @@
         $('#description-alert').hide();
         $('.table-toggle').hide();
         $('#boa-reg-number-warning').hide();
+        $('#fpk-reg-number-warning').hide();
 
         if (status.includes($('#edit-status').val())) {
             $('.form-edit-register-boa').show();

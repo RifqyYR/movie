@@ -149,7 +149,19 @@ if (!$claims->isEmpty()) {
                                         <td class="align-middle fw-bold lh-1 table-custom-fs">
                                             @php
                                                 if ($item->status == App\Models\Claim::STATUS_TELAH_SETUJU) {
-                                                    echo $text;
+                                                    echo '<a class="text-black link-status" href="#" id="badropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="fw-bold" style="0.7rem;">' .
+                                                        $item->status .
+                                                        '</span>
+                                                            </a>';
+                                                    echo '<div class="dropdown-menu dropdown-menu-bottom shadow" aria-labelledby="#badropdown">
+                                                                <a class="dropdown-item px-3 text-black" href="/claim/download/' .
+                                                        $item->uuid .
+                                                        '" target="_blank">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#000000" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
+                                                                    Download Lembar APA
+                                                                </a>
+                                                            </div>';
                                                 } elseif ($item->status == App\Models\CLaim::STATUS_TELAH_REGISTER_BOA) {
                                                     echo $text2;
                                                 } else {
@@ -354,31 +366,60 @@ if (!$claims->isEmpty()) {
                                     <div class="modal fade" id="approveVerificatorCompleteModal" tabindex="-1"
                                         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title text-danger fw-bold fs-09rem"
-                                                        id="exampleModalLabel">
-                                                        Konfirmasi Approve</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body table-custom-fs-larger">
-                                                    Apakah Anda yakin ingin melakukan <b class="text-black">
-                                                        BA Hasil Verifikasi Klaim?
-                                                    </b>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button"
-                                                        class="btn table-custom-fs-larger btn-confirm-approve btn-danger"
-                                                        data-dismiss="modal" id="btn-approve-verificator">Tidak</button>
-                                                    <a id="approveVerificatorCompleteLink" href="">
+                                            <form action="" method="POST" id="approveVerificatorCompleteLink">
+                                                @csrf
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-danger fw-bold fs-09rem"
+                                                            id="exampleModalLabel">
+                                                            Konfirmasi Approve</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body table-custom-fs-larger">
+                                                        Apakah Anda yakin ingin melakukan <b class="text-black">BA Hasil
+                                                            Verifikasi Berkas Klaim</b>
+                                                        <div class="form-group mt-3">
+                                                            <div>
+                                                                <div class="input-group">
+                                                                    <span
+                                                                        class="table-custom-fs input-group-text no-bottom-border-radius">RI</span>
+                                                                    <input id="input-no-reg-fpk-ri" type="text"
+                                                                        class="table-custom-fs form-control no-bottom-border-radius"
+                                                                        name="no_reg_fpk_ri"
+                                                                        placeholder="Masukkan Nomor FPK RI" autofocus
+                                                                        autocomplete="no_reg_fpk_ri" />
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div class="input-group">
+                                                                    <span
+                                                                        class="table-custom-fs input-group-text no-top-border-radius">RJ</span>
+                                                                    <input id="input-no-reg-fpk-rj" type="text"
+                                                                        class="table-custom-fs form-control no-top-border-radius"
+                                                                        name="no_reg_fpk_rj"
+                                                                        placeholder="Masukkan Nomor FPK RJ" autofocus
+                                                                        autocomplete="no_reg_fpk_rj" />
+                                                                </div>
+                                                            </div>
+                                                            <span id="fpk-reg-number-warning"
+                                                                class="text-danger table-custom-fs-larger">* Nomor RI atau
+                                                                RJ harus 14 digit</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
                                                         <button type="button"
-                                                            class="btn table-custom-fs-larger btn-confirm-approve btn-success">Iya</button>
-                                                    </a>
+                                                            class="btn table-custom-fs-larger btn-confirm-approve btn-danger"
+                                                            data-dismiss="modal" id="btn-cancel">Tidak</button>
+                                                        <button type="submit"
+                                                            class="btn table-custom-fs-larger btn-confirm-approve btn-success"
+                                                            id="btn-approve-verificator-complete" disabled>Iya</button>
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="modal fade" id="approveHeadModal" tabindex="-1" role="dialog"

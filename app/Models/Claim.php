@@ -33,6 +33,11 @@ class Claim extends Model
         'completion_limit_date',
         'file_completeness',
         'status',
+        'fpk_number_ri',
+        'fpk_number_rj',
+        'bahv_date',
+        'register_boa_date',
+        'approve_head_date',
     ];
 
     protected $keyType = 'string';
