@@ -52,6 +52,7 @@ Route::middleware(['auth', 'verified', 'verificator'])->group(function () {
   Route::get('/claim/buat', [ClaimController::class, 'showCreatePage'])->name('claim.create.show');
   Route::post('/claim/proses-buat-claim', [ClaimController::class, 'createProcess'])->name('claim.create');
   Route::get('/claim/approve-verifikator/{id}', [ClaimController::class, 'approveVerificator'])->name('claim.approve.verificator');
+  Route::post('/claim/approve-verifikator-complete/{id}', [ClaimController::class, 'approveVerificator'])->name('claim.approve.verificator-complete');
 });
 
 Route::middleware(['auth', 'verified', 'head'])->group(function () {

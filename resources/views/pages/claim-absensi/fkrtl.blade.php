@@ -32,32 +32,78 @@
             return 0;
         }
 
-        function getAbsensi($hospital_name, $claim_type, $object)
+        function filterEarliestMonth($hospital_name, $claim_type, $array)
         {
-            foreach ($object as $key => $data) {
-                $locale = 'id_ID';
-                $date = new DateTime(now());
-                $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-
-                if ($data->hospital_name == $hospital_name && $data->claim_type == $claim_type) {
-                    $parts = explode(' ', $dateFormatter->format($date));
-                    $parts2 = explode(' ', $data->month);
-
-                    $monthNow = monthToNum(trim($parts[1]));
-                    $monthItem = monthToNum(trim($parts2[0]));
-
-                    $yearNow = $parts[2];
-                    $yearItem = $parts2[1];
-                    if ($yearNow > $yearItem) {
-                        $monthNow = $monthNow + 12;
-                        $absensiKlaim = abs($monthItem - $monthNow);
+            $earliestMonth = null;
+            $sortedCollection = $array
+                ->filter(function ($item) {
+                    // Extract month and year, handle errors (replace with error handling)
+                    $monthYear = explode(' ', $item->month);
+                    if (!isset($monthYear[0]) || !isset($monthYear[1]) || !is_numeric($monthYear[1])) {
+                        return false; // Exclude invalid items
                     }
-                    $absensiKlaim = abs($monthItem - $monthNow);
+                    // Convert month name to lowercase for case-insensitive sorting
+                    $monthNum = (int) monthToNum($monthYear[0]);
+                    // Create single identifier within the filter function
+                    $monthIdentifier = $monthYear[1] * 100 + $monthNum;
+                    // Pass identifier and month name to sortBy function
+                    // @dd($monthIdentifier);
+                    return ['monthIdentifier' => $monthIdentifier, 'monthName' => $monthNum];
+                })
+                ->sortBy(function ($item) {
+                    $monthYear = explode(' ', $item->month);
+                    // Sort by monthIdentifier first, then by monthName for consistent order
+                    $monthNum = (int) monthToNum($monthYear[0]);
+                    $monthIdentifier = $monthYear[1] * 100 + $monthNum;
 
-                    return $absensiKlaim;
+                    $item['monthNum'] = $monthIdentifier;
+                    // Sort by monthIdentifier first, then by monthNum (numerical comparison)
+                    return [$item['monthIdentifier'], $item['monthNum']];
+                });
+            foreach ($sortedCollection as $key => $data) {
+                if ($data->hospital_name == $hospital_name && $data->claim_type == $claim_type) {
+                    if ($earliestMonth == null) {
+                        $earliestMonth = $data;
+                    } else {
+                        if ($data->monthNum > $earliestMonth->monthNum) {
+                            $earliestMonth = $data;
+                        } else {
+                            $earliestMonth = $earliestMonth;
+                        }
+                    }
                 }
             }
-            return null;
+            return $earliestMonth;
+        }
+
+        function getAbsensi($hospital_name, $claim_type, $object)
+        {
+            $data = filterEarliestMonth($hospital_name, $claim_type, $object);
+
+            if ($data == null) {
+                return null;
+            }
+            $locale = 'id_ID';
+            $date = new DateTime(now());
+            $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+            $parts = explode(' ', $dateFormatter->format($date));
+            $parts2 = explode(' ', $data->month);
+
+            $monthNow = monthToNum($parts[1]);
+            $monthItem = monthToNum($parts2[0]);
+
+            $yearNow = $parts[2];
+            $yearItem = $parts2[1];
+
+            if ($yearNow > $yearItem) {
+                $monthNow = $monthNow + 12;
+                $absensiKlaim = abs($monthItem - $monthNow);
+                return $absensiKlaim;
+            }
+            $absensiKlaim = abs($monthItem - $monthNow);
+
+            return $absensiKlaim;
         }
 
         $labExist = false;
@@ -76,10 +122,8 @@
     @endphp
     <div class="container-fluid">
         <div class="d-sm-flex">
-            <a href="{{ route('absent-claim') }}" class="fab-back rounded"
-                style="margin-right: 3.5rem; z-index: 1;">
-                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="10"
-                    viewBox="0 0 320 512">
+            <a href="{{ route('absent-claim') }}" class="fab-back rounded" style="margin-right: 3.5rem; z-index: 1;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512">
                     <path fill="#ffffff"
                         d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
                 </svg>
