@@ -320,31 +320,40 @@ if (!$claims->isEmpty()) {
                                     <div class="modal fade" id="approveVerificatorModal" tabindex="-1" role="dialog"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title text-danger fw-bold fs-09rem"
-                                                        id="exampleModalLabel">
-                                                        Konfirmasi Approve</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body table-custom-fs-larger">
-                                                    Apakah Anda yakin ingin melakukan <b class="text-black">BA Kelengkapan
-                                                        Berkas Klaim?</b>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button"
-                                                        class="btn btn-danger table-custom-fs-larger btn-confirm-approve"
-                                                        data-dismiss="modal">Tidak</button>
-                                                    <a id="approveVerificatorLink" href="">
+                                            <form action="" method="POST" id="approveVerificatorLink">
+                                                @csrf
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-danger fw-bold fs-09rem"
+                                                            id="exampleModalLabel">
+                                                            Konfirmasi Approve</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body table-custom-fs-larger">
+                                                        Apakah Anda yakin ingin melakukan <b class="text-black">BA
+                                                            Kelengkapan Berkas Klaim</b>
+                                                        <div class="form-group mt-3">
+                                                            <input type="date" class="form-control table-custom-fs"
+                                                                name="tanggal_ba_lengkap"
+                                                                value="{{ now()->toDateString() }}" autocomplete="off"
+                                                                max="{{ now()->toDateString() }}"
+                                                                min="{{ $item->created_date }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
                                                         <button type="button"
-                                                            class="btn btn-success table-custom-fs-larger btn-confirm-approve"
+                                                            class="btn table-custom-fs-larger btn-confirm-approve btn-danger"
+                                                            data-dismiss="modal" id="btn-cancel">Tidak</button>
+                                                        <button type="submit"
+                                                            class="btn table-custom-fs-larger btn-confirm-approve btn-success"
                                                             id="btn-approve-verificator">Iya</button>
-                                                    </a>
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="modal fade" id="approveVerificatorCompleteModal" tabindex="-1"

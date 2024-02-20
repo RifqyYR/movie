@@ -331,6 +331,7 @@ class ClaimController extends Controller
     public function approveVerificator(string $id, Request $request)
     {
         $data = $request->all();
+
         try {
             DB::transaction(function () use ($id, $data) {
                 $claim = Claim::find($id);
@@ -339,14 +340,14 @@ class ClaimController extends Controller
                     throw new \Exception('Klaim tidak ditemukan');
                 }
 
-                $updateData = ['ba_date' => now()];
-
                 if ($claim->level == 'FKRTL') {
                     if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA) {
+                        $updateData['ba_date'] = $data['tanggal_ba_lengkap'];
                         $updateData['status'] = Claim::STATUS_BA_KELENGKAPAN_BERKAS;
-                        $updateData['file_completeness'] = now();
+                        $updateData['file_completeness'] = $data['tanggal_ba_lengkap'];
                         $updateData['completion_limit_date'] = now()->modify('+9 day');
                     } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                        $updateData = ['ba_date' => now()];
                         $updateData['fpk_number_ri'] = $data['no_reg_fpk_ri'];
                         $updateData['fpk_number_rj'] = $data['no_reg_fpk_rj'];
                         $updateData['bahv_date'] = now();
@@ -354,10 +355,12 @@ class ClaimController extends Controller
                     }
                 } else {
                     if ($claim->status == Claim::STATUS_BA_SERAH_TERIMA) {
+                        $updateData['ba_date'] = $data['tanggal_ba_lengkap'];
                         $updateData['status'] = Claim::STATUS_BA_KELENGKAPAN_BERKAS;
-                        $updateData['file_completeness'] = now();
+                        $updateData['file_completeness'] = $data['tanggal_ba_lengkap'];
                         $updateData['completion_limit_date'] = $this->addBusinessDays(now(), 9);
                     } elseif ($claim->status == Claim::STATUS_BA_KELENGKAPAN_BERKAS) {
+                        $updateData = ['ba_date' => now()];
                         $updateData['fpk_number_ri'] = $data['no_reg_fpk_ri'];
                         $updateData['fpk_number_rj'] = $data['no_reg_fpk_rj'];
                         $updateData['bahv_date'] = now();
