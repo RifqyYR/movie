@@ -50,7 +50,7 @@
     function approveVerificator(id) {
         const link = document.getElementById('approveVerificatorLink');
         const link2 = document.getElementById('approveVerificatorCompleteLink');
-        link.href = "/claim/approve-verifikator/" + id;
+        link.action = "/claim/approve-verifikator/" + id;
         link2.action = "/claim/approve-verifikator-complete/" + id;
     }
 
