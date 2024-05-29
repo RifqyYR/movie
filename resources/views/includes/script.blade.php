@@ -41,6 +41,11 @@
         const link = document.getElementById('deleteClaimLink');
         link.href = "/claim/hapus/" + id;
     }
+    
+    function deleteArchive(id) {
+        const link = document.getElementById('deleteArchiveLink');
+        link.href = "/arsip/hapus/" + id;
+    }
 
     function approveFinance(id) {
         const link = document.getElementById('approveFinanceLink');

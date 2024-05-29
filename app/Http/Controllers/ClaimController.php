@@ -508,6 +508,30 @@ class ClaimController extends Controller
             return response()->download($fileName)->deleteFileAfterSend(true);
         }
 
+        if ($claim->status == Claim::STATUS_TELAH_BAYAR && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+            $locale = 'id_ID';
+            $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+            $templateProcessor = new TemplateProcessor('lembar-APA.docx');
+            $templateProcessor->setValues([
+                'namaFaskes' => $claim->hospital_name,
+                'nomorRJ' => $claim->rjtl_number,
+                'nomorRI' => $claim->ritl_number,
+                'nomorRJFPK' => $claim->fpk_number_rj,
+                'nomorRIFPK' => $claim->fpk_number_ri,
+                'bulanPelayanan' => $claim->month,
+                'jenisKlaim' => $claim->claim_type,
+                'tanggalRegisterBOA' => $dateFormatter->format(new DateTime($claim->register_boa_date == null ? now() : $claim->register_boa_date)),
+                'tanggalSetujuKlaim' => $dateFormatter->format(new DateTime($claim->approve_head_date == null ? now() : $claim->approve_head_date)),
+                'tanggalJatuhTempo' => $dateFormatter->format(new DateTime($claim->completion_limit_date == null ? now() : $claim->completion_limit_date)),
+            ]);
+
+            $fileName = 'Lembar APA Movie_' . time() . '.docx';
+            $templateProcessor->saveAs($fileName);
+
+            return response()->download($fileName)->deleteFileAfterSend(true);
+        }
+
         return abort(404);
     }
 }

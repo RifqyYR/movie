@@ -103,11 +103,19 @@
                                             @endif
                                         </td>
                                         @if (request('isActive') != 'inactive' && auth()->user()->role != 'GUEST')
-                                            <td class="align-middle fw-bold">
+                                            <td class="align-middle fw-bold text-nowrap">
                                                 <a href="/arsip/edit/{{ $item->uuid }}"
                                                     class="btn btn-warning btn-sm mb-1 table-custom-fs">
                                                     Edit
                                                 </a>
+                                                @if (Auth::user()->role == 'ADMIN')
+                                                    <button type="button"
+                                                        class="btn btn-danger btn-sm table-custom-fs mb-1"
+                                                        data-toggle="modal" data-target="#deleteArchiveModal"
+                                                        onclick="deleteArchive('{{ $item->uuid }}')">
+                                                        Hapus
+                                                    </button>
+                                                @endif
                                             </td>
                                         @endif
                                     </tr>
@@ -115,6 +123,32 @@
                             @endif
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteArchiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger fw-bold fs-09rem" id="exampleModalLabel">
+                        Konfirmasi Hapus</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body custom-table-fs-larger">
+                    Apakah Anda yakin ingin menghapus item ini?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-delete-archive table-custom-fs-larger btn-secondary"
+                        data-dismiss="modal" id="btn-delete">Tidak</button>
+                    <a id="deleteArchiveLink" href="">
+                        <button type="button"
+                            class="btn btn-delete-archive table-custom-fs-larger btn-danger">Iya</button>
+                    </a>
                 </div>
             </div>
         </div>
