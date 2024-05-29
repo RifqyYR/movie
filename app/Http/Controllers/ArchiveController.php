@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Exports\ArchiveExport;
 use App\Models\Archive;
 use App\Models\Hospital;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use Ramsey\Uuid\Uuid;
 
 class ArchiveController extends Controller
@@ -101,6 +103,8 @@ class ArchiveController extends Controller
             }
             $bulan = $request->input('bulan_' . $counter);
             $tahun = $request->input('tahun_' . $counter);
+            
+            $now = now()->year;
 
             $archives[] = [
                 'uuid' => Uuid::uuid7(),
@@ -116,6 +120,7 @@ class ArchiveController extends Controller
                 'description' => $request->input('keterangan_' . $counter),
                 'file_content_information' => 'Berkas Klaim ' . $judulBerkas . ' ' . $hospital->name . ' ' . $bulan . ' ' . $tahun,
                 'active_retention_schedule' => $activeSchedule,
+                'status' => $now - $tahun == $activeSchedule ? 'INAKTIF' : 'AKTIF',
             ];
             $counter++;
         }
@@ -198,6 +203,22 @@ class ArchiveController extends Controller
     public function excel()
     {
         return Excel::download(new ArchiveExport(), 'movie-arsip.xlsx');
+    }
+
+    public function delete($uuid)
+    {
+        $archive = Archive::where('uuid', $uuid)->first();
+
+        try {
+            $archive->delete();
+            return redirect()
+                ->route('archive')
+                ->with('success', 'Berhasil menghapus arsip');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal menghapus arsip: ' . $e->getMessage());
+        }
     }
 
     public function checkInactiveArchive()
