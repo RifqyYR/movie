@@ -1,5 +1,22 @@
-const labels = ["Total Faskes", "Klaim Diajukan", "Klaim Belum Diajukan"];
+function numToMonth(month) {
+    if (month == 0) return "Januari";
+    if (month == 1) return "Februari";
+    if (month == 2) return "Maret";
+    if (month == 3) return "April";
+    if (month == 4) return "Mei";
+    if (month == 5) return "Juni";
+    if (month == 6) return "Juli";
+    if (month == 7) return "Agustus";
+    if (month == 8) return "September";
+    if (month == 9) return "Oktober";
+    if (month == 10) return "November";
+    if (month == 11) return "Desember";
+}
+
+const labels = ["Total Faskes", "Faskes Telah Mengajukan", "Faskes Belum Mengajukan"];
 const backgroundColor = ["#2E3192", "#00a651", "#fc7f01"];
+const yearNow = new Date().getFullYear();
+const monthNow = numToMonth(new Date().getMonth());
 const option = {
     animation: {
         duration: 2200,
@@ -26,7 +43,7 @@ const option = {
         },
         title: {
             display: true,
-            text: "ABSENSI KLAIM FKRTL REGULER (INACBGS)",
+            text: "ABSENSI KLAIM FKRTL REGULER (INACBGS) - " + monthNow.toUpperCase() + " " + yearNow,
             font: {
                 size: 12,
             },
@@ -62,7 +79,7 @@ const optionFKTP = {
         },
         title: {
             display: true,
-            text: "ABSENSI KLAIM FKTP REGULER (NON KAPITASI)",
+            text: "ABSENSI KLAIM FKTP REGULER (NON KAPITASI) - " + monthNow.toUpperCase() + " " + yearNow,
             font: {
                 size: 12,
             },
