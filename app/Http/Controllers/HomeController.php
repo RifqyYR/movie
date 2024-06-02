@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Claim;
 use App\Models\Hospital;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
+use IntlDateFormatter;
 
 class HomeController extends Controller
 {
@@ -27,6 +29,35 @@ class HomeController extends Controller
     public function index()
     {
         return view('pages.home');
+    }
+
+    private function numToMonth($month)
+    {
+        if ($month == 1) {
+            return "Januari";
+        } else if ($month == 2) {
+            return "Februari";
+        } else if ($month == 3) {
+            return "Maret";
+        } else if ($month == 4) {
+            return "April";
+        } else if ($month == 5) {
+            return "Mei";
+        } else if ($month == 6) {
+            return "Juni";
+        } else if ($month == 7) {
+            return "Juli";
+        } else if ($month == 8) {
+            return "Agustus";
+        } else if ($month == 9) {
+            return "September";
+        } else if ($month == 10) {
+            return "Oktober";
+        } else if ($month == 11) {
+            return "November";
+        } else if ($month == 12) {
+            return "Desember";
+        }
     }
 
     public function fkrtl(Request $request)
@@ -67,7 +98,8 @@ class HomeController extends Controller
     {
         $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
 
-        $lastMonthName = Carbon::now()->subMonth()->locale('id')->translatedFormat('F');
+        $monthNow = Carbon::now()->locale('id')->month;
+        $lastMonthName = $this->numToMonth($monthNow - 1);
 
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
@@ -101,7 +133,8 @@ class HomeController extends Controller
     {
         $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
 
-        $lastMonthName = Carbon::now()->subMonth()->locale('id')->translatedFormat('F');
+        $monthNow = Carbon::now()->locale('id')->month;
+        $lastMonthName = $this->numToMonth($monthNow - 1);
 
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
@@ -115,7 +148,6 @@ class HomeController extends Controller
         $claims = Claim::with('hospital')
             ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
             ->where('claim_type', $allowedType)
-            // ->where('status', '!=', 'Pembayaran Telah Dilakukan')
             ->where('claims.month', 'LIKE', '%' . $lastMonthName . '%')
             ->where('hospitals.level', 'FKRTL')
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')
@@ -137,7 +169,8 @@ class HomeController extends Controller
     {
         $keywords = ['optik', 'apotik', 'apotek', 'laboratorium', 'prodia'];
 
-        $lastMonthName = Carbon::now()->subMonth()->locale('id')->translatedFormat('F');
+        $monthNow = Carbon::now()->locale('id')->month;
+        $lastMonthName = $this->numToMonth($monthNow - 1);
 
         $hospitals = Hospital::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
@@ -151,7 +184,6 @@ class HomeController extends Controller
         $claims = Claim::with('hospital')
             ->join('hospitals', 'claims.hospital_uuid', '=', 'hospitals.uuid')
             ->where('claim_type', $allowedType)
-            ->where('status', '!=', 'Pembayaran Telah Dilakukan')
             ->where('claims.month', 'LIKE', '%' . $lastMonthName . '%')
             ->where('hospitals.level', 'FKTP')
             ->select('claims.*', 'hospitals.uuid as hospital_uuid', 'hospitals.region')

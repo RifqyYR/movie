@@ -30,8 +30,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
   // Approval
   Route::get('/claim/approve-verifikator/{id}', [ClaimController::class, 'approveVerificator'])->name('claim.approve.verificator');
-  Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
-  Route::get('/claim/approve-keuangan/{id}', [ClaimController::class, 'approveFinance'])->name('claim.approve.finance');
+  Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHeadSingle'])->name('claim.approve.head-single');
+  Route::get('/claim/approve-keuangan/{id}', [ClaimController::class, 'approveFinanceSingle'])->name('claim.approve.finance-single');
 
   // User Management
   Route::get('/user', [UserController::class, 'index'])->name('user');
@@ -60,7 +60,7 @@ Route::middleware(['auth', 'verified', 'verificator'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'head'])->group(function () {
-  Route::get('/claim/approve-kabag/{id}', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
+  Route::post('/claim/approve-kabag', [ClaimController::class, 'approveHead'])->name('claim.approve.head');
 });
 
 Route::middleware(['auth', 'verified', 'staff'])->group(function () {
@@ -72,7 +72,7 @@ Route::middleware(['auth', 'verified', 'staff'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'finance'])->group(function () {
-  Route::get('/claim/approve-keuangan/{id}', [ClaimController::class, 'approveFinance'])->name('claim.approve.finance');
+  Route::post('/claim/approve-keuangan', [ClaimController::class, 'approveFinance'])->name('claim.approve.finance');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

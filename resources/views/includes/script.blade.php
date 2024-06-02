@@ -41,7 +41,7 @@
         const link = document.getElementById('deleteClaimLink');
         link.href = "/claim/hapus/" + id;
     }
-    
+
     function deleteArchive(id) {
         const link = document.getElementById('deleteArchiveLink');
         link.href = "/arsip/hapus/" + id;
@@ -373,5 +373,25 @@
         counter--;
         $(`#deleteButton-${counter}`).prop('disabled', false);
         $("#" + id).remove();
+    }
+
+    function toggleCheckbox(event, id) {
+        var isActionCol =
+            event.target.classList.contains("action-col") ||
+            event.target.parentElement.classList.contains("action-col") ||
+            event.target.parentElement.parentElement.classList.contains(
+                "action-col"
+            );
+
+        if (!isActionCol) {
+            var checkbox = document.getElementById("checkbox" + id);
+            checkbox.checked = !checkbox.checked;
+
+            var checkboxes = document.getElementsByName("ids[]");
+            var isChecked = Array.prototype.slice
+                .call(checkboxes)
+                .some((x) => x.checked);
+            document.getElementById("btnUpdateStatus").disabled = !isChecked;
+        }
     }
 </script>
