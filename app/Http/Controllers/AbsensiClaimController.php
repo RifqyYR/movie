@@ -103,6 +103,8 @@ class AbsensiClaimController extends Controller
 
         $hospitals = Hospital::where('level', 'FKTP')
             ->where('region', $region)
+            ->orderByRaw("CASE WHEN name LIKE 'PKM%' THEN 0 ELSE 1 END")
+            ->orderBy('name', 'asc')
             ->get();
 
         return view('pages.claim-absensi.fktp', [

@@ -66,7 +66,7 @@
                                 </th>
                                 <th scope="col" class="text-center align-middle custom-col">Keterangan</th>
                                 <th scope="col" class="text-center align-middle custom-col">JRA</th>
-                                @if (request('isActive') != 'inactive' && auth()->user()->role != 'GUEST')
+                                @if (auth()->user()->role != 'GUEST')
                                     <th scope="col" class="text-center align-middle custom-col">Aksi</th>
                                 @endif
                             </tr>
@@ -102,7 +102,7 @@
                                                 {{ $item->status == 'AKTIF' ? $item->active_retention_schedule . ' Tahun' : '' }}
                                             @endif
                                         </td>
-                                        @if (request('isActive') != 'inactive' && auth()->user()->role != 'GUEST')
+                                        @if (auth()->user()->role != 'GUEST')
                                             <td class="align-middle fw-bold text-nowrap">
                                                 <a href="/arsip/edit/{{ $item->uuid }}"
                                                     class="btn btn-warning btn-sm mb-1 table-custom-fs">

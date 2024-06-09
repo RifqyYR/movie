@@ -2,17 +2,11 @@
 <html lang="en">
 
 <head>
-    @php
-        $allowedRoute = ['claim.fkrtl', 'claim.fktp', 'history', 'absensi.fktp', 'absensi.fkrtl'];
-    @endphp
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    @if (in_array(Route::currentRouteName(), $allowedRoute))
-        <meta http-equiv="refresh" content="120">
-    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>MOVIE | Monitoring Verifikasi E-Claim</title>

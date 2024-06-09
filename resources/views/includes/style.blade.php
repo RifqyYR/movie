@@ -243,4 +243,12 @@
         font-weight: bold !important;
         text-decoration: none;
     }
+
+    input[type='checkbox'] {
+        accent-color: red !important;
+    }
+
+    input:checked~.checkbox-container {
+        background-color: red !important;
+    }
 </style>

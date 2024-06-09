@@ -254,7 +254,25 @@ class ClaimController extends Controller
         }
     }
 
-    public function approveFinance(string $id)
+    public function approveFinance(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                Claim::whereIn('uuid', $request->ids)->update([
+                    'ba_date' => now(),
+                    'status' => Claim::STATUS_TELAH_BAYAR,
+                ]);
+            });
+
+            return redirect()->back()->with('success', 'Berhasil approve');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal approve: ' . $e->getMessage());
+        }
+    }
+
+    public function approveFinanceSingle(string $id)
     {
         try {
             DB::transaction(function () use ($id) {
@@ -296,7 +314,39 @@ class ClaimController extends Controller
         }
     }
 
-    public function approveHead(string $id)
+    public function approveHead(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $claim = Claim::find($request->ids[0]);
+                $date = new DateTime($claim->file_completeness);
+
+                if ($claim->level == 'FKRTL') {
+                    Claim::whereIn('uuid', $request->ids)->update([
+                        'ba_date' => now(),
+                        'status' => Claim::STATUS_TELAH_SETUJU,
+                        'approve_head_date' => now(),
+                        'completion_limit_date' => $date->modify('+14 days'),
+                    ]);
+                } else {
+                    Claim::whereIn('uuid', $request->ids)->update([
+                        'ba_date' => now(),
+                        'status' => Claim::STATUS_TELAH_SETUJU,
+                        'approve_head_date' => now(),
+                        'completion_limit_date' => $this->addBusinessDays(Carbon::parse($claim->file_completeness), 14),
+                    ]);
+                }
+            });
+
+            return redirect()->back()->with('success', 'Berhasil approve');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal approve: ' . $e->getMessage());
+        }
+    }
+
+    public function approveHeadSingle(string $id)
     {
         try {
             DB::transaction(function () use ($id) {
@@ -533,5 +583,10 @@ class ClaimController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function deleteClaims()
+    {
+        Claim::whereColumn('ba_date', '>', 'completion_limit_date')->where('status', 'Pembayaran Telah Dilakukan')->delete();
     }
 }
