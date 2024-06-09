@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\Hospital;
+use Carbon\Carbon;
 
 class AbsensiClaimController extends Controller
 {
@@ -87,6 +88,8 @@ class AbsensiClaimController extends Controller
 
     public function absensiFKTP(string $region)
     {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
         $string2 = ['Apotek Kronis Reguler', 'Ambulance Reguler', 'Pelayanan Reguler'];
 
         if ($region == 'pare') {
@@ -98,8 +101,39 @@ class AbsensiClaimController extends Controller
             ->whereNotIn('claim_type', $string2)
             ->where('hospitals.level', 'FKTP')
             ->where('region', $region)
-            ->orderBy('month', 'asc')
-            ->get();
+            ->get()
+            ->sortBy(function ($claim) use ($currentMonth, $currentYear) {
+                // Extract month and year from the month field
+                $parts = explode(' ', $claim->month);
+                $month = $parts[0];
+                $year = $parts[1];
+
+                // Map textual month to its numeric value
+                $monthMap = [
+                    'Januari' => 1,
+                    'Februari' => 2,
+                    'Maret' => 3,
+                    'April' => 4,
+                    'Mei' => 5,
+                    'Juni' => 6,
+                    'Juli' => 7,
+                    'Agustus' => 8,
+                    'September' => 9,
+                    'Oktober' => 10,
+                    'November' => 11,
+                    'Desember' => 12,
+                ];
+
+                // Get the numeric value of the month
+                $monthNumber = $monthMap[$month];
+
+                $monthDiff = (($year - $currentYear) * 12) + ($monthNumber - $currentMonth);
+
+                // Return the negative of month difference for reverse sorting
+                return -$monthDiff;
+            });
+
+        // dd($claims);
 
         $hospitals = Hospital::where('level', 'FKTP')
             ->where('region', $region)
