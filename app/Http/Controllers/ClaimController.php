@@ -584,4 +584,9 @@ class ClaimController extends Controller
 
         return abort(404);
     }
+
+    public function deleteClaims()
+    {
+        Claim::whereColumn('ba_date', '>', 'completion_limit_date')->where('status', 'Pembayaran Telah Dilakukan')->delete();
+    }
 }

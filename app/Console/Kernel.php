@@ -12,7 +12,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->call(function() {
             app()->make('App\Http\Controllers\TelegramController')->message();
         })->dailyAt('07:30')->timezone('Asia/Singapore');
@@ -27,6 +26,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function() {
             app()->make('App\Http\Controllers\ArchiveController')->checkInactiveArchive();
+        })->everyMinute()->timezone('Asia/Singapore');
+
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\ClaimController')->deleteClaims();
         })->everyMinute()->timezone('Asia/Singapore');
     }
 

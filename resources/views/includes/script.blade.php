@@ -183,6 +183,7 @@
             paging: false,
             responsive: true,
             info: false,
+            stateSave: true,
         });
 
         $('#history-table').DataTable({
