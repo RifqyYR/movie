@@ -91,10 +91,8 @@ if (!$claims->isEmpty()) {
                                         <td class="align-middle fw-bold text-nowrap table-custom-fs">
                                             @php
                                                 if (
-                                                    (auth()->user()->role == 'VERIFICATOR' ||
-                                                        auth()->user()->role == 'ADMIN') &&
-                                                    (strpos(strtolower($item->claim_type), 'ambulance') !== false ||
-                                                        strpos(strtolower($item->claim_type), 'alkes') !== false)
+                                                    auth()->user()->role == 'VERIFICATOR' ||
+                                                    auth()->user()->role == 'ADMIN'
                                                 ) {
                                                     if ($item->status == App\Models\Claim::STATUS_TELAH_BAYAR) {
                                                         echo '<a class="text-black link-status" href="#" id="badropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
