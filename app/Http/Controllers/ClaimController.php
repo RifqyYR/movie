@@ -558,7 +558,7 @@ class ClaimController extends Controller
             return response()->download($fileName)->deleteFileAfterSend(true);
         }
 
-        if ($claim->status == Claim::STATUS_TELAH_BAYAR && (strpos(strtolower($claim->claim_type), 'ambulance') !== false || strpos(strtolower($claim->claim_type), 'alkes') !== false)) {
+        if ($claim->status == Claim::STATUS_TELAH_BAYAR) {
             $locale = 'id_ID';
             $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
 
