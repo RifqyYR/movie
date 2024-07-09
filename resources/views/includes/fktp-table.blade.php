@@ -65,11 +65,13 @@ if (!$claims->isEmpty()) {
 
                     foreach ($holidays as $holiday) {
                         $holidayDate = Carbon\Carbon::parse($holiday);
-                        if ($holidayDate->between($your_date, $now)) {
-                            $datediff--;
-                        }
-                        if ($holidayDate->between($completion_limit_date, $now)) {
-                            $dateDiffFinance--;
+                        if ($holidayDate->isWeekDay()) {
+                            if ($holidayDate->between($your_date, $now)) {
+                                $datediff--;
+                            }
+                            if ($holidayDate->between($completion_limit_date, $now)) {
+                                $dateDiffFinance--;
+                            }
                         }
                     }
 
