@@ -334,6 +334,8 @@ if (!$claims->isEmpty()) {
                                     Apakah Anda yakin ingin melakukan <b class="text-black">BA
                                         Hasil
                                         Verifikasi Berkas Klaim</b>
+                                    <br>
+                                    <span class="text-black"><b>JANGAN LUPA PIN-F</b></span>
                                     <div class="form-group mt-3">
                                         <div>
                                             <div class="input-group">
