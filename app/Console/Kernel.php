@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function() {
             app()->make('App\Http\Controllers\TelegramController')->message_notes();
-        })->everyTenSeconds();
+        })->dailyAt('16:00')->timezone('Asia/Singapore');
 
         $schedule->call(function() {
             app()->make('App\Http\Controllers\NotesController')->deleteAllNotes();

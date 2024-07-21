@@ -226,7 +226,7 @@ if (!$claims->isEmpty()) {
                     <td class="text-center align-middle fw-bold table-custom-fs-larger">
                         <div type="button" data-toggle="modal" data-target="#addNoteModal"
                             onclick="storeNotes('{{ $item->uuid }}')"
-                            class="{{ auth()->user()->role === 'VERIFICATOR' ? '' : 'disabled-div' }}">
+                            class="{{ auth()->user()->role === 'VERIFICATOR' && in_array($item->status, $notAllowedStatus) ? '' : 'disabled-div' }}">
                             <img src="{{ url('writing-tool.svg') }}" width="20">
                         </div>
                     </td>
