@@ -34,7 +34,7 @@
                             <div class="card-body notes-card-body">
                                 @foreach ($item->notes as $note)
                                     <div class="d-flex align-items-start">
-                                        <span class="list-item me-2 align-self-start py-1">{{ $loop->index + 1 }}</span>
+                                        <span class="list-item me-2 align-self-start py-1">{{ $loop->index + 1 . '.' }}</span>
                                         <p class="m-0 list-item flex-grow-1 align-self-start py-1">{{ $note->content }}</p>
                                         <form action="{{ route('notes.destroy', $note->id) }}" method="POST" clas py-1>
                                             @csrf
