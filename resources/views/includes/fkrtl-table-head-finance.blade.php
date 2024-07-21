@@ -33,7 +33,7 @@ if (!$claims->isEmpty()) {
                     <th scope="col" class="text-center align-middle custom-col">Aksi</th>
                 @endif
                 <th scope="col" class="text-center align-middle custom-col">
-                    Ctn</th>
+                    Note</th>
                 <th scope="col" class="text-center align-middle custom-col">
                     Hari ke-</th>
             </tr>

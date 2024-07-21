@@ -30,7 +30,7 @@ if (!$claims->isEmpty()) {
                 <th scope="col" class="text-center align-middle custom-col">Aksi</th>
             @endif
             <th scope="col" class="text-center align-middle custom-col">
-                Ctn</th>
+                Note</th>
             <th scope="col" class="text-center align-middle custom-col">
                 Hari ke-</th>
         </tr>
@@ -547,7 +547,7 @@ if (!$claims->isEmpty()) {
                 </button>
             </div>
             <div class="modal-body table-custom-fs-larger">
-                Menambahkan pada list kerjaan Anda hari ini?
+                Menambahkan pada list note kerjaan Anda hari ini?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-confirm-approve table-custom-fs-larger btn-danger"

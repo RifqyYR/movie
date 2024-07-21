@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Catatan: <span
+            <h1 class="h5 mb-0 text-gray-800" style="color: #ff8000 !important;">Notes: <span
                     style="font-size: 1.1rem">{{ Carbon\Carbon::now()->format('d-m-Y') }}</span></h1>
         </div>
 
@@ -36,8 +36,7 @@
                                     <div class="d-flex align-items-start">
                                         <span class="list-item me-2 align-self-start py-1">{{ $loop->index + 1 }}</span>
                                         <p class="m-0 list-item flex-grow-1 align-self-start py-1">{{ $note->content }}</p>
-                                        <form action="{{ route('notes.destroy', $note->id) }}" method="POST" clas
-                                            py-1>
+                                        <form action="{{ route('notes.destroy', $note->id) }}" method="POST" clas py-1>
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-link p-0"
