@@ -37,6 +37,11 @@
         'Klaim Telah Disetujui (Menunggu Pembayaran)', 'Pembayaran Telah Dilakukan'
     ];
 
+    function storeNotes(uuid) {
+        const link = document.getElementById('addNoteLink');
+        link.href = "/notes/" + uuid;
+    }
+
     function deleteClaim(id) {
         const link = document.getElementById('deleteClaimLink');
         link.href = "/claim/hapus/" + id;

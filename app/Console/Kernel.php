@@ -31,6 +31,14 @@ class Kernel extends ConsoleKernel
         $schedule->call(function() {
             app()->make('App\Http\Controllers\ClaimController')->deleteClaims();
         })->everyMinute()->timezone('Asia/Singapore');
+
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\TelegramController')->message_notes();
+        })->everyTenSeconds();
+
+        $schedule->call(function() {
+            app()->make('App\Http\Controllers\NotesController')->deleteAllNotes();
+        })->dailyAt('18:00')->timezone('Asia/Singapore');
     }
 
     /**

@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany(Archive::class);
     }
 
+    public function notes()
+    {
+        return $this->hasMany(Notes::class);
+    }
+
     public function getTelegramGroupIdsAttribute()
     {
         return ['-1002094693959', '-4145586916'];

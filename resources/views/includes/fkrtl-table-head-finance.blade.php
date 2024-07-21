@@ -33,6 +33,8 @@ if (!$claims->isEmpty()) {
                     <th scope="col" class="text-center align-middle custom-col">Aksi</th>
                 @endif
                 <th scope="col" class="text-center align-middle custom-col">
+                    Ctn</th>
+                <th scope="col" class="text-center align-middle custom-col">
                     Hari ke-</th>
             </tr>
         </thead>
@@ -261,6 +263,13 @@ if (!$claims->isEmpty()) {
                                 @endif
                             </td>
                         @endif
+                        <td class="text-center align-middle fw-bold table-custom-fs-larger">
+                            <div type="button" data-toggle="modal" data-target="#addNoteModal"
+                                onclick="storeNotes('{{ $item->uuid }}')"
+                                class="{{ auth()->user()->role === 'VERIFICATOR' ? '' : 'disabled-div' }}">
+                                <img src="{{ url('writing-tool.svg') }}" width="20">
+                            </div>
+                        </td>
                         <td class="text-center align-middle fw-bold table-custom-fs-larger">
                             @if ($item->status == App\Models\Claim::STATUS_TELAH_SETUJU)
                                 {{ $dateDiffFinance + 1 }}
