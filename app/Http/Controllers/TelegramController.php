@@ -200,7 +200,7 @@ class TelegramController extends Controller
             return $user->notes->isNotEmpty();
         });
 
-        $message = "Waktunya untuk memeriksa daftar catatan pakerjaaan hari ini sebelum jam kerja berakhir bpk/ibu:\n\n=============================\n";
+        $message = "Waktunya untuk memeriksa List Note pakerjaaan bpk/ibu hari ini, sebelum jam kerja berakhir:\n\n=============================\n";
         $index = 1;
         foreach ($usersWithNotes as $item) {
             $message .= $index . '. ' . $item->name . "\n";
@@ -210,7 +210,7 @@ class TelegramController extends Controller
 
         if (count($usersWithNotes) != 0) {
             $user = User::first();
-            $groupIds = ['-4145586916'];
+            $groupIds = ['-4145586916', '-4192360145', '-1001144496725', '-1001683875925', '-1001686172782'];
 
             foreach ($groupIds as $groupId) {
                 $user->notify(new ExampleNotification($message, $groupId));
