@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\Hospital;
+use App\Models\User;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Http\Request;
-use IntlDateFormatter;
 
 class HomeController extends Controller
 {

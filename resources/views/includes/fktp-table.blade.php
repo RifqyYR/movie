@@ -30,6 +30,8 @@ if (!$claims->isEmpty()) {
                 <th scope="col" class="text-center align-middle custom-col">Aksi</th>
             @endif
             <th scope="col" class="text-center align-middle custom-col">
+                Ctn</th>
+            <th scope="col" class="text-center align-middle custom-col">
                 Hari ke-</th>
         </tr>
     </thead>
@@ -137,7 +139,7 @@ if (!$claims->isEmpty()) {
                                         @if (in_array($item->status, $notAllowedStatus))
                                             <button type="button" class="btn btn-primary btn-sm btn-blue-custom w-100"
                                                 data-toggle="modal"
-                                                data-target="{{ $item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? '#approveVerificatorModal' : '#approveVerificatorCompleteModal' }}"
+                                                data-target="{{ $item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? '#approveVerificatorModal' : '#pinFModal' }}"
                                                 onclick="approveVerificator('{{ $item->uuid }}')">
                                                 Approve
                                             </button>
@@ -186,7 +188,7 @@ if (!$claims->isEmpty()) {
                                 <div class="d-flex align-items-center justify-content-center">
                                     <button type="button" class="btn btn-primary btn-sm btn-blue-custom w-100"
                                         data-toggle="modal"
-                                        data-target="{{ $item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? '#approveVerificatorModal' : '#approveVerificatorCompleteModal' }}"
+                                        data-target="{{ $item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA ? '#approveVerificatorModal' : '#pinFModal' }}"
                                         onclick="approveVerificator('{{ $item->uuid }}')"
                                         {{ !in_array($item->status, $notAllowedStatus) ? 'disabled' : '' }}>
                                         Approve
@@ -222,6 +224,13 @@ if (!$claims->isEmpty()) {
                         </td>
                     @endif
                     <td class="text-center align-middle fw-bold table-custom-fs-larger">
+                        <div type="button" data-toggle="modal" data-target="#addNoteModal"
+                            onclick="storeNotes('{{ $item->uuid }}')"
+                            class="{{ auth()->user()->role === 'VERIFICATOR' ? '' : 'disabled-div' }}">
+                            <img src="{{ url('writing-tool.svg') }}" width="20">
+                        </div>
+                    </td>
+                    <td class="text-center align-middle fw-bold table-custom-fs-larger">
                         @if ($item->status == App\Models\Claim::STATUS_TELAH_SETUJU)
                             {{ $dateDiffFinance + 1 }}
                         @elseif ($item->status == App\Models\Claim::STATUS_BA_SERAH_TERIMA)
@@ -231,6 +240,33 @@ if (!$claims->isEmpty()) {
                         @endif
                     </td>
                 </tr>
+                <div class="modal fade" id="pinFModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-danger fw-bold fs-09rem" id="exampleModalLabel">
+                                    Konfirmasi PIN-F</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body table-custom-fs-larger">
+                                Apakah Anda telah melakukan <b class="text-black">PIN-F</b> pada klaim ini?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"
+                                    class="btn table-custom-fs-larger btn-confirm-approve btn-danger"
+                                    data-dismiss="modal" id="btn-cancel">Tidak</button>
+                                <button type="button"
+                                    class="btn table-custom-fs-larger btn-confirm-approve btn-success"
+                                    data-dismiss="modal" data-target="#approveVerificatorCompleteModal"
+                                    data-toggle="modal">Iya</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="modal fade" id="approveFinanceModal" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -466,3 +502,29 @@ if (!$claims->isEmpty()) {
         @endif
     </tbody>
 </table>
+
+<div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger fw-bold fs-09rem" id="exampleModalLabel">
+                    Konfirmasi Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-custom-fs-larger">
+                Menambahkan pada list kerjaan Anda hari ini?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-confirm-approve table-custom-fs-larger btn-danger"
+                    data-dismiss="modal" id="btn-approve-finance">Tidak</button>
+                <a id="addNoteLink" href="">
+                    <button type="button"
+                        class="btn btn-confirm-approve table-custom-fs-larger btn-success">Iya</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -193,4 +193,28 @@ class TelegramController extends Controller
             }
         }
     }
+
+    public function message_notes()
+    {
+        $usersWithNotes = User::with('notes')->get()->filter(function ($user) {
+            return $user->notes->isNotEmpty();
+        });
+
+        $message = "Waktunya untuk memeriksa daftar catatan pakerjaaan hari ini sebelum jam kerja berakhir bpk/ibu:\n\n=============================\n";
+        $index = 1;
+        foreach ($usersWithNotes as $item) {
+            $message .= $index . '. ' . $item->name . "\n";
+            $index++;
+        }
+        $message .= "=============================\n\nSilahkan lakukan pengecekan pada aplikasi Movie: https://movie.pmukcpare2.com";
+
+        if (count($usersWithNotes) != 0) {
+            $user = User::first();
+            $groupIds = ['-4145586916'];
+
+            foreach ($groupIds as $groupId) {
+                $user->notify(new ExampleNotification($message, $groupId));
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HospitalController;
+use App\Http\Controllers\NotesController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\UserController;
 use App\Models\Archive;
@@ -99,6 +100,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::post('/arsip/proses-buat-arsip', [ArchiveController::class, 'store'])->name('archive.store');
   Route::get('/arsip/export', [ArchiveController::class, 'excel'])->name('archive.export-excel');
   
+  Route::get('/notes', [NotesController::class, 'index'])->name('notes.index');
+  Route::get('/notes/{claim_uuid}', [NotesController::class, 'store'])->name('notes.store');
+  Route::delete('/notes/{note}', [NotesController::class, 'destroy'])->name('notes.destroy');
+
   Route::get('/arsip/edit/{uid}', [ArchiveController::class, 'edit'])->name('archive.edit');
   Route::post('/arsip/proses-edit-arsip', [ArchiveController::class, 'update'])->name('archive.update');
   
