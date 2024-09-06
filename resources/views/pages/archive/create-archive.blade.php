@@ -182,7 +182,7 @@
                             <div class="form-group">
                                 <label class="table-custom-fs-larger" for="nomor_dos">Nomor Dos</label>
                                 <input id="nomor_dos" type="text" class="table-custom-fs form-control" name="nomor_dos"
-                                    value="{{ $archive_number }}" autocomplete="nomor_dos" readonly
+                                    value="{{ $archive_number }}" autocomplete="nomor_dos"
                                     @error('nomor_dos') is-invalid @enderror />
                                 @error('nomor_dos')
                                     <span class="invalid-feedback" role="alert">

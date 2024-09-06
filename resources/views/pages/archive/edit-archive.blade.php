@@ -135,16 +135,9 @@
         <div class="card">
             <form action="/arsip/proses-edit-arsip" method="post">
                 @csrf
-                <div class="card-header d-flex align-items-center">
+                <div class="card-header">
                     <h6>Archive: {{ $archives[0]->unit_name }} - {{ $archives[0]->archive_number }} -
                         {{ $archives[0]->dos_number }}</h6>
-                    @if (in_array(Auth::user()->role, ['ADMIN', 'SDMUK']))
-                        <select class="form-select table-custom-fs-larger ms-auto" style="width: 10rem !important;" name="location">
-                            <option value="Gudang Cabang" {{ $archives[0]->location === 'Gudang Cabang' ? 'selected' : '' }}>Gudang Cabang</option>
-                            <option value="Gudang Sewa" {{ $archives[0]->location === 'Gudang Sewa' ? 'selected' : '' }}>Gudang Sewa</option>
-                            <option value="Gudang Pihak Ke-3" {{ $archives[0]->location === 'Gudang Pihak Ke-3' ? 'selected' : '' }}>Gudang Pihak Ke-3</option>
-                        </select>
-                    @endif
                 </div>
                 <div class="card-body">
                     @foreach ($archives as $archive)

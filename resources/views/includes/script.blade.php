@@ -193,6 +193,10 @@
         });
     });
 
+    function setArchiveId(uuid) {
+        document.getElementById('archive_uuid').value = uuid;
+    }
+
     $(document).ready(function() {
         $('#description-alert').hide();
         $('.table-toggle').hide();

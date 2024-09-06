@@ -48,7 +48,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
   // Hapus Claim
   Route::get('/claim/hapus/{id}', [ClaimController::class, 'delete'])->name('claim.delete');
-  
+
   // Hapus Arsip
   Route::get('/arsip/hapus/{id}', [ArchiveController::class, 'delete'])->name('archive.delete');
 });
@@ -79,34 +79,34 @@ Route::middleware(['auth', 'verified', 'finance'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
   Route::get('/claim-absensi', [AbsensiClaimController::class, 'index'])->name('absent-claim');
-  
+
   Route::get('/claim-fktp', [App\Http\Controllers\HomeController::class, 'fktp'])->name('claim.fktp');
   Route::get('/claim-fkrtl', [App\Http\Controllers\HomeController::class, 'fkrtl'])->name('claim.fkrtl');
 
   Route::get('/absensi-fktp/{wilayah}', [AbsensiClaimController::class, 'absensiFKTP'])->name('absensi.fktp');
   Route::get('/absensi-fkrtl/{wilayah}', [AbsensiClaimController::class, 'absensiFKRTL'])->name('absensi.fkrtl');
-  
+
   Route::get('/history', [ClaimController::class, 'showHistoryPage'])->name('history');
-  
+
   Route::get('/ganti-password/{user:uuid}', [UserController::class, 'changePassword'])->name('user.change-password');
   Route::post('/proses-ganti-password/{user:uuid}', [UserController::class, 'changePasswordProcess'])->name('user.change-password.process');
 
   Route::get('/claim/export-fkrtl', [ClaimController::class, 'export_fkrtl']);
   Route::get('/claim/export-fktp', [ClaimController::class, 'export_fktp']);
   Route::get('/claim/export-riwayat', [ClaimController::class, 'export_history']);
-  
+
   Route::get('/arsip', [ArchiveController::class, 'index'])->name('archive');
   Route::get('/arsip/buat', [ArchiveController::class, 'create'])->name('archive.create');
   Route::post('/arsip/proses-buat-arsip', [ArchiveController::class, 'store'])->name('archive.store');
   Route::get('/arsip/export', [ArchiveController::class, 'excel'])->name('archive.export-excel');
-  
+
   Route::get('/notes', [NotesController::class, 'index'])->name('notes.index');
   Route::get('/notes/{claim_uuid}', [NotesController::class, 'store'])->name('notes.store');
   Route::delete('/notes/{note}', [NotesController::class, 'destroy'])->name('notes.destroy');
 
   Route::get('/arsip/edit/{uid}', [ArchiveController::class, 'edit'])->name('archive.edit');
   Route::post('/arsip/proses-edit-arsip', [ArchiveController::class, 'update'])->name('archive.update');
-  
+
   Route::get('/telegram/example', [TelegramController::class, 'callback'])->name('telegram.connect');
   Route::post('/message', [TelegramController::class, 'message']);
 
@@ -116,6 +116,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
   // Download Word
   Route::get('/claim/download/{uid}', [ClaimController::class, 'downloadWord']);
+
+  Route::post('/archive/update-location', [ArchiveController::class, 'updateLocation'])->name('archive.update-location');
 });
 
 Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);

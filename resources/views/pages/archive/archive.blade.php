@@ -34,9 +34,12 @@
                 <div method="GET" action="{{ route('archive') }}" class="ms-2">
                     <select class="form-select table-custom-fs-larger" name="location" onchange="this.form.submit()">
                         <option value="">Pilih Lokasi</option>
-                        <option value="Gudang Cabang" {{ request('location') === 'Gudang Cabang' ? 'selected' : '' }}>Gudang Cabang</option>
-                        <option value="Gudang Sewa" {{ request('location') === 'Gudang Sewa' ? 'selected' : '' }}>Gudang Sewa</option>
-                        <option value="Gudang Pihak Ke-3" {{ request('location') === 'Gudang Pihak Ke-3' ? 'selected' : '' }}>Gudang Pihak Ke-3</option>
+                        <option value="Gudang Cabang" {{ request('location') === 'Gudang Cabang' ? 'selected' : '' }}>Gudang
+                            Cabang</option>
+                        <option value="Gudang Sewa" {{ request('location') === 'Gudang Sewa' ? 'selected' : '' }}>Gudang
+                            Sewa</option>
+                        <option value="Gudang Pihak Ke-3"
+                            {{ request('location') === 'Gudang Pihak Ke-3' ? 'selected' : '' }}>Gudang Pihak Ke-3</option>
                     </select>
                 </div>
             </div>
@@ -89,23 +92,27 @@
                             @else
                                 @foreach ($archives as $item)
                                     <tr>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} text-center align-middle fw-bold table-custom-fs">{{ $loop->index + 1 }}
+                                        <td class="text-center align-middle fw-bold table-custom-fs">{{ $loop->index + 1 }}
                                         </td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
                                             {{ $item->unit_name }}</td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
                                             {{ $item->archive_number }}</td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
                                             {{ $item->dos_number }}</td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">{{ $item->archive_title }}</td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">{{ $item->classification_code }}
+                                        <td class="align-middle fw-bold table-custom-fs">{{ $item->archive_title }}</td>
+                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                            {{ $item->classification_code }}
                                         </td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">
+                                        <td class="align-middle fw-bold table-custom-fs">
                                             {{ $item->file_content_information }}
                                         </td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">{{ $item->description }}</td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">{{ $item->location ?? 'Belum ada lokasi gudang' }}</td>
-                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs text-nowrap">
+                                        <td class="align-middle fw-bold table-custom-fs">{{ $item->description }}</td>
+                                        <td class="align-middle fw-bold text-center">
+                                            <span
+                                                class="table-custom-fs badge badge-pill {{ $item->location === null ? 'badge-danger' : 'badge-success' }} text-wrap">{{ $item->location ?? 'Belum ada' }}</span>
+                                        </td>
+                                        <td class="align-middle fw-bold table-custom-fs text-nowrap">
                                             @if (request('isActive') == 'inactive')
                                                 {{ $item->status == 'INAKTIF' ? 'Inaktif' : '' }}
                                             @else
@@ -113,17 +120,27 @@
                                             @endif
                                         </td>
                                         @if (auth()->user()->role != 'GUEST')
-                                            <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold text-nowrap">
-                                                <a href="/arsip/edit/{{ $item->uuid }}"
-                                                    class="btn btn-warning btn-sm mb-1 table-custom-fs">
-                                                    Edit
-                                                </a>
+                                            <td class="align-middle fw-bold text-nowrap">
+                                                @if (in_array(Auth::user()->role, ['ADMIN', 'SDMUK']))
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-sm table-custom-fs mb-1"
+                                                        data-toggle="modal" data-target="#selectLocationModal"
+                                                        onclick="setArchiveId('{{ $item->uuid }}')">
+                                                        Gudang
+                                                    </button>
+                                                @endif
+                                                @if (Auth::user()->role !== 'SDMUK')
+                                                    <a href="/arsip/edit/{{ $item->uuid }}"
+                                                        class="btn btn-warning btn-sm mb-1 table-custom-fs">
+                                                        Edit
+                                                    </a>
+                                                @endif
                                                 @if (Auth::user()->role == 'ADMIN')
                                                     <button type="button"
                                                         class="btn btn-danger btn-sm table-custom-fs mb-1"
                                                         data-toggle="modal" data-target="#deleteArchiveModal"
                                                         onclick="deleteArchive('{{ $item->uuid }}')">
-                                                        Hapus
+                                                        <i class="fa fa-trash"></i>
                                                     </button>
                                                 @endif
                                             </td>
@@ -138,6 +155,7 @@
         </div>
     </div>
 
+    {{-- Delete Archive Modal --}}
     <div class="modal fade" id="deleteArchiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -160,6 +178,38 @@
                             class="btn btn-delete-archive table-custom-fs-larger btn-danger">Iya</button>
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Select Location Modal --}}
+    <div class="modal fade" id="selectLocationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold fs-09rem" id="exampleModalLabel">
+                        Pilih Lokasi Gudang</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="updateLocationForm" action="{{ route('archive.update-location') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="archive_uuid" id="archive_uuid" value="">
+                    <div class="modal-body custom-table-fs-larger">
+                        <select name="location" id="location" class="form-select table-custom-fs-larger">
+                            <option value="Gudang Cabang">Gudang Cabang</option>
+                            <option value="Gudang Sewa">Gudang Sewa</option>
+                            <option value="Gudang Pihak Ke-3">Gudang Pihak Ke-3</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn table-custom-fs-larger btn-secondary" data-dismiss="modal"
+                            id="btn-delete">Batal</button>
+                        <button type="submit" class="btn table-custom-fs-larger btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -27,6 +27,10 @@
                             Staf Administrasi
                         @elseif (auth()->user()->role == 'GUEST')
                             Tamu
+                        @elseif (auth()->user()->role == 'SDMUK')
+                            SDM
+                        @elseif (auth()->user()->role == 'ARCHIVE')
+                            Panitia Arsip
                         @endif
                     </span>
                 </span>
