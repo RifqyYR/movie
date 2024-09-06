@@ -645,7 +645,6 @@
                     <div class="col-md-3">
                     <select ${enableNamaRS ? '' : 'disabled'} class="custom-select table-custom-fs editable-select @error('nama_rs') is-invalid @enderror"
                         name="nama_rs_${counter}">
-                        <option selected hidden value="">Nama Faskes</option>
                         ${hospitals.map(item => `<option class="table-custom-fs" value="${item.uuid.trim()}">${item.name.trim()}</option>`).join('')}
                     </select>
                     </div>

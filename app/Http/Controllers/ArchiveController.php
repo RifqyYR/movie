@@ -235,6 +235,9 @@ class ArchiveController extends Controller
                     $archiveData['hospital_uuid'] = $hospital->uuid;
                     $archiveData['hospital_name'] = $hospital->name;
                 }
+            } else {
+                $archiveData['hospital_uuid'] = null;
+                $archiveData['hospital_name'] = null;
             }
 
             // Set file_content_information based on unit_name
@@ -242,7 +245,7 @@ class ArchiveController extends Controller
                 $hospitalInfo = isset($archiveData['hospital_name']) ? " {$archiveData['hospital_name']}" : '';
                 $archiveData['file_content_information'] = "Berkas Klaim {$judulBerkas}{$hospitalInfo} {$bulan} {$tahun}";
             } else {
-                $hospitalInfo = isset($archiveData['hospital_name']) ? " {$archiveData['hospital_name']}" : '';
+                $hospitalInfo = $archiveData['hospital_name'] !== null ? " {$archiveData['hospital_name']}" : '';
                 $archiveData['file_content_information'] = "Berkas {$judulBerkas}{$hospitalInfo} {$bulan} {$tahun}";
             }
 
