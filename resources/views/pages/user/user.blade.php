@@ -23,10 +23,14 @@
                         <tbody>
                             @foreach ($users as $user)
                                 <tr>
-                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger" scope="row">{{ $loop->index + 1 }}</td>
-                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">{{ $user->name }}</td>
-                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">{{ $user->username }}</td>
-                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">{{ $user->email }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger"
+                                        scope="row">{{ $loop->index + 1 }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
+                                        {{ $user->name }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
+                                        {{ $user->username }}</td>
+                                    <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
+                                        {{ $user->email }}</td>
                                     <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
                                         @if ($user->role == 'ADMIN')
                                             Admin
@@ -40,6 +44,10 @@
                                             Staf Administrasi
                                         @elseif ($user->role == 'GUEST')
                                             Tamu
+                                        @elseif ($user->role == 'ARCHIVE')
+                                            Panitia Arsip
+                                        @elseif ($user->role == 'SDMUK')
+                                            SDMUK
                                         @endif
                                     </td>
                                     <td class="fw-bold text-center align-middle fw-bold table-custom-fs-larger">
@@ -95,7 +103,8 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title fw-bold text-danger" id="exampleModalLabel">Konfirmasi Hapus</h5>
+                                                <h5 class="modal-title fw-bold text-danger" id="exampleModalLabel">
+                                                    Konfirmasi Hapus</h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>

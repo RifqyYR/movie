@@ -71,6 +71,8 @@
                                         <option value="FINANCE">Keuangan</option>
                                         <option value="STAFF_ADMIN">Staf Administrasi</option>
                                         <option value="GUEST">Tamu</option>
+                                        <option value="ARCHIVE">Panitia Arsip</option>
+                                        <option value="SDMUK">SDMUK</option>
                                     </select>
                                 </div>
                             </div>

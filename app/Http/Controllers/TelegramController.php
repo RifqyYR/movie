@@ -9,15 +9,6 @@ use Carbon\Carbon;
 
 class TelegramController extends Controller
 {
-    // public function callback(Request $request)
-    // {
-    //     $authUser = Auth::user();
-    //     $telegramChatId = $request->input('id');
-    //     $authUser->update(['telegram_chat_id' => $telegramChatId]);
-
-    //     return redirect()->route('home');
-    // }
-
     public function message()
     {
         $claims = Claim::with('hospital')
