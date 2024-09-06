@@ -23,6 +23,7 @@ class Archive extends Model
         'year',
         'file_content_information',
         'description',
+        'location', 
         'status',
         'active_retention_schedule',
     ];

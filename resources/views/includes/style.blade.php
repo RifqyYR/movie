@@ -283,4 +283,8 @@
             background-color: #1381c6 !important;
         }
     }
+
+    .bg-red {
+        background-color: rgb(255, 193, 193) !important;
+    }
 </style>

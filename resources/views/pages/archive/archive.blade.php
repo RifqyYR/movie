@@ -31,6 +31,14 @@
                         @endfor
                     </select>
                 </div>
+                <div method="GET" action="{{ route('archive') }}" class="ms-2">
+                    <select class="form-select table-custom-fs-larger" name="location" onchange="this.form.submit()">
+                        <option value="">Pilih Lokasi</option>
+                        <option value="Gudang Cabang" {{ request('location') === 'Gudang Cabang' ? 'selected' : '' }}>Gudang Cabang</option>
+                        <option value="Gudang Sewa" {{ request('location') === 'Gudang Sewa' ? 'selected' : '' }}>Gudang Sewa</option>
+                        <option value="Gudang Pihak Ke-3" {{ request('location') === 'Gudang Pihak Ke-3' ? 'selected' : '' }}>Gudang Pihak Ke-3</option>
+                    </select>
+                </div>
             </div>
         </form>
 
@@ -65,6 +73,7 @@
                                 <th scope="col" class="text-center align-middle custom-col">Uraian Informasi Isi Berkas
                                 </th>
                                 <th scope="col" class="text-center align-middle custom-col">Keterangan</th>
+                                <th scope="col" class="text-center align-middle custom-col">Lokasi</th>
                                 <th scope="col" class="text-center align-middle custom-col">JRA</th>
                                 @if (auth()->user()->role != 'GUEST')
                                     <th scope="col" class="text-center align-middle custom-col">Aksi</th>
@@ -74,28 +83,29 @@
                         <tbody>
                             @if ($archives->isEmpty())
                                 <tr>
-                                    <td colspan="10" class="text-center fw-bold table-custom-fs-larger">Tidak ada data
+                                    <td colspan="11" class="text-center fw-bold table-custom-fs-larger">Tidak ada data
                                     </td>
                                 </tr>
                             @else
                                 @foreach ($archives as $item)
                                     <tr>
-                                        <td class="text-center align-middle fw-bold table-custom-fs">{{ $loop->index + 1 }}
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} text-center align-middle fw-bold table-custom-fs">{{ $loop->index + 1 }}
                                         </td>
-                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">
                                             {{ $item->unit_name }}</td>
-                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">
                                             {{ $item->archive_number }}</td>
-                                        <td class="align-middle fw-bold table-custom-fs table-custom-width-smaller">
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">
                                             {{ $item->dos_number }}</td>
-                                        <td class="align-middle fw-bold table-custom-fs">{{ $item->archive_title }}</td>
-                                        <td class="align-middle fw-bold table-custom-fs">{{ $item->classification_code }}
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">{{ $item->archive_title }}</td>
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs table-custom-width-smaller">{{ $item->classification_code }}
                                         </td>
-                                        <td class="align-middle fw-bold table-custom-fs">
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">
                                             {{ $item->file_content_information }}
                                         </td>
-                                        <td class="align-middle fw-bold table-custom-fs">{{ $item->description }}</td>
-                                        <td class="align-middle fw-bold table-custom-fs text-nowrap">
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">{{ $item->description }}</td>
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs">{{ $item->location ?? 'Belum ada lokasi gudang' }}</td>
+                                        <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold table-custom-fs text-nowrap">
                                             @if (request('isActive') == 'inactive')
                                                 {{ $item->status == 'INAKTIF' ? 'Inaktif' : '' }}
                                             @else
@@ -103,7 +113,7 @@
                                             @endif
                                         </td>
                                         @if (auth()->user()->role != 'GUEST')
-                                            <td class="align-middle fw-bold text-nowrap">
+                                            <td class="{{ $item->location === null ? 'bg-red' : '' }} align-middle fw-bold text-nowrap">
                                                 <a href="/arsip/edit/{{ $item->uuid }}"
                                                     class="btn btn-warning btn-sm mb-1 table-custom-fs">
                                                     Edit

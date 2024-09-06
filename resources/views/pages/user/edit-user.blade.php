@@ -56,6 +56,8 @@
                                         <option {{ $user->role == 'FINANCE' ? 'selected' : '' }} value="FINANCE">Keuangan</option>
                                         <option {{ $user->role == 'STAFF_ADMIN' ? 'selected' : '' }} value="STAFF_ADMIN">Staf Administrasi</option>
                                         <option {{ $user->role == 'GUEST' ? 'selected' : '' }} value="GUEST">Tamu</option>
+                                        <option {{ $user->role == 'ARCHIVE' ? 'selected' : '' }} value="ARCHIVE">Panitia Arsip</option>
+                                        <option {{ $user->role == 'SDMUK' ? 'selected' : '' }} value="SDMUK">SDMUK</option>
                                     </select>
                                 </div>
                             </div>
