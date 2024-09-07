@@ -228,7 +228,7 @@
                                             <select class="form-control table-custom-fs"
                                                 name="archives[{{ $archive->uuid }}][year]"
                                                 id="tahun_{{ $archive->uuid }}">
-                                                @for ($year = date('Y'); $year >= 2020; $year--)
+                                                @for ($year = date('Y'); $year >= 2014; $year--)
                                                     <option value="{{ $year }}"
                                                         {{ $archive->year == $year ? 'selected' : '' }}>
                                                         {{ $year }}

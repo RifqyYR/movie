@@ -660,7 +660,7 @@
                     </div>
                     <div class="col-md-1">
                     <select class="custom-select table-custom-fs @error('tahun') is-invalid @enderror" name="tahun_${counter}">
-                        ${Array.from({length: new Date().getFullYear() - 2019}, (_, i) => new Date().getFullYear() - i)
+                        ${Array.from({length: new Date().getFullYear() - 2013}, (_, i) => new Date().getFullYear() - i)
                         .map(year => `<option value="${year}" ${year === new Date().getFullYear() ? 'selected' : ''}>${year}</option>`).join('')}
                     </select>
                     </div>
