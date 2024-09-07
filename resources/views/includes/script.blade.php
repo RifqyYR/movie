@@ -227,6 +227,9 @@
             info: false,
             dom: "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            order: [
+                [3, 'desc']
+            ],
         });
 
         const nomorBerkasPMU = [{
