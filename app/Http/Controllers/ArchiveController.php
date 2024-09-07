@@ -69,17 +69,6 @@ class ArchiveController extends Controller
     public function create()
     {
         $hospitals = Hospital::all();
-        // $archiveNumber = Archive::all()->last();
-        // if ($archiveNumber == null) {
-        //     $archiveNumber = 'P-001';
-        // } else {
-        //     $prefix = substr($archiveNumber->dos_number, 0, 2);
-        //     $number = substr($archiveNumber->dos_number, 2);
-
-        //     $number = intval($number) + 1;
-
-        //     $archiveNumber = $prefix . str_pad($number, 3, '0', STR_PAD_LEFT);
-        // }
         $archiveNumber = ArchiveNumberGenerator::generateUniqueArchiveNumber();
 
         return view('pages.archive.create-archive', [
@@ -257,8 +246,8 @@ class ArchiveController extends Controller
                 Archive::insert($archives);
             });
             return redirect()
-                ->route('archive')
-                ->with('success', 'Berhasil menambahkan arsip');
+                ->route('archive', ['isActive' => current($archives)['status'] == 'AKTIF' ? 'active' : 'inactive'])
+                ->with('success', 'Berhasil menambahkan arsip dengan nomor dos: ' . current($archives)['dos_number']);
         } catch (\Throwable $e) {
             return redirect()
                 ->back()

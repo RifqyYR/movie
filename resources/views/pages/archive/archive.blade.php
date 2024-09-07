@@ -25,7 +25,7 @@
                 <div method="GET" action="{{ route('archive') }}" class="ms-2">
                     <select class="form-select table-custom-fs-larger" name="year" onchange="this.form.submit()">
                         <option value="">Select Year</option>
-                        @for ($year = date('Y'); $year >= 2020; $year--)
+                        @for ($year = date('Y'); $year >= 2014; $year--)
                             <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
                                 {{ $year }}</option>
                         @endfor
