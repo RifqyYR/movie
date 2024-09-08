@@ -148,7 +148,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="table-custom-fs-larger" for="unit_pengolah">Unit Pengolah</label>
-                                <select id="unit_pengolah" class="table-custom-fs form-select" name="unit_pengolah"
+                                <select required id="unit_pengolah" class="table-custom-fs form-select" name="unit_pengolah"
                                     @error('unit_pengolah') is-invalid @enderror>
                                     <option value="" selected hidden></option>
                                     <option value="PMU">PMU</option>
@@ -168,7 +168,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="table-custom-fs-larger" for="nomor_berkas">Nomor Barcode</label>
-                                <input id="nomor_berkas" type="text" class="table-custom-fs form-control"
+                                <input required id="nomor_berkas" type="text" class="table-custom-fs form-control"
                                     name="nomor_berkas" autocomplete="nomor_berkas"
                                     @error('nomor_berkas') is-invalid @enderror />
                                 @error('nomor_berkas')

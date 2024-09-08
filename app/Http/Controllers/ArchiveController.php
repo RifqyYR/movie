@@ -358,58 +358,140 @@ class ArchiveController extends Controller
             'Pemeriksaan Kepatuhan' => 2,
         ];
 
-        $archivesData = $request->input('archives');
-        $now = now()->year;
-
         try {
-            foreach ($archivesData as $uuid => $data) {
-                $archive = Archive::where('uuid', $uuid)->first();
-                $unitName = $archive->unit_name;
+            DB::transaction(function () use ($request, $retentionPeriods) {
+                $now = now()->year;
 
-                if ($archive) {
-                    $judulBerkas = $data['archive_title'];
+                // Edit existing data
+                foreach ($request->all() as $key => $value) {
+                    // Mencari data arsip lama berdasarkan pattern key 'judul_berkas_' dan bukan 'new'
+                    if (preg_match('/^judul_berkas_(\d+)$/', $key, $matches)) {
+                        $index = $matches[1];
 
-                    $activeSchedule = ($judulBerkas == 'Rawat Jalan Tingkat Lanjutan') ? 1 : 2;
+                        // Dapatkan arsip yang ada berdasarkan index
+                        $archive = Archive::where('archive_number', $request->input('nomor_berkas'))
+                            ->where('dos_number', $request->input('nomor_dos'))
+                            ->where('archive_title', $request->input("judul_berkas_{$index}"))
+                            ->first();
 
-                    $bulan = $data['month'];
-                    $tahun = $data['year'];
+                        $activeSchedule = 2;
+                        $judulBerkas = $request->input("judul_berkas_{$index}");
+                        $unitName = $request->unit_name;
+                        $bulan = $request->input("bulan_{$index}");
+                        $tahun = $request->input("tahun_{$index}");
 
-                    $activeSchedule = 2;
-
-                    if (array_key_exists($judulBerkas, $retentionPeriods)) {
-                        $activeSchedule = $retentionPeriods[$judulBerkas];
-                    }
-
-                    if ($activeSchedule == 0) {
-                        $status = 'AKTIF';
-                    } else {
-                        $status = ($now - $tahun >= $activeSchedule) ? 'INAKTIF' : 'AKTIF';
-                    }
-
-                    $data['status'] = $status;
-                    $data['active_retention_schedule'] = $activeSchedule;
-
-                    if (isset($data['hospital_name'])) {
-                        $hospital = Hospital::where('name', $data['hospital_name'])->first();
-                        if ($hospital) {
-                            $data['hospital_uuid'] = $hospital->uuid;
-                            $data['hospital_name'] = $hospital->name;
+                        if (array_key_exists($request->input("judul_berkas_{$index}"), $retentionPeriods)) {
+                            $activeSchedule = $retentionPeriods[$request->input("judul_berkas_{$index}")];
                         }
 
+                        if ($activeSchedule == 0) {
+                            $status = 'AKTIF';
+                        } else {
+                            // Calculate the status based on the active retention schedule
+                            $status = ($now - $request->input("tahun_{$index}") >= $activeSchedule) ? 'INAKTIF' : 'AKTIF';
+                        }
+
+                        $data = [
+                            'archive_number' => $request->input("nomor_berkas"),
+                            'dos_number' => $request->nomor_dos,
+                            'archive_title' => $request->input("judul_berkas_{$index}"),
+                            'classification_code' => $request->input("kode_klasifikasi_{$index}"),
+                            'month' => $request->input("bulan_{$index}"),
+                            'year' => $request->input("tahun_{$index}"),
+                            'description' => $request->input("description_{$index}"),
+                            'active_retention_schedule' => $activeSchedule,
+                            'status' => $status,
+                        ];
+
+                        // Check if hospital name field is not disabled and has a value
+                        $hospitalName = trim($request->input("nama_rs_{$index}", ''));
+                        if ($hospitalName !== '') {
+                            $hospital = Hospital::where('name', $hospitalName)->first();
+                            if ($hospital) {
+                                $data['hospital_uuid'] = $hospital->uuid;
+                                $data['hospital_name'] = $hospital->name;
+                            }
+                        } else {
+                            $data['hospital_uuid'] = null;
+                            $data['hospital_name'] = null;
+                        }
+
+                        // Set file_content_information based on unit_name
                         if ($unitName === 'PMU') {
                             $hospitalInfo = isset($data['hospital_name']) ? " {$data['hospital_name']}" : '';
                             $data['file_content_information'] = "Berkas Klaim {$judulBerkas}{$hospitalInfo} {$bulan} {$tahun}";
                         } else {
-                            $hospitalInfo = isset($data['hospital_name']) ? " {$data['hospital_name']}" : '';
+                            $hospitalInfo = $data['hospital_name'] !== null ? " {$data['hospital_name']}" : '';
                             $data['file_content_information'] = "Berkas {$judulBerkas}{$hospitalInfo} {$bulan} {$tahun}";
                         }
-                    } else {
-                        $data['file_content_information'] = "Berkas {$judulBerkas} {$bulan} {$tahun}";
-                    }
 
-                    $archive->update($data);
+                        $archive->update($data);
+                    }
                 }
-            }
+
+                // Create New data
+                foreach ($request->all() as $key => $value) {
+                    if (preg_match('/^judul_berkas_new_(\d+)$/', $key, $matches)) {
+                        $index = $matches[1];
+
+                        $activeSchedule = 2;
+                        $judulBerkas = $request->input("judul_berkas_new_{$index}");
+                        $unitName = $request->unit_name;
+                        $bulan = $request->input("bulan_new_{$index}");
+                        $tahun = $request->input("tahun_new_{$index}");
+
+                        if (array_key_exists($request->input("judul_berkas_new_{$index}"), $retentionPeriods)) {
+                            $activeSchedule = $retentionPeriods[$request->input("judul_berkas_new_{$index}")];
+                        }
+
+                        if ($activeSchedule == 0) {
+                            $status = 'AKTIF';
+                        } else {
+                            // Calculate the status based on the active retention schedule
+                            $status = ($now - $request->input("tahun_new_{$index}") >= $activeSchedule) ? 'INAKTIF' : 'AKTIF';
+                        }
+
+                        $data = [
+                            'uuid' => Uuid::uuid7(),
+                            'unit_name' => $unitName,
+                            'archive_number' => $request->nomor_berkas,
+                            'dos_number' => $request->nomor_dos,
+                            'archive_title' => $request->input("judul_berkas_new_{$index}"),
+                            'classification_code' => $request->input("kode_klasifikasi_new_{$index}"),
+                            'month' => $request->input("bulan_new_{$index}"),
+                            'year' => $request->input("tahun_new_{$index}"),
+                            'description' => $request->input("description_new_{$index}"),
+                            'active_retention_schedule' => $activeSchedule,
+                            'status' => $status,
+                        ];
+
+                        // Check if hospital name field is not disabled and has a value
+                        $hospitalName = trim($request->input("nama_rs_new_{$index}", ''));
+                        if ($hospitalName !== '') {
+                            $hospital = Hospital::where('name', $hospitalName)->first();
+                            if ($hospital) {
+                                $data['hospital_uuid'] = $hospital->uuid;
+                                $data['hospital_name'] = $hospital->name;
+                            }
+                        } else {
+                            $data['hospital_uuid'] = null;
+                            $data['hospital_name'] = null;
+                        }
+
+                        // Set file_content_information based on unit_name
+                        if ($unitName === 'PMU') {
+                            $hospitalInfo = isset($data['hospital_name']) ? " {$data['hospital_name']}" : '';
+                            $data['file_content_information'] = "Berkas Klaim {$judulBerkas}{$hospitalInfo} {$bulan} {$tahun}";
+                        } else {
+                            $hospitalInfo = $data['hospital_name'] !== null ? " {$data['hospital_name']}" : '';
+                            $data['file_content_information'] = "Berkas {$judulBerkas}{$hospitalInfo} {$bulan} {$tahun}";
+                        }
+
+                        // Membuat arsip baru
+                        Archive::create($data);
+                    }
+                }
+            });
 
             return redirect()
                 ->route('archive')

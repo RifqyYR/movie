@@ -652,14 +652,14 @@
                     </select>
                     </div>
                     <div class="col-md-1">
-                    <select class="custom-select table-custom-fs @error('bulan') is-invalid @enderror" name="bulan_${counter}">
+                    <select required class="custom-select table-custom-fs @error('bulan') is-invalid @enderror" name="bulan_${counter}">
                         <option selected hidden value="">Bulan</option>
                         ${['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
                         .map(month => `<option value="${month}">${month}</option>`).join('')}
                     </select>
                     </div>
                     <div class="col-md-1">
-                    <select class="custom-select table-custom-fs @error('tahun') is-invalid @enderror" name="tahun_${counter}">
+                    <select required class="custom-select table-custom-fs @error('tahun') is-invalid @enderror" name="tahun_${counter}">
                         ${Array.from({length: new Date().getFullYear() - 2013}, (_, i) => new Date().getFullYear() - i)
                         .map(year => `<option value="${year}" ${year === new Date().getFullYear() ? 'selected' : ''}>${year}</option>`).join('')}
                     </select>
@@ -720,7 +720,122 @@
             // Initial setup
             $('#unit_pengolah').change();
         @endif
+        @if (Route::is('archive.edit'))
+        var hospitals = @json($hospitals);
+            // Define the data for different units
+            const unitData = {
+                PMU: {
+                    nomorBerkas: nomorBerkasPMU,
+                    enableNamaRS: true
+                },
+                YANSER: {
+                    nomorBerkas: nomorBerkasYANSER,
+                    enableNamaRS: false
+                },
+                KEPSER: {
+                    nomorBerkas: nomorBerkasKEPSER,
+                    enableNamaRS: false
+                },
+                YANFASKES: {
+                    nomorBerkas: nomorBerkasYANFASKES,
+                    enableNamaRS: true
+                },
+                SDMUK: {
+                    nomorBerkas: nomorBerkasSDMUK,
+                    enableNamaRS: false
+                },
+                PKP: {
+                    nomorBerkas: nomorBerkasPKP,
+                    enableNamaRS: true
+                }
+            };
 
+            let counter = 0;
+
+            // Function to create a new input row
+            const createInputRow = (counter, unit) => {
+            const { nomorBerkas, enableNamaRS } = unitData[unit];
+            return `
+                <div class="form-group" id="berkas-${counter}">
+                <div class="form-row">
+                    <div class="col-md-3">
+                    <select class="custom-select text-truncate table-custom-fs @error('judul_berkas') is-invalid @enderror"
+                        name="judul_berkas_new_${counter}">
+                        <option selected hidden value="">Judul Berkas</option>
+                        ${nomorBerkas.map(item => `<option class="table-custom-fs" value="${item.name}">${item.name}</option>`).join('')}
+                    </select>
+                    </div>
+                    <div class="col-md-1">
+                    <input readonly type="text" class="table-custom-fs text-truncate form-control"
+                        name="kode_klasifikasi_new_${counter}" placeholder="Kode Klasifikasi" />
+                    </div>
+                    <div class="col-md-3">
+                    <select ${enableNamaRS ? '' : 'disabled'} class="custom-select table-custom-fs editable-select @error('nama_rs') is-invalid @enderror"
+                        name="nama_rs_new_${counter}">
+                        ${hospitals.map(item => `<option class="table-custom-fs" value="${item.uuid.trim()}">${item.name.trim()}</option>`).join('')}
+                    </select>
+                    </div>
+                    <div class="col-md-1">
+                    <select required class="custom-select table-custom-fs @error('bulan') is-invalid @enderror" name="bulan_new_${counter}">
+                        <option selected hidden value="">Bulan</option>
+                        ${['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+                        .map(month => `<option value="${month}">${month}</option>`).join('')}
+                    </select>
+                    </div>
+                    <div class="col-md-1">
+                    <select required class="custom-select table-custom-fs @error('tahun') is-invalid @enderror" name="tahun_new_${counter}">
+                        ${Array.from({length: new Date().getFullYear() - 2013}, (_, i) => new Date().getFullYear() - i)
+                        .map(year => `<option value="${year}" ${year === new Date().getFullYear() ? 'selected' : ''}>${year}</option>`).join('')}
+                    </select>
+                    </div>
+                    <div class="col-md-2">
+                    <input type="text" class="table-custom-fs form-control description-archive" name="keterangan_new_${counter}"
+                        placeholder="Keterangan" />
+                    </div>
+                    <div class="col-md-1">
+                    <button type="button" class="btn btn-danger table-custom-fs w-100 btn-sm delete-button" data-id="${counter}">
+                        Hapus
+                    </button>
+                    </div>
+                </div>
+                </div>
+            `;
+            };
+
+            // Event delegation for dynamically added elements
+            $('#inputContainer').on('change', 'select[name^="judul_berkas_"]', function() {
+                const counter = this.name.split('_')[2];                
+                const selectedOptionText = $(this).find('option:selected').text().trim();
+                const unit = $('#unit_pengolah').val();
+                const kodeKlasifikasi = unitData[unit].nomorBerkas.find(item => item.name === selectedOptionText)?.code || '';
+                $(`input[name='kode_klasifikasi_${counter}']`).val(kodeKlasifikasi);
+            });
+            const selectedUnit = $('#unit_pengolah').val();
+
+            $('#newInputContainer').on('change', 'select[name^="judul_berkas_new_"]', function() {
+                const counter = this.name.split('_')[3];                
+                const selectedOptionText = $(this).find('option:selected').text().trim();
+                const unit = $('#unit_pengolah').val();
+                const kodeKlasifikasi = unitData[unit].nomorBerkas.find(item => item.name === selectedOptionText)?.code || '';
+                console.log(counter);
+                $(`input[name='kode_klasifikasi_new_${counter}']`).val(kodeKlasifikasi);
+            });
+
+            $('#newInputContainer').on('click', '.delete-button', function() {
+                const id = $(this).data('id');
+                $(`#berkas-${id}`).remove();
+            });
+            
+            if (selectedUnit) {
+                $('#addInput').on('click', function() {
+                    counter++;
+                    const newInput = $(createInputRow(counter, selectedUnit));
+                    $("#newInputContainer").append(newInput);
+                    $(`select[name='nama_rs_${counter}']`).editableSelect();
+                    $(`select[name='nama_rs_new_${counter}']`).editableSelect();
+                });
+            }
+        @endif
     });
 
     function removeInput(id, number) {
