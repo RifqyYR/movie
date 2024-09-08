@@ -15,9 +15,8 @@ class ArchiveNumberGenerator
             // Get the latest archive number
             $latestArchive = DB::table('archives')
                 ->where('dos_number', 'like', 'P-%')
-                ->orderByDesc('dos_number')
+                ->orderByRaw('CAST(SUBSTRING(dos_number, 3) AS UNSIGNED) DESC')
                 ->first();
-
 
             if ($latestArchive) {
                 // Extract the numeric part and increment
@@ -27,9 +26,13 @@ class ArchiveNumberGenerator
                 // If no archives, start with 1
                 $newNumber = 1;
             }
-            
+
             // Format the new archive number
-            $newArchiveNumber = sprintf("P-%03d", $newNumber);
+            if ($newNumber < 100) {
+                $newArchiveNumber = sprintf("P-%03d", $newNumber);
+            } else {
+                $newArchiveNumber = sprintf("P-%d", $newNumber);
+            }
 
             return $newArchiveNumber;
         }, 5); // Retry up to 5 times in case of deadlock

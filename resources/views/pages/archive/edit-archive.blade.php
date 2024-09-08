@@ -126,145 +126,174 @@
             ['name' => 'Pemeriksaan Kepatuhan', 'code' => 'HK.07'],
         ];
         $allowedUnit = ['PMU', 'YANFASKES', 'PKP'];
+        // Tentukan daftar nomor berkas sesuai unit pengolah
+        $unitPengolah = $archives[0]->unit_name;
+        $nomorBerkas = [];
+        switch ($unitPengolah) {
+            case 'PMU':
+                $nomorBerkas = $nomorBerkasPMU;
+                break;
+            case 'YANSER':
+                $nomorBerkas = $nomorBerkasYANSER;
+                break;
+            case 'KEPSER':
+                $nomorBerkas = $nomorBerkasKEPSER;
+                break;
+            case 'YANFASKES':
+                $nomorBerkas = $nomorBerkasYANFASKES;
+                break;
+            case 'SDMUK':
+                $nomorBerkas = $nomorBerkasSDMUK;
+                break;
+            case 'PKP':
+                $nomorBerkas = $nomorBerkasPKP;
+                break;
+        }
+        $months = [
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
     @endphp
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-3">
             <h1 class="h6 mb-0 text-gray-800 fw-bold" style="color: #fc7f01 !important;">Edit Arsip</h1>
         </div>
 
-        <div class="card">
+        <div class="card p-4">
             <form action="/arsip/proses-edit-arsip" method="post">
                 @csrf
-                <div class="card-header">
-                    <h6>Archive: {{ $archives[0]->unit_name }} - {{ $archives[0]->archive_number }} -
-                        {{ $archives[0]->dos_number }}</h6>
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="table-custom-fs-larger" for="unit_pengolah">Unit Pengolah</label>
+                            <input readonly type="text" class="form-control table-custom-fs" name="unit_name"
+                                value="{{ $archives[0]->unit_name }}" id="unit_pengolah" />
+                            @error('unit_pengolah')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="table-custom-fs-larger" for="nomor_berkas">Nomor Barcode</label>
+                            <input required id="nomor_berkas" type="text" class="table-custom-fs form-control"
+                                name="nomor_berkas" autocomplete="nomor_berkas" value="{{ $archives[0]->archive_number }}"
+                                @error('nomor_berkas') is-invalid @enderror />
+                            @error('nomor_berkas')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="table-custom-fs-larger" for="nomor_dos">Nomor Dos</label>
+                            <input id="nomor_dos" type="text" class="table-custom-fs form-control" name="nomor_dos"
+                                value="{{ $archives[0]->dos_number }}" autocomplete="nomor_dos"
+                                @error('nomor_dos') is-invalid @enderror />
+                            @error('nomor_dos')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    @foreach ($archives as $archive)
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="form-row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="table-custom-fs" for="judul_berkas_{{ $archive->uuid }}">Judul Berkas</label>
-                                            <select class="form-control table-custom-fs"
-                                                name="archives[{{ $archive->uuid }}][archive_title]"
-                                                id="judul_berkas_{{ $archive->uuid }}">
-                                                @php
-                                                    switch ($archive->unit_name) {
-                                                        case 'PMU':
-                                                            $nomorBerkas = $nomorBerkasPMU;
-                                                            break;
-                                                        case 'YANSER':
-                                                            $nomorBerkas = $nomorBerkasYANSER;
-                                                            break;
-                                                        case 'KEPSER':
-                                                            $nomorBerkas = $nomorBerkasKEPSER;
-                                                            break;
-                                                        case 'YANFASKES':
-                                                            $nomorBerkas = $nomorBerkasYANFASKES;
-                                                            break;
-                                                        case 'SDMUK':
-                                                            $nomorBerkas = $nomorBerkasSDMUK;
-                                                            break;
-                                                        case 'PKP':
-                                                            $nomorBerkas = $nomorBerkasPKP;
-                                                            break;
-                                                        default:
-                                                            $nomorBerkas = [];
-                                                    }
-                                                @endphp
-                                                @foreach ($nomorBerkas as $item)
-                                                    <option value="{{ $item['name'] }}"
-                                                            data-code="{{ $item['code'] }}"
-                                                            {{ $archive->archive_title == $item['name'] ? 'selected' : '' }}>
-                                                        {{ $item['name'] }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <label class="table-custom-fs" for="kode_klasifikasi{{ $archive->uuid }}">Kode Klasifikasi</label>
-                                            <input class="form-control table-custom-fs"
-                                                name="archives[{{ $archive->uuid }}][archive_code]"
-                                                id="kode_klasifikasi{{ $archive->uuid }}" 
-                                                readonly 
-                                                value="{{ $archive->classification_code }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="table-custom-fs" for="nama_rs_{{ $archive->uuid }}">Nama
-                                                RS</label>
-                                            <select class="form-control editable-select custom-select table-custom-fs"
-                                                name="archives[{{ $archive->uuid }}][hospital_name]"
-                                                id="nama_rs_{{ $archive->uuid }}" {{ !in_array($archive->unit_name, $allowedUnit) ? 'disabled' : '' }}>
-                                                <option value="{{ $archive->hospital_name }}" selected hidden>{{ $archive->hospital_name }}</option>
-                                                @foreach ($hospitals as $hospital)
-                                                    <option class="table-custom-fs" value="{{ $hospital->name }}">{{ $hospital->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="table-custom-fs" for="bulan_{{ $archive->uuid }}">Bulan</label>
-                                            <select class="form-control table-custom-fs"
-                                                name="archives[{{ $archive->uuid }}][month]"
-                                                id="bulan_{{ $archive->uuid }}">
-                                                <option value="{{ $archive->month }}" selected hidden>{{ $archive->month }}
-                                                </option>
-                                                @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $month)
-                                                    <option value="{{ $month }}">{{ $month }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <label class="table-custom-fs" for="tahun_{{ $archive->uuid }}">Tahun</label>
-                                            <select class="form-control table-custom-fs"
-                                                name="archives[{{ $archive->uuid }}][year]"
-                                                id="tahun_{{ $archive->uuid }}">
-                                                @for ($year = date('Y'); $year >= 2014; $year--)
-                                                    <option value="{{ $year }}"
-                                                        {{ $archive->year == $year ? 'selected' : '' }}>
-                                                        {{ $year }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="table-custom-fs"
-                                                for="keterangan_{{ $archive->uuid }}">Keterangan</label>
-                                            <input type="text" class="form-control table-custom-fs"
-                                                id="keterangan_{{ $archive->uuid }}"
-                                                name="archives[{{ $archive->uuid }}][description]"
-                                                value="{{ $archive->description }}">
-                                        </div>
-                                    </div>
+
+                <span class="table-custom-fs-larger mb-0">Berkas Arsip</span>
+
+                <div id="inputContainer">
+                    @foreach ($archives as $index => $archive)
+                        <div class="form-group" id="berkas-{{ $index }}">
+                            <div class="form-row">
+                                <div class="col-md-3">
+                                    <select
+                                        class="custom-select text-truncate table-custom-fs @error('judul_berkas') is-invalid @enderror"
+                                        name="judul_berkas_{{ $index }}">
+                                        <option selected hidden value="">Judul Berkas</option>
+                                        <!-- Looping untuk menampilkan semua pilihan berkas sesuai unit pengolah -->
+                                        @foreach ($nomorBerkas as $berkas)
+                                            <option value="{{ $berkas['name'] }}"
+                                                {{ $berkas['name'] === $archive->archive_title ? 'selected' : '' }}>
+                                                {{ $berkas['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <input readonly type="text" class="table-custom-fs text-truncate form-control"
+                                        name="kode_klasifikasi_{{ $index }}" placeholder="Kode Klasifikasi"
+                                        value="{{ $archive->classification_code }}" />
+                                </div>
+                                <div class="col-md-3">
+                                    <select {{ in_array($unitPengolah, ['YANSER', 'KEPSER', 'SDMUK']) ? 'disabled' : '' }}
+                                        class="custom-select table-custom-fs editable-select @error('nama_rs') is-invalid @enderror"
+                                        name="nama_rs_{{ $index }}">
+                                        <option value="" hidden></option>
+                                        @foreach ($hospitals as $hospital)
+                                            <option class="table-custom-fs" value="{{ $hospital->name }}"
+                                                {{ $hospital->name === $archive->hospital_name ? 'selected' : '' }}>{{ $hospital->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <select required
+                                        class="custom-select table-custom-fs @error('bulan') is-invalid @enderror"
+                                        name="bulan_{{ $index }}">
+                                        @foreach ($months as $month)
+                                            <option value="{{ $month }}"
+                                                {{ $month === $archive->month ? 'selected' : '' }}>{{ $month }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <select required
+                                        class="custom-select table-custom-fs @error('tahun') is-invalid @enderror"
+                                        name="tahun_{{ $index }}">
+                                        @for ($year = date('Y'); $year >= 2014; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == $archive->year ? 'selected' : '' }}>
+                                                {{ $year }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="table-custom-fs form-control description-archive"
+                                        name="keterangan_{{ $index }}" placeholder="Keterangan" />
                                 </div>
                             </div>
                         </div>
                     @endforeach
-                    <input type="hidden" value="{{ $archive->uuid }}" name="uuid">
-                    <div class="form-group mt-1">
-                        <span id="description-alert" class="text-danger table-custom-fs">*Maksimal karakter input
-                            deskripsi
-                            hanya 30
-                            karakter</span>
-                        <div class="form-group mt-4 d-flex justify-content-center">
-                            <a href="{{ route('archive') }}">
-                                <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
-                                    style="width: 5rem;">
-                            </a>
-                            <input type="submit" class="btn btn-success table-custom-fs-larger" value="Edit"
+                </div>
+                <div id="newInputContainer"></div>
+                <button id="addInput" type="button" class="btn btn-sm table-custom-fs btn-success mb-2">Tambah Berkas
+                    Arsip</button>
+
+                <div class="form-group mt-1">
+                    <span id="description-alert" class="text-danger table-custom-fs">*Maksimal karakter input deskripsi
+                        hanya 30
+                        karakter</span>
+                    <div class="form-group mt-4 d-flex justify-content-center">
+                        <a href="{{ route('archive') }}">
+                            <input type="button" class="btn btn-danger me-4 table-custom-fs-larger" value="Kembali"
                                 style="width: 5rem;">
-                        </div>
+                        </a>
+                        <input type="submit" class="btn btn-success table-custom-fs-larger" value="Buat"
+                            style="width: 5rem;">
                     </div>
                 </div>
             </form>

@@ -20,6 +20,7 @@
                         <option value="active" {{ request('isActive') == 'active' ? 'selected' : '' }}>Arsip Aktif</option>
                         <option value="inactive" {{ request('isActive') == 'inactive' ? 'selected' : '' }}>Arsip Inaktif
                         </option>
+                        <option value="" {{ request('isActive') == '' ? 'selected' : '' }}>Semua Status</option>
                     </select>
                 </div>
                 <div method="GET" action="{{ route('archive') }}" class="ms-2">
@@ -116,7 +117,7 @@
                                             @if (request('isActive') == 'inactive')
                                                 {{ $item->status == 'INAKTIF' ? 'Inaktif' : '' }}
                                             @else
-                                                {{ $item->status == 'AKTIF' ? $item->active_retention_schedule . ' Tahun' : '' }}
+                                                {{ $item->status == 'AKTIF' ? $item->active_retention_schedule . ' Tahun' : 'Inaktif' }}
                                             @endif
                                         </td>
                                         @if (auth()->user()->role != 'GUEST')
