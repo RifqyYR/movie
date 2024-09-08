@@ -358,6 +358,10 @@ class ArchiveController extends Controller
             'Pemeriksaan Kepatuhan' => 2,
         ];
 
+        $arsip = Archive::where('archive_number', $request->input('nomor_berkas'))
+            ->where('dos_number', $request->input('nomor_dos'))
+            ->first();
+
         try {
             DB::transaction(function () use ($request, $retentionPeriods) {
                 $now = now()->year;
@@ -494,8 +498,8 @@ class ArchiveController extends Controller
             });
 
             return redirect()
-                ->route('archive')
-                ->with('success', 'Berhasil mengedit arsip');
+                ->route('archive', ['isActive' => $arsip->status == 'AKTIF' ? 'active' : 'inactive'])
+                ->with('success', 'Berhasil mengedit arsip dengan nomor dos: ' . $request->nomor_dos);
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
